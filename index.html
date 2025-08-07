@@ -300,32 +300,37 @@
         });
 
         for (const category in groupedPrices) {
-            if (category) {
-                const subtitle = document.createElement('li');
-                subtitle.className = 'subtitle';
-                subtitle.textContent = category;
-                ul.appendChild(subtitle);
-            }
+            const priceItems = groupedPrices[category];
+            const isSingleLine = priceItems.length === 1 && !priceItems[0].price && priceItems[0].duration;
 
-            groupedPrices[category].forEach(price => {
+            if (isSingleLine) {
                 const li = document.createElement('li');
-                if (price.duration) {
+                li.textContent = `${category} ${priceItems[0].duration}`;
+                li.classList.add('subtitle');
+                ul.appendChild(li);
+            } else {
+                if (category) {
+                    const subtitle = document.createElement('li');
+                    subtitle.className = 'subtitle';
+                    subtitle.textContent = category;
+                    ul.appendChild(subtitle);
+                }
+                
+                priceItems.forEach(price => {
+                    const li = document.createElement('li');
                     li.textContent = price.duration;
-                } else {
-                    li.style.display = 'none'; // Sembunyikan jika tidak ada durasi
-                }
-                const priceSpan = document.createElement('span');
-                priceSpan.className = 'price';
-                priceSpan.textContent = price.price;
-                if (price.notes) {
-                    priceSpan.textContent += ' ' + price.notes;
-                }
-                li.appendChild(priceSpan);
-                if (price.duration || price.price) {
+                    const priceSpan = document.createElement('span');
+                    priceSpan.className = 'price';
+                    priceSpan.textContent = price.price;
+                    if (price.notes) {
+                        priceSpan.textContent += ' ' + price.notes;
+                    }
+                    li.appendChild(priceSpan);
                     ul.appendChild(li);
-                }
-            });
+                });
+            }
         }
+        
         bodyDiv.appendChild(ul);
         card.appendChild(bodyDiv);
 
