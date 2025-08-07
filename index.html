@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricelist Aplikasi Premium - SteoType</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            color: #ff69b4;
+        }
+        .header p {
+            margin-top: 5px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .search-bar {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .search-bar input {
+            width: 80%;
+            max-width: 500px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            outline: none;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .card-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .card-header h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff69b4;
+        }
+        .card-body ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .card-body li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .card-body li:last-child {
+            border-bottom: none;
+        }
+        .subtitle {
+            font-weight: 600;
+            color: #555;
+            margin-top: 10px;
+        }
+        .price {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .download-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: background-color 0.3s ease;
+        }
+        .download-button:hover {
+            background-color: #ff4794;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Pricelist Aplikasi Premium</h1>
+        <p>SteoType - Solusi Premium untuk Aplikasi Favoritmu</p>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" onkeyup="searchCards()" placeholder="Cari aplikasi...">
+    </div>
+
+    <div class="grid-container" id="pricelistGrid">
+        </div>
+</div>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+    async function loadDataAndRenderCards() {
+        try {
+            const response = await fetch('pricelist.csv');
+            const csvData = await response.text();
+            
+            const parsedData = parseCSV(csvData);
+            const groupedData = groupDataByApp(parsedData);
+            
+            const gridContainer = document.getElementById('pricelistGrid');
+            gridContainer.innerHTML = ''; // Bersihkan kontainer sebelum menambahkan kartu
+            
+            for (const appName in groupedData) {
+                const card = createCard(appName, groupedData[appName]);
+                gridContainer.appendChild(card);
+            }
+        } catch (error) {
+            console.error('Error fetching or processing CSV:', error);
+            document.getElementById('pricelistGrid').innerHTML = '<p>Gagal memuat data. Pastikan file pricelist.csv ada di folder yang sama.</p>';
+        }
+    }
+
+    function parseCSV(csv) {
+        const lines = csv.split('\n');
+        const headers = lines[0].split(',');
+        const result = [];
+        
+        for (let i = 1; i < lines.length; i++) {
+            const currentline = lines[i].split(',');
+            if (currentline.length === headers.length) {
+                const obj = {};
+                for (let j = 0; j < headers.length; j++) {
+                    obj[headers[j].trim()] = currentline[j].trim();
+                }
+                result.push(obj);
+            }
+        }
+        return result;
+    }
+
+    function groupDataByApp(data) {
+        const grouped = {};
+        data.forEach(item => {
+            const appName = item.app_name;
+            if (!grouped[appName]) {
+                grouped[appName] = [];
+            }
+            grouped[appName].push(item);
+        });
+        return grouped;
+    }
+
+    function createCard(appName, prices) {
+        const card = document.createElement('div');
+        const cardId = 'card-' + appName.replace(/[^a-zA-Z0-9]/g, '-');
+        card.className = 'card';
+        card.id = cardId;
+        card.setAttribute('data-app-name', appName);
+
+        const downloadButton = document.createElement('button');
+        downloadButton.className = 'download-button';
+        downloadButton.textContent = '↓';
+        downloadButton.onclick = () => downloadCard(cardId);
+        card.appendChild(downloadButton);
+
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'card-header';
+        const h2 = document.createElement('h2');
+        h2.textContent = appName.toUpperCase();
+        headerDiv.appendChild(h2);
+        card.appendChild(headerDiv);
+
+        const bodyDiv = document.createElement('div');
+        bodyDiv.className = 'card-body';
+        const ul = document.createElement('ul');
+
+        const groupedPrices = {};
+        prices.forEach(price => {
+            const category = price.category;
+            if (!groupedPrices[category]) {
+                groupedPrices[category] = [];
+            }
+            groupedPrices[category].push(price);
+        });
+
+        for (const category in groupedPrices) {
+            const subtitle = document.createElement('li');
+            subtitle.className = 'subtitle';
+            subtitle.textContent = category;
+            ul.appendChild(subtitle);
+
+            groupedPrices[category].forEach(price => {
+                const li = document.createElement('li');
+                li.textContent = price.duration;
+                const priceSpan = document.createElement('span');
+                priceSpan.className = 'price';
+                priceSpan.textContent = price.price;
+                if (price.notes) {
+                    priceSpan.textContent += ' ' + price.notes;
+                }
+                li.appendChild(priceSpan);
+                ul.appendChild(li);
+            });
+        }
+        bodyDiv.appendChild(ul);
+        card.appendChild(bodyDiv);
+
+        return card;
+    }
+    
+    function searchCards() {
+        var input, filter, grid, cards, h2, i, txtValue;
+        input = document.getElementById('searchInput');
+        filter = input.value.toUpperCase();
+        grid = document.getElementById('pricelistGrid');
+        cards = grid.getElementsByClassName('card');
+
+        for (i = 0; i < cards.length; i++) {
+            var cardHeader = cards[i].querySelector('h2');
+            if (cardHeader) {
+                txtValue = cardHeader.textContent || cardHeader.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function downloadCard(cardId) {
+        const cardElement = document.getElementById(cardId);
+        const downloadButton = cardElement.querySelector('.download-button');
+        downloadButton.style.display = 'none';
+
+        html2canvas(cardElement, {
+            scale: 2
+        }).then(canvas => {
+            const appName = cardElement.getAttribute('data-app-name');
+            const link = document.createElement('a');
+            link.download = `${appName.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-')}-pricelist.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            link.remove();
+            
+            downloadButton.style.display = 'flex';
+        });
+    }
+
+    // Panggil fungsi ini saat halaman dimuat
+    window.onload = loadDataAndRenderCards;
+</script>
+
+</body>
+</html>
