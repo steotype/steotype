@@ -130,92 +130,47 @@
     </div>
 
     <div class="grid-container" id="pricelistGrid">
-        </div>
+    </div>
 </div>
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
-    const pricelistData = [
-        { "app_name": "Netflix", "category": "SHARING 1P1U", "duration": "3 Hari", "price": "10K", "notes": "" },
-        { "app_name": "Netflix", "category": "SHARING 1P1U", "duration": "5 Hari", "price": "12K", "notes": "" },
-        { "app_name": "Netflix", "category": "SHARING 1P1U", "duration": "7 Hari", "price": "15K", "notes": "" },
-        { "app_name": "Netflix", "category": "SHARING 1P1U", "duration": "14 Hari", "price": "22K", "notes": "" },
-        { "app_name": "Netflix", "category": "SHARING 1P1U", "duration": "1 Bulan", "price": "40K", "notes": "" },
-        { "app_name": "Netflix", "category": "SHARING 1P1U", "duration": "2 Bulan", "price": "80K", "notes": "" },
-        { "app_name": "Netflix", "category": "SHARING 1P1U", "duration": "3 Bulan", "price": "120K", "notes": "" },
-        { "app_name": "Netflix", "category": "SHARING 1P2U", "duration": "1 Bulan", "price": "25K", "notes": "" },
-        { "app_name": "Netflix", "category": "SHARING 1P2U", "duration": "3 Bulan", "price": "70K", "notes": "" },
-        { "app_name": "Netflix", "category": "SEMI PRIVATE", "duration": "1 Bulan", "price": "50K", "notes": "" },
-        { "app_name": "Netflix", "category": "SEMI PRIVATE", "duration": "2 Bulan", "price": "90K", "notes": "" },
-        { "app_name": "Netflix", "category": "SEMI PRIVATE", "duration": "3 Bulan", "price": "130K", "notes": "" },
-        { "app_name": "Netflix", "category": "PRIVATE", "duration": "1 Bulan", "price": "165K", "notes": "" },
-        { "app_name": "Disney+", "category": "SHARING", "duration": "7 Hari", "price": "16K", "notes": "" },
-        { "app_name": "Disney+", "category": "SHARING", "duration": "1 Bulan", "price": "35K", "notes": "" },
-        { "app_name": "Disney+", "category": "SHARING", "duration": "3 Bulan", "price": "85K", "notes": "" },
-        { "app_name": "Disney+", "category": "SHARING 3U", "duration": "1 Bulan", "price": "65K", "notes": "" },
-        { "app_name": "Disney+", "category": "SHARING 3U", "duration": "1 Bulan", "price": "155K", "notes": "" },
-        { "app_name": "Canva", "category": "MEMBER", "duration": "1 Hari", "price": "2K", "notes": "" },
-        { "app_name": "Canva", "category": "MEMBER", "duration": "3 Hari", "price": "4K", "notes": "" },
-        { "app_name": "Canva", "category": "MEMBER", "duration": "7 Hari", "price": "6K", "notes": "" },
-        { "app_name": "Canva", "category": "MEMBER", "duration": "1 Bulan", "price": "10K", "notes": "" },
-        { "app_name": "Canva", "category": "MEMBER", "duration": "2 Bulan", "price": "15K", "notes": "" },
-        { "app_name": "Canva", "category": "MEMBER", "duration": "3 Bulan", "price": "20K", "notes": "" },
-        { "app_name": "Canva", "category": "MEMBER", "duration": "4 Bulan", "price": "25K", "notes": "" },
-        { "app_name": "Canva", "category": "MEMBER", "duration": "5 Bulan", "price": "30K", "notes": "" },
-        { "app_name": "Canva", "category": "MEMBER", "duration": "6 Bulan", "price": "40K", "notes": "" },
-        { "app_name": "Canva", "category": "EDUCATION", "duration": "1 Tahun", "price": "55K", "notes": "" },
-        { "app_name": "Canva", "category": "DESIGNER", "duration": "", "price": "+2K", "notes": "" },
-        { "app_name": "Amazon", "category": "SHARING", "duration": "1 Bulan", "price": "15K", "notes": "" },
-        { "app_name": "Amazon", "category": "PRIVATE", "duration": "1 Bulan", "price": "35K", "notes": "" },
-        { "app_name": "YouTube", "category": "FAMILY PLAN", "duration": "1 Bulan", "price": "10K", "notes": "" },
-        { "app_name": "YouTube", "category": "FAMILY PLAN", "duration": "2 Bulan", "price": "15K", "notes": "" },
-        { "app_name": "YouTube", "category": "ACCOUNT SELLER", "duration": "", "price": "+3K", "notes": "" },
-        { "app_name": "Loklok", "category": "SHARING", "duration": "1 Bulan", "price": "30K", "notes": "" },
-        { "app_name": "Picsart", "category": "SHARING", "duration": "1 Bulan", "price": "10K", "notes": "" },
-        { "app_name": "Picsart", "category": "SHARING", "duration": "2 Bulan", "price": "15K", "notes": "" },
-        { "app_name": "Picsart", "category": "SHARING", "duration": "3 Bulan", "price": "30K", "notes": "" },
-        { "app_name": "Picsart", "category": "PRIVATE", "duration": "1 Bulan", "price": "25K", "notes": "" },
-        { "app_name": "Picsart", "category": "PRIVATE", "duration": "3 Bulan", "price": "40K", "notes": "" },
-        { "app_name": "IQIYI", "category": "SHARING", "duration": "1 Bulan", "price": "15K", "notes": "" },
-        { "app_name": "IQIYI", "category": "PRIVATE", "duration": "1 Bulan", "price": "45K", "notes": "" },
-        { "app_name": "VIU", "category": "PREMIUM", "duration": "1 Bulan", "price": "10K", "notes": "" },
-        { "app_name": "VIU", "category": "PREMIUM", "duration": "2 Bulan", "price": "14K", "notes": "" },
-        { "app_name": "VIU", "category": "PREMIUM", "duration": "3 Bulan", "price": "18K", "notes": "" },
-        { "app_name": "VIU", "category": "ANTI LIMIT", "duration": "1 Bulan", "price": "15K", "notes": "" },
-        { "app_name": "VIU", "category": "ANTI LIMIT", "duration": "2 Bulan", "price": "18K", "notes": "" },
-        { "app_name": "VIU", "category": "ANTI LIMIT", "duration": "3 Bulan", "price": "25K", "notes": "" },
-        { "app_name": "VIU", "category": "ANTI LIMIT", "duration": "6 Bulan", "price": "35K", "notes": "" },
-        { "app_name": "VIU", "category": "ANTI LIMIT", "duration": "1 Tahun", "price": "50K", "notes": "" },
-        { "app_name": "We TV", "category": "SHARING", "duration": "1 Bulan", "price": "15K", "notes": "" },
-        { "app_name": "We TV", "category": "SHARING 3U", "duration": "1 Bulan", "price": "25K", "notes": "" },
-        { "app_name": "We TV", "category": "PRIVATE", "duration": "1 Bulan", "price": "45K", "notes": "" },
-        { "app_name": "Vidio", "category": "SHARING", "duration": "1 Bulan", "price": "30K", "notes": "" },
-        { "app_name": "Vidio", "category": "PRIVATE", "duration": "1 Bulan", "price": "45K", "notes": "" },
-        { "app_name": "HBO GO", "category": "SHARING", "duration": "1 Bulan", "price": "25K", "notes": "" },
-        { "app_name": "HBO GO", "category": "PRIVATE", "duration": "1 Bulan", "price": "125K", "notes": "" },
-        { "app_name": "Bstation", "category": "SHARING", "duration": "1 Bulan", "price": "15K", "notes": "" },
-        { "app_name": "Bstation", "category": "SHARING", "duration": "1 Tahun", "price": "35K", "notes": "" },
-        { "app_name": "Bstation", "category": "PRIVATE", "duration": "1 Bulan", "price": "45K", "notes": "" },
-        { "app_name": "CapCut", "category": "SHARING", "duration": "1 Hari", "price": "5K", "notes": "" },
-        { "app_name": "CapCut", "category": "SHARING", "duration": "7 Hari", "price": "15K", "notes": "" },
-        { "app_name": "CapCut", "category": "SHARING", "duration": "1 Bulan", "price": "28K", "notes": "" },
-        { "app_name": "CapCut", "category": "SHARING PC/Laptop", "duration": "1 Bulan", "price": "40K", "notes": "" },
-        { "app_name": "CapCut", "category": "PRIVATE", "duration": "1 Bulan", "price": "75K", "notes": "" },
-        { "app_name": "Youku", "category": "SHARING", "duration": "1 Bulan", "price": "15K", "notes": "" },
-        { "app_name": "Youku", "category": "SHARING", "duration": "1 Tahun", "price": "35K", "notes": "" },
-        { "app_name": "Youku", "category": "PRIVATE", "duration": "1 Bulan", "price": "45K", "notes": "" },
-        { "app_name": "ChatGPT+", "category": "SHARING", "duration": "7 Hari", "price": "20K", "notes": "" },
-        { "app_name": "ChatGPT+", "category": "SHARING", "duration": "1 Bulan", "price": "50K", "notes": "" },
-        { "app_name": "ChatGPT+", "category": "PRIVATE", "duration": "1 Bulan", "price": "240K", "notes": "" },
-        { "app_name": "Vision+", "category": "SHARING", "duration": "1 Bulan", "price": "25K", "notes": "" },
-        { "app_name": "Vision+", "category": "PRIVATE", "duration": "1 Bulan", "price": "40K", "notes": "" },
-        { "app_name": "Wattpad", "category": "SHARING", "duration": "1 Bulan", "price": "15K", "notes": "" },
-        { "app_name": "Wattpad", "category": "SHARING", "duration": "6 Bulan", "price": "25K", "notes": "" },
-        { "app_name": "Wattpad", "category": "SHARING", "duration": "1 Tahun", "price": "40K", "notes": "" },
-        { "app_name": "Get Contact", "category": "PRIVATE", "duration": "1 Bulan", "price": "16K", "notes": "" }
-    ];
+    const csvUrl = 'https://raw.githubusercontent.com/rdsaja/shoiconer/1d38a0ecdab562d258034eba38f58dcdd62c2c38/pricelist.csv';
 
-    function loadDataAndRenderCards() {
+    async function fetchAndRenderData() {
+        try {
+            const response = await fetch(csvUrl);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const csvText = await response.text();
+            const pricelistData = parseCsv(csvText);
+            loadDataAndRenderCards(pricelistData);
+        } catch (error) {
+            console.error('Error fetching or parsing CSV:', error);
+            document.getElementById('pricelistGrid').innerHTML = '<p style="text-align:center;">Gagal memuat data. Silakan coba periksa URL CSV Anda atau koneksi internet.</p>';
+        }
+    }
+
+    function parseCsv(csvString) {
+        const lines = csvString.trim().split('\r\n');
+        const headers = lines[0].split(',');
+        const data = [];
+        
+        for (let i = 1; i < lines.length; i++) {
+            const currentLine = lines[i].split(',');
+            if (currentLine.length === headers.length) {
+                const row = {};
+                for (let j = 0; j < headers.length; j++) {
+                    row[headers[j].trim()] = currentLine[j].trim();
+                }
+                data.push(row);
+            }
+        }
+        return data;
+    }
+
+    function loadDataAndRenderCards(pricelistData) {
         const groupedData = groupDataByApp(pricelistData);
         const gridContainer = document.getElementById('pricelistGrid');
         gridContainer.innerHTML = '';
@@ -349,7 +304,7 @@
     }
 
     // Panggil fungsi ini saat halaman dimuat
-    window.onload = loadDataAndRenderCards;
+    window.onload = fetchAndRenderData;
 </script>
 
 </body>
