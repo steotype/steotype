@@ -7,14 +7,14 @@
     
     <meta property="og:title" content="Pricelist Aplikasi Premium - Steotype">
     <meta property="og:description" content="Daftar harga terbaru aplikasi premium untuk Steotype. Cepat dan mudah diakses.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/rdsaja/steotype/abcb3f1b539d5adad71b70ef9c18b10d678e455d/lipe.png">
+    <meta property="og:image" content="https://raw.githubusercontent.com/rdsaja/steotype/670224175bc0a90d8e0ace7d71e0b3334fc82b03/lpi.png">
     <meta property="og:url" content="https://steotype.pages.dev">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Pricelist Aplikasi Premium - Steotype">
     <meta name="twitter:description" content="Daftar harga terbaru aplikasi premium untuk Steotype. Cepat dan mudah diakses.">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/rdsaja/steotype/abcb3f1b539d5adad71b70ef9c18b10d678e455d/lipe.png">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/rdsaja/steotype/670224175bc0a90d8e0ace7d71e0b3334fc82b03/lpi.png">
     <meta name="twitter:url" content="https://steotype.pages.dev">
 
     <style>
@@ -46,6 +46,10 @@
         .search-bar {
             margin-bottom: 30px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* Memberi jarak antara search dan tombol unduh */
         }
         .search-bar input {
             width: 80%;
@@ -56,6 +60,28 @@
             font-size: 1rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             outline: none;
+        }
+        .download-all-button {
+            width: 80%;
+            max-width: 500px;
+        }
+        .download-all-button button {
+            width: 100%;
+            padding: 12px 0;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .download-all-button button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
         }
         .grid-container {
             display: grid;
@@ -136,7 +162,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="mainContainer">
     <div class="header">
         <h1>Pricelist Aplikasi Premium</h1>
         <p>Steotype</p>
@@ -144,6 +170,10 @@
 
     <div class="search-bar">
         <input type="text" id="searchInput" onkeyup="searchCards()" placeholder="Cari aplikasi...">
+        
+        <div class="download-all-button">
+            <button onclick="downloadAllCards()">Unduh Semua Pricelist (PNG)</button>
+        </div>
     </div>
 
     <div class="grid-container" id="pricelistGrid">
@@ -300,7 +330,8 @@
             }
         }
     }
-
+    
+    // Fungsi untuk mengunduh SATU kartu
     function downloadCard(cardId) {
         const cardElement = document.getElementById(cardId);
         const downloadButton = cardElement.querySelector('.download-button');
@@ -317,6 +348,37 @@
             link.remove();
             
             downloadButton.style.display = 'block';
+        });
+    }
+
+    // Fungsi BARU untuk mengunduh SEMUA pricelist
+    function downloadAllCards() {
+        const containerElement = document.getElementById('mainContainer');
+        const individualButtons = document.querySelectorAll('.download-button');
+        const mainDownloadButton = document.querySelector('.download-all-button button');
+
+        // 1. Sembunyikan tombol-tombol yang tidak ingin muncul di gambar
+        individualButtons.forEach(btn => btn.style.display = 'none');
+        mainDownloadButton.style.display = 'none';
+        
+        // Atur posisi scroll ke atas sebelum capture untuk memastikan semua konten terlihat
+        window.scrollTo(0, 0);
+
+        html2canvas(containerElement, {
+            scale: 2,
+            logging: false,
+            // Tambahkan sedikit padding/margin agar hasil capture terlihat lebih baik (opsional)
+            y: 0 
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'pricelist-steotype-lengkap.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            link.remove();
+        }).finally(() => {
+            // 3. Tampilkan kembali tombol-tombol setelah selesai
+            individualButtons.forEach(btn => btn.style.display = 'block');
+            mainDownloadButton.style.display = 'block';
         });
     }
 
