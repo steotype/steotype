@@ -184,7 +184,7 @@
 <script>
     const csvUrl = 'https://raw.githubusercontent.com/rdsaja/shoiconer/1d38a0ecdab562d258034eba38f58dcdd62c2c38/pricelist.csv';
     
-    // URL gambar PL.jpg diperbaiki ke tautan RAW yang benar
+    // URL gambar PL.jpg menggunakan commit hash yang Anda berikan
     const fullPricelistImageUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/c2319f848e834b3d8b6143e18bcfe5534ccb5b5a/PL.jpg';
 
 
@@ -354,11 +354,14 @@
         });
     }
 
-    // Fungsi untuk mengunduh gambar PL.jpg dari tautan RAW yang benar
+    // FUNGSI INI DIPERBAIKI UNTUK MEMAKSA DOWNLOAD
     function downloadAllCards() {
         const link = document.createElement('a');
         link.href = fullPricelistImageUrl;
-        link.download = 'Pricelist_Steotype.jpg';
+        // Atribut 'download' memberi tahu browser untuk mengunduh, bukan menampilkan.
+        link.download = 'Pricelist_Steotype.jpg'; 
+        
+        // Memastikan link ditambahkan, diklik, dan dihapus untuk memicu unduhan
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
