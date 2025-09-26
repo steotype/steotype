@@ -7,14 +7,14 @@
     
     <meta property="og:title" content="Pricelist Aplikasi Premium - Steotype">
     <meta property="og:description" content="Daftar harga terbaru aplikasi premium untuk Steotype. Cepat dan mudah diakses.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/rdsaja/steotype/670224175bc0a90d8e0ace7d71e0b3334fc82b03/lpi.png">
+    <meta property="og:image" content="https://raw.githubusercontent.com/rdsaja/steotype/670224175bc0a90d8e0ace7d71e0b3334fc82b03/PL.jpg">
     <meta property="og:url" content="https://steotype.pages.dev">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Pricelist Aplikasi Premium - Steotype">
     <meta name="twitter:description" content="Daftar harga terbaru aplikasi premium untuk Steotype. Cepat dan mudah diakses.">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/rdsaja/steotype/670224175bc0a90d8e0ace7d71e0b3334fc82b03/lpi.png">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/rdsaja/steotype/670224175bc0a90d8e0ace7d71e0b3334fc82b03/PL.jpg">
     <meta name="twitter:url" content="https://steotype.pages.dev">
 
     <style>
@@ -49,7 +49,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px; /* Memberi jarak antara search dan tombol unduh */
+            gap: 15px;
         }
         .search-bar input {
             width: 80%;
@@ -172,7 +172,7 @@
         <input type="text" id="searchInput" onkeyup="searchCards()" placeholder="Cari aplikasi...">
         
         <div class="download-all-button">
-            <button onclick="downloadAllCards()">Unduh Semua Pricelist (PNG)</button>
+            <button onclick="downloadAllCards()">Unduh Semua Pricelist (PL.jpg)</button>
         </div>
     </div>
 
@@ -183,6 +183,10 @@
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
     const csvUrl = 'https://raw.githubusercontent.com/rdsaja/shoiconer/1d38a0ecdab562d258034eba38f58dcdd62c2c38/pricelist.csv';
+    
+    // URL gambar PL.jpg yang sudah disiapkan
+    const fullPricelistImageUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/670224175bc0a90d8e0ace7d71e0b3334fc82b03/PL.jpg';
+
 
     async function fetchAndRenderData() {
         try {
@@ -302,6 +306,7 @@
         bodyDiv.appendChild(ul);
         card.appendChild(bodyDiv);
 
+        // Tombol unduh per-kartu tetap menggunakan html2canvas
         const downloadButton = document.createElement('button');
         downloadButton.className = 'download-button';
         downloadButton.textContent = 'Unduh';
@@ -331,7 +336,7 @@
         }
     }
     
-    // Fungsi untuk mengunduh SATU kartu
+    // Fungsi untuk mengunduh SATU kartu (menggunakan html2canvas)
     function downloadCard(cardId) {
         const cardElement = document.getElementById(cardId);
         const downloadButton = cardElement.querySelector('.download-button');
@@ -351,35 +356,14 @@
         });
     }
 
-    // Fungsi BARU untuk mengunduh SEMUA pricelist
+    // Fungsi BARU untuk mengunduh gambar yang sudah disiapkan (PL.jpg)
     function downloadAllCards() {
-        const containerElement = document.getElementById('mainContainer');
-        const individualButtons = document.querySelectorAll('.download-button');
-        const mainDownloadButton = document.querySelector('.download-all-button button');
-
-        // 1. Sembunyikan tombol-tombol yang tidak ingin muncul di gambar
-        individualButtons.forEach(btn => btn.style.display = 'none');
-        mainDownloadButton.style.display = 'none';
-        
-        // Atur posisi scroll ke atas sebelum capture untuk memastikan semua konten terlihat
-        window.scrollTo(0, 0);
-
-        html2canvas(containerElement, {
-            scale: 2,
-            logging: false,
-            // Tambahkan sedikit padding/margin agar hasil capture terlihat lebih baik (opsional)
-            y: 0 
-        }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'pricelist-steotype-lengkap.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            link.remove();
-        }).finally(() => {
-            // 3. Tampilkan kembali tombol-tombol setelah selesai
-            individualButtons.forEach(btn => btn.style.display = 'block');
-            mainDownloadButton.style.display = 'block';
-        });
+        const link = document.createElement('a');
+        link.href = fullPricelistImageUrl;
+        link.download = 'Pricelist_Steotype.jpg'; // Nama file yang akan diunduh
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     // Panggil fungsi ini saat halaman dimuat
