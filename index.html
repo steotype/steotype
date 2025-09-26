@@ -354,14 +354,13 @@
         });
     }
 
-    // FUNGSI INI DIPERBAIKI UNTUK MEMAKSA DOWNLOAD
+    // FUNGSI DIPERBARUI: menggunakan target='_blank' dan download
     function downloadAllCards() {
         const link = document.createElement('a');
         link.href = fullPricelistImageUrl;
-        // Atribut 'download' memberi tahu browser untuk mengunduh, bukan menampilkan.
-        link.download = 'Pricelist_Steotype.jpg'; 
+        link.download = 'Pricelist_Steotype.jpg';
+        link.target = '_blank'; // Membuka di tab baru (seringkali memaksa download)
         
-        // Memastikan link ditambahkan, diklik, dan dihapus untuk memicu unduhan
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
