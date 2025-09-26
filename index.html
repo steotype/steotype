@@ -7,14 +7,14 @@
     
     <meta property="og:title" content="Pricelist Aplikasi Premium - Steotype">
     <meta property="og:description" content="Daftar harga terbaru aplikasi premium untuk Steotype. Cepat dan mudah diakses.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/rdsaja/steotype/670224175bc0a90d8e0ace7d71e0b3334fc82b03/PL.jpg">
+    <meta property="og:image" content="https://raw.githubusercontent.com/rdsaja/steotype/c2319f848e834b3d8b6143e18bcfe5534ccb5b5a/PL.jpg">
     <meta property="og:url" content="https://steotype.pages.dev">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Pricelist Aplikasi Premium - Steotype">
     <meta name="twitter:description" content="Daftar harga terbaru aplikasi premium untuk Steotype. Cepat dan mudah diakses.">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/rdsaja/steotype/670224175bc0a90d8e0ace7d71e0b3334fc82b03/PL.jpg">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/rdsaja/steotype/c2319f848e834b3d8b6143e18bcfe5534ccb5b5a/PL.jpg">
     <meta name="twitter:url" content="https://steotype.pages.dev">
 
     <style>
@@ -184,8 +184,8 @@
 <script>
     const csvUrl = 'https://raw.githubusercontent.com/rdsaja/shoiconer/1d38a0ecdab562d258034eba38f58dcdd62c2c38/pricelist.csv';
     
-    // URL gambar PL.jpg yang sudah disiapkan
-    const fullPricelistImageUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/670224175bc0a90d8e0ace7d71e0b3334fc82b03/PL.jpg';
+    // URL gambar PL.jpg diperbaiki ke tautan RAW yang benar
+    const fullPricelistImageUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/c2319f848e834b3d8b6143e18bcfe5534ccb5b5a/PL.jpg';
 
 
     async function fetchAndRenderData() {
@@ -306,7 +306,6 @@
         bodyDiv.appendChild(ul);
         card.appendChild(bodyDiv);
 
-        // Tombol unduh per-kartu tetap menggunakan html2canvas
         const downloadButton = document.createElement('button');
         downloadButton.className = 'download-button';
         downloadButton.textContent = 'Unduh';
@@ -336,7 +335,6 @@
         }
     }
     
-    // Fungsi untuk mengunduh SATU kartu (menggunakan html2canvas)
     function downloadCard(cardId) {
         const cardElement = document.getElementById(cardId);
         const downloadButton = cardElement.querySelector('.download-button');
@@ -356,11 +354,11 @@
         });
     }
 
-    // Fungsi BARU untuk mengunduh gambar yang sudah disiapkan (PL.jpg)
+    // Fungsi untuk mengunduh gambar PL.jpg dari tautan RAW yang benar
     function downloadAllCards() {
         const link = document.createElement('a');
         link.href = fullPricelistImageUrl;
-        link.download = 'Pricelist_Steotype.jpg'; // Nama file yang akan diunduh
+        link.download = 'Pricelist_Steotype.jpg';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
