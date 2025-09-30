@@ -46,6 +46,11 @@
         .search-bar {
             margin-bottom: 30px;
             text-align: center;
+            /* Tambahan: Mengatur tata letak untuk input dan tombol download semua */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
         .search-bar input {
             width: 80%;
@@ -56,6 +61,29 @@
             font-size: 1rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             outline: none;
+        }
+        /* Tambahan: Gaya untuk tombol download semua */
+        .download-all-button {
+            width: 80%;
+            max-width: 500px;
+        }
+        .download-all-button button {
+            width: 100%;
+            padding: 12px 0;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .download-all-button button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
         }
         .grid-container {
             display: grid;
@@ -144,6 +172,10 @@
 
     <div class="search-bar">
         <input type="text" id="searchInput" onkeyup="searchCards()" placeholder="Cari aplikasi...">
+        
+        <div class="download-all-button">
+            <button onclick="downloadAllCards()">Unduh Semua Pricelist (GPL.png)</button>
+        </div>
     </div>
 
     <div class="grid-container" id="pricelistGrid">
@@ -152,10 +184,11 @@
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
-    // URL CSV DIPERBARUI: menggunakan commit hash baru yang diberikan
-    const csvUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/e8f2e0c899b220a8520029697834d0d23aadfb67/pricelist.csv'; 
+    // URL CSV DIPERBARUI: menggunakan commit hash baru yang diberikan (raw format)
+    const csvUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/52de798cf1471f74d0a50232415f7495fd551fe6/pricelist.csv'; 
     
-    // URL gambar PL.jpg (tidak berubah)
+    // URL gambar untuk tombol download semua
+    // Catatan: Nama file di GitHub adalah PL.jpg, tetapi kita akan menggunakan nama GPL.png saat diunduh.
     const fullPricelistImageUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/c2319f848e834b3d8b6143e18bcfe5534ccb5b5a/PL.jpg';
 
 
@@ -332,6 +365,19 @@
             
             downloadButton.style.display = 'block';
         });
+    }
+
+    // FUNGSI UNTUK MENGUNDUH SEMUA KARTU (DIKEMBALIKAN)
+    function downloadAllCards() {
+        const link = document.createElement('a');
+        link.href = fullPricelistImageUrl;
+        // Menggunakan nama file yang diminta: GPL.png
+        link.download = 'GPL.png';
+        link.target = '_blank'; // Membuka di tab baru untuk memaksa download
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     window.onload = fetchAndRenderData;
