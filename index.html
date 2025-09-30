@@ -46,7 +46,6 @@
         .search-bar {
             margin-bottom: 30px;
             text-align: center;
-            /* Tambahan: Mengatur tata letak untuk input dan tombol download semua */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -62,7 +61,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             outline: none;
         }
-        /* Tambahan: Gaya untuk tombol download semua */
         .download-all-button {
             width: 80%;
             max-width: 500px;
@@ -185,10 +183,9 @@
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
     // URL CSV DIPERBARUI: menggunakan commit hash baru yang diberikan (raw format)
-    const csvUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/52de798cf1471f74d0a50232415f7495fd551fe6/pricelist.csv'; 
+    const csvUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/57581961881fa274677861c86bf5dd6199553b6a/pricelist.csv'; 
     
-    // URL gambar untuk tombol download semua
-    // Catatan: Nama file di GitHub adalah PL.jpg, tetapi kita akan menggunakan nama GPL.png saat diunduh.
+    // URL gambar untuk tombol download semua (Menggunakan hash lama untuk PL.jpg)
     const fullPricelistImageUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/c2319f848e834b3d8b6143e18bcfe5534ccb5b5a/PL.jpg';
 
 
@@ -367,11 +364,11 @@
         });
     }
 
-    // FUNGSI UNTUK MENGUNDUH SEMUA KARTU (DIKEMBALIKAN)
+    // FUNGSI UNTUK MENGUNDUH SEMUA KARTU
     function downloadAllCards() {
         const link = document.createElement('a');
         link.href = fullPricelistImageUrl;
-        // Menggunakan nama file yang diminta: GPL.png
+        // Nama file tetap GPL.png sesuai permintaan sebelumnya
         link.download = 'GPL.png';
         link.target = '_blank'; // Membuka di tab baru untuk memaksa download
         
