@@ -46,7 +46,6 @@
         .search-bar {
             margin-bottom: 30px;
             text-align: center;
-            /* Perubahan: Tidak perlu display: flex jika hanya ada input */
         }
         .search-bar input {
             width: 80%;
@@ -58,8 +57,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             outline: none;
         }
-        /* Bagian .download-all-button DIHAPUS dari sini */
-        
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -155,16 +152,22 @@
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
-    const csvUrl = 'https://raw.githubusercontent.com/rdsaja/shoiconer/1d38a0ecdab562d258034eba38f58dcdd62c2c38/pricelist.csv';
+    // PERBAIKAN: Mengganti URL CSV ke format RAW yang benar dan ke repositori steotype dengan commit hash baru
+    // Commit hash: 25d71a9d04ebd4f3f33aa1f59aad9ad853669d07
+    const csvUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/25d71a9d04ebd4f3f33aa1f59aad9ad853669d07/pricelist.csv'; 
     
-    // Variabel ini tidak lagi digunakan untuk tombol, tapi tetap dipertahankan jika sewaktu-waktu dibutuhkan.
+    // URL gambar PL.jpg menggunakan commit hash sebelumnya
     const fullPricelistImageUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/c2319f848e834b3d8b6143e18bcfe5534ccb5b5a/PL.jpg';
 
 
     async function fetchAndRenderData() {
         try {
-            const response = await fetch(csvUrl);
+            // Menambahkan parameter acak untuk mem-bypass cache (cache-busting)
+            const noCacheUrl = `${csvUrl}?t=${new Date().getTime()}`;
+            const response = await fetch(noCacheUrl);
             if (!response.ok) {
+                // Memberikan feedback yang lebih spesifik jika terjadi error
+                document.getElementById('pricelistGrid').innerHTML = '<p style="text-align:center;">❌ Gagal memuat data. Mohon pastikan URL CSV dan commit hash benar, serta file tersedia.</p>';
                 throw new Error('Network response was not ok');
             }
             const csvText = await response.text();
@@ -172,12 +175,22 @@
             loadDataAndRenderCards(pricelistData);
         } catch (error) {
             console.error('Error fetching or parsing CSV:', error);
-            document.getElementById('pricelistGrid').innerHTML = '<p style="text-align:center;">Gagal memuat data. Silakan coba periksa URL CSV Anda atau koneksi internet.</p>';
+            // Hanya tampilkan pesan error default jika belum ditampilkan
+            if (!document.getElementById('pricelistGrid').innerHTML.includes('Gagal memuat data')) {
+                 document.getElementById('pricelistGrid').innerHTML = '<p style="text-align:center;">Gagal memuat data. Silakan coba periksa URL CSV Anda atau koneksi internet.</p>';
+            }
         }
     }
 
     function parseCsv(csvString) {
-        const lines = csvString.trim().split('\r\n');
+        // Memecah baris, mengatasi kemungkinan baris kosong
+        const lines = csvString.trim().split('\n').filter(line => line.trim() !== '');
+        
+        if (lines.length === 0) return [];
+        
+        // Memecah baris pertama untuk header
+        // Menggunakan regex untuk mengatasi koma di dalam tanda kutip jika ada (meskipun data Anda saat ini tidak menggunakannya)
+        // Namun, kita akan tetap menggunakan split(',') sederhana berdasarkan format CSV yang Anda berikan.
         const headers = lines[0].split(',');
         const data = [];
         
@@ -309,7 +322,6 @@
         }
     }
     
-    // Fungsi untuk mengunduh SATU kartu (menggunakan html2canvas)
     function downloadCard(cardId) {
         const cardElement = document.getElementById(cardId);
         const downloadButton = cardElement.querySelector('.download-button');
@@ -329,9 +341,6 @@
         });
     }
 
-    // Fungsi downloadAllCards() telah dihapus sepenuhnya.
-
-    // Panggil fungsi ini saat halaman dimuat
     window.onload = fetchAndRenderData;
 </script>
 
