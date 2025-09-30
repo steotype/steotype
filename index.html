@@ -182,11 +182,11 @@
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
-    // URL CSV DIPERBARUI: menggunakan commit hash baru yang diberikan (raw format)
+    // URL CSV: TIDAK DIUBAH, MENGGUNAKAN COMMIT HASH TERAKHIR SEBELUM PERMINTAAN GAMBAR
     const csvUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/57581961881fa274677861c86bf5dd6199553b6a/pricelist.csv'; 
     
-    // URL gambar untuk tombol download semua (Menggunakan hash lama untuk PL.jpg)
-    const fullPricelistImageUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/c2319f848e834b3d8b6143e18bcfe5534ccb5b5a/PL.jpg';
+    // URL DOWNLOAD SEMUA DIPERBARUI: menggunakan commit hash d3a941d040da791ffbd086824b545b75e2ce3801 (raw format)
+    const fullPricelistImageUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/d3a941d040da791ffbd086824b545b75e2ce3801/GPL.png';
 
 
     async function fetchAndRenderData() {
@@ -367,10 +367,10 @@
     // FUNGSI UNTUK MENGUNDUH SEMUA KARTU
     function downloadAllCards() {
         const link = document.createElement('a');
-        link.href = fullPricelistImageUrl;
-        // Nama file tetap GPL.png sesuai permintaan sebelumnya
+        // Menggunakan fullPricelistImageUrl yang sudah diubah ke format raw dan commit hash d3a941d040da791ffbd086824b545b75e2ce3801
+        link.href = fullPricelistImageUrl; 
         link.download = 'GPL.png';
-        link.target = '_blank'; // Membuka di tab baru untuk memaksa download
+        link.target = '_blank';
         
         document.body.appendChild(link);
         link.click();
