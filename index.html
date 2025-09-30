@@ -152,11 +152,10 @@
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
-    // PERBAIKAN: Mengganti URL CSV ke format RAW yang benar dan ke repositori steotype dengan commit hash baru
-    // Commit hash: 25d71a9d04ebd4f3f33aa1f59aad9ad853669d07
-    const csvUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/25d71a9d04ebd4f3f33aa1f59aad9ad853669d07/pricelist.csv'; 
+    // URL CSV DIPERBARUI: menggunakan commit hash baru dari repositori steotype
+    const csvUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/db5ba685c41d6975ab2c551338628fb17e838421/pricelist.csv'; 
     
-    // URL gambar PL.jpg menggunakan commit hash sebelumnya
+    // URL gambar PL.jpg (tidak berubah)
     const fullPricelistImageUrl = 'https://raw.githubusercontent.com/rdsaja/steotype/c2319f848e834b3d8b6143e18bcfe5534ccb5b5a/PL.jpg';
 
 
@@ -166,7 +165,6 @@
             const noCacheUrl = `${csvUrl}?t=${new Date().getTime()}`;
             const response = await fetch(noCacheUrl);
             if (!response.ok) {
-                // Memberikan feedback yang lebih spesifik jika terjadi error
                 document.getElementById('pricelistGrid').innerHTML = '<p style="text-align:center;">❌ Gagal memuat data. Mohon pastikan URL CSV dan commit hash benar, serta file tersedia.</p>';
                 throw new Error('Network response was not ok');
             }
@@ -175,7 +173,6 @@
             loadDataAndRenderCards(pricelistData);
         } catch (error) {
             console.error('Error fetching or parsing CSV:', error);
-            // Hanya tampilkan pesan error default jika belum ditampilkan
             if (!document.getElementById('pricelistGrid').innerHTML.includes('Gagal memuat data')) {
                  document.getElementById('pricelistGrid').innerHTML = '<p style="text-align:center;">Gagal memuat data. Silakan coba periksa URL CSV Anda atau koneksi internet.</p>';
             }
@@ -183,14 +180,10 @@
     }
 
     function parseCsv(csvString) {
-        // Memecah baris, mengatasi kemungkinan baris kosong
         const lines = csvString.trim().split('\n').filter(line => line.trim() !== '');
         
         if (lines.length === 0) return [];
         
-        // Memecah baris pertama untuk header
-        // Menggunakan regex untuk mengatasi koma di dalam tanda kutip jika ada (meskipun data Anda saat ini tidak menggunakannya)
-        // Namun, kita akan tetap menggunakan split(',') sederhana berdasarkan format CSV yang Anda berikan.
         const headers = lines[0].split(',');
         const data = [];
         
