@@ -19,30 +19,40 @@
 
     <style>
         body {
-            font-family: sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #ffe6f0, #fff0f6, #fff8fb);
+            color: #4a4a4a;
             margin: 0;
             padding: 20px;
+            overflow-x: hidden;
         }
         .container {
             max-width: 1200px;
             margin: auto;
+            animation: fadeIn 1.2s ease;
         }
+
+        /* HEADER */
         .header {
             text-align: center;
             margin-bottom: 40px;
+            position: relative;
         }
         .header h1 {
-            font-size: 2.5rem;
-            color: #ff69b4;
+            font-size: 2.8rem;
+            color: #ff6fa9;
+            text-shadow: 2px 2px #ffd6e6;
+            animation: floatY 3s ease-in-out infinite;
         }
         .header p {
             margin-top: 5px;
             font-size: 1.1rem;
             font-weight: bold;
-            color: #007bff;
+            color: #ff9ed0;
+            letter-spacing: 1px;
         }
+
+        /* SEARCH BAR */
         .search-bar {
             margin-bottom: 30px;
             text-align: center;
@@ -50,17 +60,25 @@
             flex-direction: column;
             align-items: center;
             gap: 15px;
+            animation: fadeUp 1.2s ease;
         }
         .search-bar input {
             width: 80%;
             max-width: 500px;
             padding: 12px 20px;
             border-radius: 25px;
-            border: 1px solid #ccc;
+            border: 2px solid #ffc1da;
             font-size: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: #fff7fb;
+            box-shadow: 0 3px 6px rgba(255, 182, 206, 0.3);
             outline: none;
+            transition: all 0.3s ease;
         }
+        .search-bar input:focus {
+            border-color: #ff89bb;
+            box-shadow: 0 4px 12px rgba(255, 150, 200, 0.5);
+        }
+
         .download-all-button {
             width: 80%;
             max-width: 500px;
@@ -68,39 +86,46 @@
         .download-all-button button {
             width: 100%;
             padding: 12px 0;
-            background-color: #007bff;
+            background: linear-gradient(90deg, #ff89bb, #ffa8d1);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: bold;
             text-transform: uppercase;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(255, 100, 150, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .download-all-button button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(255, 100, 150, 0.6);
         }
+
+        /* GRID */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+            gap: 25px;
+            animation: fadeUp 1s ease;
         }
+
+        /* CARD */
         .card {
             background-color: #fff;
-            border-radius: 12px;
+            border-radius: 20px;
             padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 140, 180, 0.2);
+            transition: all 0.4s ease;
             position: relative;
             display: flex;
             flex-direction: column;
+            transform: scale(1);
+            animation: popIn 0.8s ease;
         }
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transform: translateY(-8px) rotate(-1deg);
+            box-shadow: 0 8px 16px rgba(255, 120, 160, 0.4);
         }
         .card-header {
             text-align: center;
@@ -109,10 +134,8 @@
         .card-header h2 {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #ff69b4;
-        }
-        .card-body {
-            flex-grow: 1;
+            color: #ff5c9a;
+            text-shadow: 1px 1px #ffd0e0;
         }
         .card-body ul {
             list-style: none;
@@ -121,42 +144,67 @@
         }
         .card-body li {
             padding: 8px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px dashed #ffe0ed;
             font-size: 0.95rem;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
         }
-        .card-body li:last-child {
-            border-bottom: none;
+        .card-body li:hover {
+            background-color: #fff5fa;
+            border-radius: 8px;
+            padding-left: 10px;
         }
         .subtitle {
             font-weight: 600;
-            color: #555;
+            color: #ff80b5;
             margin-top: 10px;
         }
         .price {
             font-weight: bold;
-            color: #007bff;
+            color: #ff6fa9;
         }
+
+        /* BUTTON */
         .download-button {
             display: block;
             width: 100%;
             padding: 10px 0;
             margin-top: 20px;
-            background-color: #ff69b4;
+            background: linear-gradient(90deg, #ff89bb, #ffa8d1);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: bold;
             text-transform: uppercase;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 3px 8px rgba(255, 120, 160, 0.4);
+            transition: all 0.3s ease;
         }
         .download-button:hover {
-            background-color: #ff4794;
-            transform: translateY(-2px);
+            transform: scale(1.05);
+            background: linear-gradient(90deg, #ff76b0, #ff9fc7);
+            box-shadow: 0 6px 12px rgba(255, 100, 150, 0.6);
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        @keyframes fadeUp {
+            from {opacity: 0; transform: translateY(30px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        @keyframes floatY {
+            0%, 100% {transform: translateY(0);}
+            50% {transform: translateY(-8px);}
+        }
+        @keyframes popIn {
+            0% {opacity: 0; transform: scale(0.95);}
+            100% {opacity: 1; transform: scale(1);}
         }
     </style>
 </head>
@@ -182,41 +230,30 @@
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script>
-    // URL CSV DIPERBARUI: menggunakan commit hash 4f1dcc116f865734090afeee42be5ffbf55bd22c
     const csvUrl = 'https://raw.githubusercontent.com/steotype/steotype/4f1dcc116f865734090afeee42be5ffbf55bd22c/pricelist.csv'; 
-    
-    // URL DOWNLOAD SEMUA DIPERBARUI: menggunakan commit hash 4f1dcc116f865734090afeee42be5ffbf55bd22c
     const fullPricelistImageUrl = 'https://raw.githubusercontent.com/steotype/steotype/dc79d8469c35124778febc04db0e573fa48f069f/PL-New.png';
-
 
     async function fetchAndRenderData() {
         try {
-            // Menambahkan parameter acak untuk mem-bypass cache (cache-busting)
             const noCacheUrl = `${csvUrl}?t=${new Date().getTime()}`;
             const response = await fetch(noCacheUrl);
             if (!response.ok) {
-                document.getElementById('pricelistGrid').innerHTML = '<p style="text-align:center;">❌ Gagal memuat data. Mohon pastikan URL CSV dan commit hash benar, serta file tersedia.</p>';
-                throw new Error('Network response was not ok');
+                document.getElementById('pricelistGrid').innerHTML = '<p style="text-align:center;">❌ Gagal memuat data.</p>';
+                throw new Error('Network error');
             }
             const csvText = await response.text();
             const pricelistData = parseCsv(csvText);
             loadDataAndRenderCards(pricelistData);
         } catch (error) {
-            console.error('Error fetching or parsing CSV:', error);
-            if (!document.getElementById('pricelistGrid').innerHTML.includes('Gagal memuat data')) {
-                 document.getElementById('pricelistGrid').innerHTML = '<p style="text-align:center;">Gagal memuat data. Silakan coba periksa URL CSV Anda atau koneksi internet.</p>';
-            }
+            console.error(error);
         }
     }
 
     function parseCsv(csvString) {
         const lines = csvString.trim().split('\n').filter(line => line.trim() !== '');
-        
         if (lines.length === 0) return [];
-        
         const headers = lines[0].split(',');
         const data = [];
-        
         for (let i = 1; i < lines.length; i++) {
             const currentLine = lines[i].split(',');
             if (currentLine.length === headers.length) {
@@ -234,7 +271,6 @@
         const groupedData = groupDataByApp(pricelistData);
         const gridContainer = document.getElementById('pricelistGrid');
         gridContainer.innerHTML = '';
-        
         for (const appName in groupedData) {
             const card = createCard(appName, groupedData[appName]);
             gridContainer.appendChild(card);
@@ -245,9 +281,7 @@
         const grouped = {};
         data.forEach(item => {
             const appName = item.app_name;
-            if (!grouped[appName]) {
-                grouped[appName] = [];
-            }
+            if (!grouped[appName]) grouped[appName] = [];
             grouped[appName].push(item);
         });
         return grouped;
@@ -274,48 +308,33 @@
         const groupedPrices = {};
         prices.forEach(price => {
             const category = price.category;
-            if (!groupedPrices[category]) {
-                groupedPrices[category] = [];
-            }
+            if (!groupedPrices[category]) groupedPrices[category] = [];
             groupedPrices[category].push(price);
         });
 
         for (const category in groupedPrices) {
             const priceItems = groupedPrices[category];
-            const isSingleLine = priceItems.length === 1 && !priceItems[0].price && priceItems[0].duration;
-
-            if (isSingleLine) {
-                const li = document.createElement('li');
-                li.textContent = `${category} ${priceItems[0].duration}`;
-                li.classList.add('subtitle');
-                ul.appendChild(li);
-            } else {
-                if (category) {
-                    const subtitle = document.createElement('li');
-                    subtitle.className = 'subtitle';
-                    subtitle.textContent = category;
-                    ul.appendChild(subtitle);
-                }
-                
-                priceItems.forEach(price => {
-                    const li = document.createElement('li');
-                    li.textContent = price.duration;
-                    const priceSpan = document.createElement('span');
-                    priceSpan.className = 'price';
-                    priceSpan.textContent = price.price;
-                    if (price.notes) {
-                        priceSpan.textContent += ' ' + price.notes;
-                    }
-                    li.appendChild(priceSpan);
-                    ul.appendChild(li);
-                });
+            if (category) {
+                const subtitle = document.createElement('li');
+                subtitle.className = 'subtitle';
+                subtitle.textContent = category;
+                ul.appendChild(subtitle);
             }
+            priceItems.forEach(price => {
+                const li = document.createElement('li');
+                li.textContent = price.duration;
+                const priceSpan = document.createElement('span');
+                priceSpan.className = 'price';
+                priceSpan.textContent = price.price;
+                if (price.notes) priceSpan.textContent += ' ' + price.notes;
+                li.appendChild(priceSpan);
+                ul.appendChild(li);
+            });
         }
-        
+
         bodyDiv.appendChild(ul);
         card.appendChild(bodyDiv);
 
-        // Tombol unduh per-kartu tetap menggunakan html2canvas
         const downloadButton = document.createElement('button');
         downloadButton.className = 'download-button';
         downloadButton.textContent = 'Unduh';
@@ -324,54 +343,35 @@
 
         return card;
     }
-    
-    function searchCards() {
-        var input, filter, grid, cards, h2, i, txtValue;
-        input = document.getElementById('searchInput');
-        filter = input.value.toUpperCase();
-        grid = document.getElementById('pricelistGrid');
-        cards = grid.getElementsByClassName('card');
 
-        for (i = 0; i < cards.length; i++) {
-            var cardHeader = cards[i].querySelector('h2');
-            if (cardHeader) {
-                txtValue = cardHeader.textContent || cardHeader.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    cards[i].style.display = "";
-                } else {
-                    cards[i].style.display = "none";
-                }
-            }
+    function searchCards() {
+        const input = document.getElementById('searchInput').value.toUpperCase();
+        const cards = document.getElementsByClassName('card');
+        for (let i = 0; i < cards.length; i++) {
+            const h2 = cards[i].querySelector('h2');
+            cards[i].style.display = h2 && h2.textContent.toUpperCase().includes(input) ? "" : "none";
         }
     }
-    
-    function downloadCard(cardId) {
-        const cardElement = document.getElementById(cardId);
-        const downloadButton = cardElement.querySelector('.download-button');
-        downloadButton.style.display = 'none';
 
-        html2canvas(cardElement, {
-            scale: 2
-        }).then(canvas => {
-            const appName = cardElement.getAttribute('data-app-name');
+    function downloadCard(cardId) {
+        const card = document.getElementById(cardId);
+        const btn = card.querySelector('.download-button');
+        btn.style.display = 'none';
+        html2canvas(card, { scale: 2 }).then(canvas => {
+            const appName = card.getAttribute('data-app-name');
             const link = document.createElement('a');
             link.download = `${appName.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-')}-pricelist.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
-            link.remove();
-            
-            downloadButton.style.display = 'block';
+            btn.style.display = 'block';
         });
     }
 
-    // FUNGSI UNTUK MENGUNDUH SEMUA KARTU
     function downloadAllCards() {
         const link = document.createElement('a');
-        // Menggunakan fullPricelistImageUrl yang sudah diubah ke format raw dan commit hash terbaru
         link.href = fullPricelistImageUrl; 
         link.download = 'All_PL.png';
         link.target = '_blank';
-        
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
