@@ -35,7 +35,7 @@
         /* HEADER */
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 20px; /* Dikurangi untuk memberi ruang info banner */
             position: relative;
         }
         .header h1 {
@@ -79,7 +79,21 @@
             box-shadow: 0 4px 12px rgba(255, 150, 200, 0.5);
         }
 
-        /* Tombol 'download-all-button' telah dihapus dari sini */
+        /* INFO BANNER BARU */
+        .info-banner {
+            max-width: 600px;
+            margin: 20px auto 30px auto;
+            padding: 10px 20px;
+            background-color: #ffb6c1; /* Light Pink */
+            border: 2px solid #ff89bb;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #8b0000; /* Dark Red for contrast */
+            box-shadow: 0 2px 5px rgba(255, 100, 150, 0.2);
+            animation: fadeUp 1.5s ease;
+        }
 
         /* GRID */
         .grid-container {
@@ -195,10 +209,13 @@
         <p>Steotype</p>
     </div>
 
+    <div class="info-banner">
+        Daftar harga pada gambar sebelumnya mungkin telah diperbarui. Harga terbaru dan yang berlaku saat ini hanya terdapat di website ini.
+    </div>
+
     <div class="search-bar">
         <input type="text" id="searchInput" onkeyup="searchCards()" placeholder="Cari aplikasi...">
-        
-        </div>
+    </div>
 
     <div class="grid-container" id="pricelistGrid">
     </div>
@@ -342,8 +359,6 @@
             btn.style.display = 'block';
         });
     }
-
-    // Fungsi downloadAllCards() telah dihapus atau diabaikan karena tombolnya tidak ada lagi
 
     window.onload = fetchAndRenderData;
 </script>
