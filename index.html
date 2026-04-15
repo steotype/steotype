@@ -67,7 +67,9 @@
         
         .card:hover { transform: translateY(-4px); border-color: #4a4a5a; }
         .card-header { text-align: center; margin-bottom: 1.2rem; }
-        .brand-name { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.2rem; }
+        
+        /* Judul Aplikasi (Seragam Putih) */
+        .brand-name { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.2rem; color: #ffffff; }
 
         .package-group { background: #21212c; border-radius: 8px; padding: 1rem; margin-bottom: 0.8rem; }
         
@@ -85,19 +87,14 @@
         .features li { margin-bottom: 0.5rem; color: #8b8b99; font-size: 0.85rem; display: flex; align-items: center; }
         .features li::before { content: "✓"; color: #ffffff; font-weight: bold; margin-right: 6px; }
 
-        /* Tombol Beli */
+        /* Tombol Beli (Seragam) */
         .btn {
             display: block; width: 100%; padding: 12px 0; border-radius: 8px; text-decoration: none;
-            font-weight: 600; font-size: 0.95rem; text-align: center; transition: opacity 0.2s ease; box-sizing: border-box;
+            font-weight: 600; font-size: 0.95rem; text-align: center; transition: all 0.2s ease; box-sizing: border-box;
+            background-color: #ffffff; color: #0d0d12; /* Warna tombol putih elegan */
         }
         
-        .btn:hover { opacity: 0.85; }
-
-        /* Warna Dinamis Brand */
-        .default-brand { color: #00c4cc; } .btn-default-brand { background-color: #00c4cc; color: black; }
-        .netflix { color: #e50914; } .btn-netflix { background-color: #e50914; color: white; }
-        .youtube { color: #ff0000; } .btn-youtube { background-color: #ff0000; color: white; }
-        .spotify { color: #1db954; } .btn-spotify { background-color: #1db954; color: black; }
+        .btn:hover { opacity: 0.85; transform: scale(0.98); }
 
         .footer { text-align: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #2a2a35; color: #666; font-size: 0.85rem; }
     </style>
@@ -128,11 +125,12 @@
 
     <script>
         // Sesuaikan dengan nama file CSV Anda
-        const csvFileName = 'pricelist.csv';
+        const csvFileName = 'pricelist (1).csv';
 
         async function loadPricelist() {
             try {
-                const response = await fetch(csvFileName);
+                // Tambahkan query parameter waktu agar tidak ter-cache (jika update CSV langsung berubah)
+                const response = await fetch(csvFileName + '?t=' + new Date().getTime());
                 if (!response.ok) throw new Error("File tidak ditemukan");
                 
                 const data = await response.text();
@@ -154,15 +152,7 @@
                     const price = cols[3].trim();    
 
                     if (!apps[appName]) {
-                        // Tentukan tema warna otomatis berdasarkan nama aplikasi
-                        let colorClass = 'default-brand';
-                        const nameLower = appName.toLowerCase();
-                        if (nameLower.includes('netflix')) colorClass = 'netflix';
-                        else if (nameLower.includes('youtube')) colorClass = 'youtube';
-                        else if (nameLower.includes('spotify')) colorClass = 'spotify';
-                        
                         apps[appName] = {
-                            color: colorClass,
                             categories: {}
                         };
                     }
@@ -223,7 +213,7 @@
                 card.innerHTML = `
                     <div>
                         <div class="card-header">
-                            <div class="brand-name ${info.color}">${name}</div>
+                            <div class="brand-name">${name}</div>
                         </div>
                         ${packageHTML}
                         <ul class="features">
@@ -231,7 +221,7 @@
                             <li>Bisa perpanjang akun lama</li>
                         </ul>
                     </div>
-                    <a href="https://wa.me/6281234567890?text=${waText}" target="_blank" class="btn btn-${info.color}">Pesan Sekarang</a>
+                    <a href="https://wa.me/6281234567890?text=${waText}" target="_blank" class="btn">Pesan Sekarang</a>
                 `;
                 grid.appendChild(card);
             }
