@@ -70,7 +70,6 @@
         .duration { color: #b4b4c0; }
         .cost { font-weight: 700; color: #ffffff; }
 
-        /* Fitur / Notes */
         .features { list-style: none; padding: 0; margin: 1.2rem 0; text-align: left; }
         .features li { margin-bottom: 0.5rem; color: #8b8b99; font-size: 0.85rem; display: flex; align-items: flex-start; }
         .features li::before { content: "✓"; color: #ffffff; font-weight: bold; margin-right: 8px; margin-top: 2px; }
@@ -109,9 +108,9 @@
     </div>
 
     <script>
+        // Karena pricelist.csv ikut pindah ke folder PL, panggil langsung namanya
         const csvFileName = 'pricelist.csv';
 
-        // Fungsi akurat untuk memotong baris CSV tanpa merusak spasi
         function parseCSVLine(row) {
             const cols = [];
             let current = '';
@@ -120,7 +119,7 @@
             for (let i = 0; i < row.length; i++) {
                 const char = row[i];
                 if (char === '"') {
-                    inQuotes = !inQuotes; // Toggle status di dalam/luar tanda kutip
+                    inQuotes = !inQuotes;
                 } else if (char === ',' && !inQuotes) {
                     cols.push(current.trim().replace(/^"|"$/g, ''));
                     current = '';
@@ -128,18 +127,16 @@
                     current += char;
                 }
             }
-            cols.push(current.trim().replace(/^"|"$/g, '')); // Masukkan kolom terakhir
+            cols.push(current.trim().replace(/^"|"$/g, ''));
             return cols;
         }
 
         async function loadPricelist() {
             try {
-                // Tambahkan parameter waktu agar data tidak kena cache (selalu baru)
                 const response = await fetch(csvFileName + '?t=' + new Date().getTime());
                 if (!response.ok) throw new Error("File tidak ditemukan");
                 
                 const data = await response.text();
-                // Buang baris pertama (header)
                 const rows = data.split(/\r?\n/).slice(1); 
                 
                 const apps = {};
@@ -148,7 +145,7 @@
                     if (!row.trim()) return;
                     
                     const cols = parseCSVLine(row);
-                    if (cols.length < 4) return; // Lewati jika data tidak lengkap (minimal 4 kolom)
+                    if (cols.length < 4) return;
 
                     const appName = cols[0];
                     const category = cols[1]; 
@@ -167,10 +164,8 @@
                         apps[appName].categories[category] = [];
                     }
 
-                    // Menyimpan data paket per kategori
                     apps[appName].categories[category].push({ duration, price });
 
-                    // Simpan keterangan/catatan unik jika ada
                     if (notes && notes.toLowerCase() !== 'nan') {
                         apps[appName].appNotes.add(notes);
                     }
@@ -180,7 +175,7 @@
                 document.getElementById('statusMessage').style.display = 'none';
 
             } catch (error) {
-                document.getElementById('statusMessage').innerText = "Gagal memuat file CSV. Pastikan file " + csvFileName + " berada di folder yang sama.";
+                document.getElementById('statusMessage').innerText = "Gagal memuat file CSV. Pastikan file " + csvFileName + " berada di folder yang sama (folder PL).";
             }
         }
 
@@ -266,4 +261,4 @@
         loadPricelist();
     </script>
 </body>
-  </html>
+</html>
