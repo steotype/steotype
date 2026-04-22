@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RDS - Stok Akun X</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "San Francisco", sans-serif; }
+    
+    .fade-in-down {
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: fadeInDown 0.6s ease forwards;
+    }
+    @keyframes fadeInDown {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+    }
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Tab Active Style */
+    .tab-active {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen relative">
+
+  <main class="px-6 max-w-md mx-auto space-y-5 pb-8 relative z-0 pt-8"> 
+    
+    <button onclick="openModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-gray-700 bg-gray-800/50 text-sm font-semibold text-gray-300 hover:bg-gray-700 hover:text-white transition-all fade-in-down outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      Syarat & Ketentuan (TNC)
+    </button>
+
+    <div class="flex gap-2 fade-in-down">
+      <button onclick="switchTab('ready')" id="btn-ready" class="flex-1 py-3 rounded-xl border border-gray-700 bg-gray-800 text-sm font-bold transition-all tab-active">
+        AKUN READY (<span id="count-ready">0</span>)
+      </button>
+      <button onclick="switchTab('sold')" id="btn-sold" class="flex-1 py-3 rounded-xl border border-gray-700 bg-gray-800 text-sm font-bold transition-all text-gray-400">
+        AKUN SOLD (<span id="count-sold">0</span>)
+      </button>
+    </div>
+
+    <div class="fade-in-down relative z-20">
+      <div class="relative w-full">
+        <input type="text" id="searchInput" onkeyup="filterAccounts()" placeholder="Cari di tab ini (F100, MT, 2015)..." class="w-full bg-gray-800 border border-gray-700 text-gray-200 text-sm rounded-xl block pl-10 pr-3 py-3 outline-none focus:border-blue-500">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+      </div>
+    </div>
+
+    <div id="loadingIndicator" class="space-y-4">
+      <div class="skeleton h-64 w-full rounded-2xl"></div>
+      <div class="skeleton h-64 w-full rounded-2xl"></div>
+    </div>
+
+    <div id="productGrid" class="space-y-6"></div>
+
+  </main>
+
+  <div id="tncModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="modalBackdrop" onclick="closeModal()"></div>
+    
+    <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="modalContent">
+      
+      <div class="flex justify-between items-center p-4 border-b border-gray-700">
+        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          Syarat & Ketentuan
+        </h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-white transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-4 text-sm text-gray-300 leading-relaxed">
+        <p class="text-xs text-gray-400 italic mb-2">Dengan melakukan pembelian, Anda dianggap menyetujui poin-poin berikut:</p>
+        
+        <ul class="space-y-3">
+          <li><strong class="text-white block">1. Garansi 60 Jam</strong> 
+            Garansi berlaku selama 2 hari 12 jam (60 jam) sejak akun dikirim. Garansi hanya mencakup gagal login akibat kesalahan sistem/kredensial dari pihak kami.</li>
+          
+          <li><strong class="text-white block">2. Garansi Hangus</strong> 
+            Garansi otomatis batal jika: akun dipindahtangankan lebih dari pembeli reseller, atau pembeli mengubah data pemulihan (hapus email utama/recovery) yang membuat akun tidak bisa dipulihkan.</li>
+          
+          <li><strong class="text-white block">3. Kebijakan Refund & Penukaran</strong> 
+            Semua penjualan bersifat final (tidak ada refund uang tunai). Penggantian berupa penukaran akun atau saldo hanya diberikan jika kesalahan murni dari pihak kami.</li>
+          
+          <li><strong class="text-white block">4. Tanggung Jawab Penggunaan</strong> 
+            Kami tidak bertanggung jawab atas akun yang di-suspend, dilimit, atau hilang akses karena kelalaian pembeli atau penggunaan untuk aktivitas ilegal setelah akun diserahkan.</li>
+          
+          <li><strong class="text-white block">5. Akses Recovery</strong> 
+            Bantuan untuk mendapatkan kode verifikasi dari email/nomor lama hanya dapat dijamin selama masa garansi. Setelahnya murni menjadi tanggung jawab pembeli.</li>
+            
+          <li><strong class="text-white block">6. Khusus Reseller</strong> 
+            Kami hanya bertanggung jawab kepada reseller dan pembeli langsung dari reseller. Komplain wajib dilakukan melalui reseller terkait.</li>
+        </ul>
+      </div>
+
+      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
+        <button onclick="closeModal()" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20">
+          Saya Mengerti & Setuju
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Ingat untuk mengubah ini ke URL Google Apps Script kamu jika tidak menggunakan _redirects
+    const SPREADSHEET_URL = "/api/stok";
+    let allData = [];
+    let currentTab = 'ready';
+
+    // FUNGSI MODAL POP-UP
+    function openModal() {
+      const modal = document.getElementById('tncModal');
+      const backdrop = document.getElementById('modalBackdrop');
+      const content = document.getElementById('modalContent');
+      
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        backdrop.classList.remove('opacity-0');
+        backdrop.classList.add('opacity-100');
+        content.classList.remove('opacity-0', 'scale-95');
+        content.classList.add('opacity-100', 'scale-100');
+      }, 10);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('tncModal');
+      const backdrop = document.getElementById('modalBackdrop');
+      const content = document.getElementById('modalContent');
+      
+      backdrop.classList.remove('opacity-100');
+      backdrop.classList.add('opacity-0');
+      content.classList.remove('opacity-100', 'scale-100');
+      content.classList.add('opacity-0', 'scale-95');
+      
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
+    }
+
+    async function loadData() {
+      const grid = document.getElementById('productGrid');
+      const loader = document.getElementById('loadingIndicator');
+      try {
+        const response = await fetch(SPREADSHEET_URL);
+        allData = await response.json();
+        loader.style.display = 'none';
+        
+        updateCounts();
+        renderProducts();
+      } catch (e) {
+        loader.style.display = 'none';
+        grid.innerHTML = '<p class="text-center text-red-400 py-10">Gagal memuat data stok. Pastikan API berjalan dengan baik.</p>';
+      }
+    }
+
+    function updateCounts() {
+      const readyCount = allData.filter(item => item.status_stok?.toLowerCase() === 'ready').length;
+      const soldCount = allData.filter(item => item.status_stok?.toLowerCase() === 'sold').length;
+      
+      document.getElementById('count-ready').innerText = readyCount;
+      document.getElementById('count-sold').innerText = soldCount;
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      
+      document.getElementById('btn-ready').classList.toggle('tab-active', tab === 'ready');
+      document.getElementById('btn-ready').classList.toggle('text-gray-400', tab !== 'ready');
+      document.getElementById('btn-sold').classList.toggle('tab-active', tab === 'sold');
+      document.getElementById('btn-sold').classList.toggle('text-gray-400', tab !== 'sold');
+      
+      document.getElementById('searchInput').value = '';
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+      
+      const filtered = allData.filter(item => item.status_stok?.toLowerCase() === currentTab);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<p class="text-center text-gray-500 py-10">Tidak ada akun di kategori ini.</p>`;
+        return;
+      }
+
+      filtered.forEach((item, index) => {
+        const isReady = item.status_stok?.toLowerCase() === 'ready';
+        
+        const cardHtml = `
+          <div class="product-card bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-700 fade-in-down ${!isReady ? 'opacity-60' : ''}" style="animation-delay: ${index * 0.05}s">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h2 class="text-lg font-bold text-gray-100">Akun X ${item.tahun_akun}</h2>
+                <span class="text-xs text-gray-500 font-mono">KODE: ${item.kode}</span>
+              </div>
+              <span class="px-2.5 py-1 ${isReady ? 'bg-green-900/40 text-green-400 border-green-800' : 'bg-red-900/40 text-red-400 border-red-800'} text-[10px] uppercase font-bold rounded border tracking-wider">
+                ${item.status_stok}
+              </span>
+            </div>
+            
+            <div class="bg-gray-900/60 rounded-xl p-4 mb-5 border border-gray-700/50 space-y-3">
+              <div class="flex justify-between items-center text-sm border-b border-gray-700/50 pb-2">
+                <span class="text-gray-400">Username</span>
+                <span class="text-gray-200 font-semibold font-mono">${item.username}</span>
+              </div>
+              <div class="flex justify-between items-center text-sm border-b border-gray-700/50 pb-2">
+                <span class="text-gray-400">Link Profil</span>
+                <a href="${item.link_akun}" target="_blank" class="text-blue-400 hover:text-blue-300 font-semibold underline underline-offset-2 flex items-center gap-1">Cek Akun</a>
+              </div>
+              <div class="flex justify-between items-center text-sm border-b border-gray-700/50 pb-2">
+                <span class="text-gray-400">Tahun Akun</span>
+                <span class="text-gray-200 font-semibold">${item.tahun_akun}</span>
+              </div>
+              <div class="flex justify-between items-center text-sm border-b border-gray-700/50 pb-2">
+                <span class="text-gray-400">Followers</span>
+                <span class="text-gray-200 font-semibold val-followers">${item.followers}</span>
+              </div>
+              <div class="flex justify-between items-center text-sm border-b border-gray-700/50 pb-2">
+                <span class="text-gray-400">Postingan</span>
+                <span class="text-gray-200 font-semibold">${item.postingan}</span>
+              </div>
+              <div class="flex justify-between items-center text-sm border-b border-gray-700/50 pb-2">
+                <span class="text-gray-400">Email</span>
+                <span class="text-gray-200 font-semibold">${item.email}</span>
+              </div>
+              <div class="flex justify-between items-center text-sm border-b border-gray-700/50 pb-2">
+                <span class="text-gray-400">Verif Telepon</span>
+                <span class="${item.verif_telepon?.toLowerCase() === 'tidak' ? 'text-red-400' : 'text-green-400'} font-semibold">${item.verif_telepon}</span>
+              </div>
+              <div class="flex justify-between items-center text-sm border-b border-gray-700/50 pb-2">
+                <span class="text-gray-400">Masuk HT/MT</span>
+                <span class="${item.status_htmt?.toLowerCase().includes('mt') ? 'text-yellow-400' : 'text-green-400'} font-semibold val-htmt">${item.status_htmt}</span>
+              </div>
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-400">Kesehatan</span>
+                <span class="text-green-400 font-semibold">${item.kesehatan}</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-2">
+              <div>
+                <p class="text-xs text-gray-500 mb-0.5">Harga</p>
+                <p class="text-xl font-bold text-blue-500">${item.harga}</p>
+              </div>
+              ${isReady ? 
+                `<a href="https://wa.me/6285959161539?text=Order%20Akun%20${item.kode}" target="_blank" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition shadow-lg shadow-blue-900/20">Beli</a>` :
+                `<button disabled class="px-5 py-2.5 bg-gray-700 text-gray-400 text-sm font-semibold rounded-lg cursor-not-allowed">Sold</button>`
+              }
+            </div>
+          </div>`;
+        grid.innerHTML += cardHtml;
+      });
+      
+      generateSearchIndex();
+    }
+
+    function generateSearchIndex() {
+      document.querySelectorAll('.product-card').forEach(card => {
+        let fVal = card.querySelector('.val-followers')?.innerText.trim() || '';
+        let hVal = card.querySelector('.val-htmt')?.innerText.trim().toLowerCase() || '';
+        let extra = ` f${fVal} `;
+        if(hVal.includes('mt')) extra += 'mt masuk mt ';
+        if(hVal.includes('ht')) extra += 'ht masuk ht ';
+        
+        let cleanText = card.innerText.toLowerCase().replace(/masuk ht\/mt/g, '');
+        card.dataset.search = cleanText + " " + extra;
+      });
+    }
+
+    function filterAccounts() {
+      let input = document.getElementById('searchInput').value.toLowerCase().trim();
+      document.querySelectorAll('.product-card').forEach(card => {
+        card.style.display = card.dataset.search.includes(input) ? "block" : "none";
+      });
+    }
+
+    window.onload = loadData;
+  </script>
+</body>
+  </html>
+
