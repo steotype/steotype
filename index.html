@@ -197,7 +197,13 @@
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
       
-      const filtered = allData.filter(item => item.status_stok?.toLowerCase() === currentTab);
+      // Mengubah const menjadi let agar array bisa dimodifikasi
+      let filtered = allData.filter(item => item.status_stok?.toLowerCase() === currentTab);
+
+      // Membalikkan urutan jika tab yang aktif adalah 'sold'
+      if (currentTab === 'sold') {
+        filtered.reverse();
+      }
 
       if (filtered.length === 0) {
         grid.innerHTML = `<p class="text-center text-gray-500 py-10">Tidak ada akun di kategori ini.</p>`;
@@ -298,5 +304,4 @@
     window.onload = loadData;
   </script>
 </body>
-  </html>
-
+</html>
