@@ -47,18 +47,12 @@
       Syarat & Ketentuan (TNC)
     </button>
 
-    <div class="grid grid-cols-2 gap-2 fade-in-down">
-      <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold transition-all tab-active">
-        READY (<span id="count-ready">0</span>)
+    <div class="flex gap-2 fade-in-down">
+      <button onclick="switchTab('ready')" id="btn-ready" class="flex-1 py-3 rounded-xl border border-gray-700 bg-gray-800 text-sm font-bold transition-all tab-active">
+        AKUN READY (<span id="count-ready">0</span>)
       </button>
-      <button onclick="switchTab('sold')" id="btn-sold" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold transition-all text-gray-400">
-        SOLD (<span id="count-sold">0</span>)
-      </button>
-      <button onclick="switchTab('mt')" id="btn-mt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold transition-all text-gray-400">
-        MASUK MT (<span id="count-mt">0</span>)
-      </button>
-      <button onclick="switchTab('htmt')" id="btn-htmt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold transition-all text-gray-400">
-        MASUK HTMT (<span id="count-htmt">0</span>)
+      <button onclick="switchTab('sold')" id="btn-sold" class="flex-1 py-3 rounded-xl border border-gray-700 bg-gray-800 text-sm font-bold transition-all text-gray-400">
+        AKUN SOLD (<span id="count-sold">0</span>)
       </button>
     </div>
 
@@ -99,12 +93,20 @@
         <p class="text-xs text-gray-400 italic mb-2">Dengan melakukan pembelian, Anda dianggap menyetujui poin-poin berikut:</p>
         
         <ul class="space-y-3">
-          <li><strong class="text-white block">1. Garansi 60 Jam</strong> Garansi berlaku selama 2 hari 12 jam (60 jam) sejak akun dikirim. Garansi hanya mencakup gagal login akibat kesalahan sistem/kredensial dari pihak kami.</li>
-          <li><strong class="text-white block">2. Garansi Hangus</strong> Garansi otomatis batal jika: akun dipindahtangankan lebih dari pembeli reseller, atau pembeli mengubah data pemulihan (hapus email utama/recovery) yang membuat akun tidak bisa dipulihkan.</li>
-          <li><strong class="text-white block">3. Kebijakan Refund & Penukaran</strong> Semua penjualan bersifat final (tidak ada refund uang tunai). Penggantian berupa penukaran akun atau saldo hanya diberikan jika kesalahan murni dari pihak kami.</li>
-          <li><strong class="text-white block">4. Tanggung Jawab Penggunaan</strong> Kami tidak bertanggung jawab atas akun yang di-suspend, dilimit, atau hilang akses karena kelalaian pembeli atau penggunaan untuk aktivitas ilegal setelah akun diserahkan.</li>
-          <li><strong class="text-white block">5. Akses Recovery</strong> Bantuan untuk mendapatkan kode verifikasi dari email/nomor lama hanya dapat dijamin selama masa garansi. Setelahnya murni menjadi tanggung jawab pembeli.</li>
-          <li><strong class="text-white block">6. Khusus Reseller</strong> Kami hanya bertanggung jawab kepada reseller dan pembeli langsung dari reseller. Komplain wajib dilakukan melalui reseller terkait.</li>
+          <li><strong class="text-white block">1. Garansi 60 Jam</strong> 
+            Garansi berlaku selama 2 hari 12 jam (60 jam) sejak akun dikirim. Garansi hanya mencakup gagal login akibat kesalahan sistem/kredensial dari pihak kami.</li>
+          
+          <li><strong class="text-white block">2. Garansi Hangus</strong> 
+            Garansi otomatis batal jika: akun dipindahtangankan atau dijual kembali kepada pihak lain, atau pembeli mengubah data pemulihan yang membuat akun tidak bisa dipulihkan.</li>
+          
+          <li><strong class="text-white block">3. Kebijakan Refund & Penukaran</strong> 
+            Semua penjualan bersifat final (tidak ada refund uang tunai). Penggantian berupa penukaran akun atau saldo hanya diberikan jika kesalahan murni dari pihak kami.</li>
+          
+          <li><strong class="text-white block">4. Tanggung Jawab Penggunaan</strong> 
+            Setelah akun diserahkan, kami <strong>tidak bertanggung jawab apabila akun digunakan untuk hal-hal yang melanggar hukum</strong>. Kami juga tidak bertanggung jawab atas penyalahgunaan akibat kelalaian pembeli.</li>
+          
+          <li><strong class="text-white block">5. Bantuan Kode Verifikasi (Recovery)</strong> 
+            Bantuan untuk mendapatkan kode verifikasi dari email/nomor pemulihan lama <strong>terjamin dan dapat Anda minta kapan pun</strong> tanpa batasan waktu garansi.</li>
         </ul>
       </div>
 
@@ -117,7 +119,6 @@
   </div>
 
   <script>
-    // URL disesuaikan dengan folder functions/stok.js di Cloudflare
     const SPREADSHEET_URL = "/api/stok";
     let allData = [];
     let currentTab = 'ready';
@@ -126,7 +127,6 @@
       const modal = document.getElementById('tncModal');
       const backdrop = document.getElementById('modalBackdrop');
       const content = document.getElementById('modalContent');
-      
       modal.classList.remove('hidden');
       setTimeout(() => {
         backdrop.classList.remove('opacity-0');
@@ -140,15 +140,11 @@
       const modal = document.getElementById('tncModal');
       const backdrop = document.getElementById('modalBackdrop');
       const content = document.getElementById('modalContent');
-      
       backdrop.classList.remove('opacity-100');
       backdrop.classList.add('opacity-0');
       content.classList.remove('opacity-100', 'scale-100');
       content.classList.add('opacity-0', 'scale-95');
-      
-      setTimeout(() => {
-        modal.classList.add('hidden');
-      }, 300);
+      setTimeout(() => { modal.classList.add('hidden'); }, 300);
     }
 
     async function loadData() {
@@ -158,53 +154,27 @@
         const response = await fetch(SPREADSHEET_URL);
         allData = await response.json();
         loader.style.display = 'none';
-        
         updateCounts();
         renderProducts();
       } catch (e) {
         loader.style.display = 'none';
-        grid.innerHTML = '<p class="text-center text-red-400 py-10">Gagal memuat data stok. Pastikan API berjalan dengan baik.</p>';
+        grid.innerHTML = '<p class="text-center text-red-400 py-10">Gagal memuat data stok.</p>';
       }
     }
 
     function updateCounts() {
       const readyCount = allData.filter(item => item.status_stok?.toLowerCase() === 'ready').length;
       const soldCount = allData.filter(item => item.status_stok?.toLowerCase() === 'sold').length;
-      
-      // Hitung khusus yg Ready & mengandung text MT atau HT
-      const mtCount = allData.filter(item => {
-        const isReady = item.status_stok?.toLowerCase() === 'ready';
-        const htmtVal = item.status_htmt?.toLowerCase() || '';
-        return isReady && htmtVal.includes('mt') && !htmtVal.includes('ht');
-      }).length;
-
-      const htmtCount = allData.filter(item => {
-        const isReady = item.status_stok?.toLowerCase() === 'ready';
-        const htmtVal = item.status_htmt?.toLowerCase() || '';
-        return isReady && htmtVal.includes('ht'); 
-      }).length;
-      
       document.getElementById('count-ready').innerText = readyCount;
       document.getElementById('count-sold').innerText = soldCount;
-      document.getElementById('count-mt').innerText = mtCount;
-      document.getElementById('count-htmt').innerText = htmtCount;
     }
 
     function switchTab(tab) {
       currentTab = tab;
-      
-      const tabs = ['ready', 'sold', 'mt', 'htmt'];
-      tabs.forEach(t => {
-        const btn = document.getElementById(`btn-${t}`);
-        if (t === tab) {
-          btn.classList.add('tab-active');
-          btn.classList.remove('text-gray-400');
-        } else {
-          btn.classList.remove('tab-active');
-          btn.classList.add('text-gray-400');
-        }
-      });
-      
+      document.getElementById('btn-ready').classList.toggle('tab-active', tab === 'ready');
+      document.getElementById('btn-ready').classList.toggle('text-gray-400', tab !== 'ready');
+      document.getElementById('btn-sold').classList.toggle('tab-active', tab === 'sold');
+      document.getElementById('btn-sold').classList.toggle('text-gray-400', tab !== 'sold');
       document.getElementById('searchInput').value = '';
       renderProducts();
     }
@@ -212,27 +182,10 @@
     function renderProducts() {
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
+      let filtered = allData.filter(item => item.status_stok?.toLowerCase() === currentTab);
       
-      let filtered = [];
-
-      // Logika Filter Tab
-      if (currentTab === 'ready' || currentTab === 'sold') {
-        filtered = allData.filter(item => item.status_stok?.toLowerCase() === currentTab);
-        if (currentTab === 'sold') {
-          filtered.reverse(); // Sold terbaru di atas
-        }
-      } else if (currentTab === 'mt') {
-        filtered = allData.filter(item => {
-          const isReady = item.status_stok?.toLowerCase() === 'ready';
-          const htmtVal = item.status_htmt?.toLowerCase() || '';
-          return isReady && htmtVal.includes('mt') && !htmtVal.includes('ht'); // Hanya MT, tanpa HT
-        });
-      } else if (currentTab === 'htmt') {
-        filtered = allData.filter(item => {
-          const isReady = item.status_stok?.toLowerCase() === 'ready';
-          const htmtVal = item.status_htmt?.toLowerCase() || '';
-          return isReady && htmtVal.includes('ht'); // Ada kata HT
-        });
+      if (currentTab === 'sold') {
+        filtered.reverse(); // Membalik urutan agar yang baru sold tampil di atas
       }
 
       if (filtered.length === 0) {
@@ -242,7 +195,6 @@
 
       filtered.forEach((item, index) => {
         const isReady = item.status_stok?.toLowerCase() === 'ready';
-        
         const cardHtml = `
           <div class="product-card bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-700 fade-in-down ${!isReady ? 'opacity-60' : ''}" style="animation-delay: ${index * 0.05}s">
             <div class="flex justify-between items-start mb-4">
@@ -307,7 +259,6 @@
           </div>`;
         grid.innerHTML += cardHtml;
       });
-      
       generateSearchIndex();
     }
 
@@ -318,7 +269,6 @@
         let extra = ` f${fVal} `;
         if(hVal.includes('mt')) extra += 'mt masuk mt ';
         if(hVal.includes('ht')) extra += 'ht masuk ht ';
-        
         let cleanText = card.innerText.toLowerCase().replace(/masuk ht\/mt/g, '');
         card.dataset.search = cleanText + " " + extra;
       });
@@ -335,4 +285,3 @@
   </script>
 </body>
 </html>
-
