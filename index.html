@@ -107,8 +107,27 @@
 
       <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
         <button onclick="closeModal()" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20">
-          Saya Mengerti & Setuju
+          Saya Mengerti
         </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="buyModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="buyModalBackdrop" onclick="closeBuyModal()"></div>
+    
+    <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[85%] max-w-sm flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="buyModalContent">
+      <div class="p-6 text-center space-y-4">
+        <div class="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-2 border border-blue-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-100">Konfirmasi Pesanan</h3>
+        <p class="text-sm text-gray-400">Dengan melanjutkan, saya menyatakan telah membaca dan menyetujui seluruh <button onclick="closeBuyModal(); openModal();" class="text-blue-400 hover:underline outline-none">Syarat & Ketentuan</button> pembelian.</p>
+      </div>
+      
+      <div class="flex border-t border-gray-700">
+        <button onclick="closeBuyModal()" class="flex-1 py-3.5 text-sm font-semibold text-gray-400 hover:text-white transition border-r border-gray-700 outline-none">Batal</button>
+        <button id="btn-confirm-buy" class="flex-1 py-3.5 text-sm font-bold text-blue-500 hover:text-blue-400 transition outline-none">Setuju & Beli</button>
       </div>
     </div>
   </div>
@@ -117,7 +136,9 @@
     const SPREADSHEET_URL = "/api/stok";
     let allData = [];
     let currentTab = 'ready';
+    let currentOrderCode = ''; // Menyimpan kode akun yang mau dibeli
 
+    // --- FUNGSI MODAL TNC ---
     function openModal() {
       const modal = document.getElementById('tncModal');
       const backdrop = document.getElementById('modalBackdrop');
@@ -138,6 +159,36 @@
       setTimeout(() => { modal.classList.add('hidden'); }, 300);
     }
 
+    // --- FUNGSI MODAL BELI ---
+    function openBuyModal(kodeAkun) {
+      currentOrderCode = kodeAkun; // Simpan kode akun
+      const modal = document.getElementById('buyModal');
+      const backdrop = document.getElementById('buyModalBackdrop');
+      const content = document.getElementById('buyModalContent');
+      
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        backdrop.classList.remove('opacity-0'); backdrop.classList.add('opacity-100');
+        content.classList.remove('opacity-0', 'scale-95'); content.classList.add('opacity-100', 'scale-100');
+      }, 10);
+
+      // Pasang fungsi pada tombol setuju
+      document.getElementById('btn-confirm-buy').onclick = function() {
+        window.open(`https://wa.me/6285959161539?text=Order%20Akun%20${currentOrderCode}`, '_blank');
+        closeBuyModal();
+      };
+    }
+
+    function closeBuyModal() {
+      const modal = document.getElementById('buyModal');
+      const backdrop = document.getElementById('buyModalBackdrop');
+      const content = document.getElementById('buyModalContent');
+      backdrop.classList.remove('opacity-100'); backdrop.classList.add('opacity-0');
+      content.classList.remove('opacity-100', 'scale-100'); content.classList.add('opacity-0', 'scale-95');
+      setTimeout(() => { modal.classList.add('hidden'); }, 300);
+    }
+
+    // --- FUNGSI LOAD DATA ---
     async function loadData() {
       const grid = document.getElementById('productGrid');
       const loader = document.getElementById('loadingIndicator');
@@ -274,7 +325,7 @@
                 <p class="text-xl font-bold text-blue-500">${item.harga}</p>
               </div>
               ${isReady ? 
-                `<a href="https://wa.me/6285959161539?text=Order%20Akun%20${item.kode}" target="_blank" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition shadow-lg shadow-blue-900/20">Beli</a>` :
+                `<button onclick="openBuyModal('${item.kode}')" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition shadow-lg shadow-blue-900/20">Beli</button>` :
                 `<button disabled class="px-5 py-2.5 bg-gray-700 text-gray-400 text-sm font-semibold rounded-lg cursor-not-allowed">Sold</button>`
               }
             </div>
