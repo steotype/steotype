@@ -185,7 +185,7 @@
       let filtered = allData.filter(item => item.status_stok?.toLowerCase() === currentTab);
       
       if (currentTab === 'sold') {
-        filtered.reverse(); // Membalik urutan agar yang baru sold tampil di atas
+        filtered.reverse();
       }
 
       if (filtered.length === 0) {
@@ -214,7 +214,10 @@
               </div>
               <div class="flex justify-between items-center text-sm border-b border-gray-700/50 pb-2">
                 <span class="text-gray-400">Link Profil</span>
-                <a href="${item.link_akun}" target="_blank" class="text-blue-400 hover:text-blue-300 font-semibold underline underline-offset-2 flex items-center gap-1">Cek Akun</a>
+                ${isReady ? 
+                  `<a href="${item.link_akun}" target="_blank" class="text-blue-400 hover:text-blue-300 font-semibold underline underline-offset-2 flex items-center gap-1">Cek Akun</a>` :
+                  `<span class="text-gray-500 italic">Privat</span>`
+                }
               </div>
               <div class="flex justify-between items-center text-sm border-b border-gray-700/50 pb-2">
                 <span class="text-gray-400">Tahun Akun</span>
