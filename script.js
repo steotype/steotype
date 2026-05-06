@@ -1,4 +1,4 @@
-/* Logic and Data Fetching for SteoType (X-PROFILE UI + ORIGINAL FOOTER) */
+/* Logic and Data Fetching for SteoType (X-PROFILE UI + ORIGINAL FOOTER - NO VERIFIED BADGE) */
 
 const SPREADSHEET_URL = "/api/stok";
 let allData = [];
@@ -327,7 +327,6 @@ function renderProducts() {
           <div class="mb-3">
             <h2 class="text-xl font-extrabold text-gray-100 flex items-center gap-1">
               Akun X ${item.tahun_akun}
-              <svg viewBox="0 0 24 24" class="w-5 h-5 text-blue-400" fill="currentColor"><g><path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.79-4-4-4-.495 0-.965.084-1.4.238C14.55 2.465 13.18 1.59 11.6 1.59c-1.58 0-2.95.875-3.6 2.148-.435-.154-.905-.238-1.4-.238-2.21 0-4 1.79-4 4 0 .495.084.965.238 1.4-.875.65-1.748 2.02-1.748 3.6 0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.79 4 4 4 .495 0 .965-.084 1.4-.238C8.65 21.535 10.02 22.41 11.6 22.41c1.58 0 2.95-.875 3.6-2.148.435.154.905.238 1.4.238 2.21 0 4-1.79 4-4 0-.495-.084-.965-.238-1.4.875-.65 1.748-2.02 1.748-3.6zm-10.424 5.4l-3.8-3.8 1.414-1.414 2.386 2.386 5.386-5.386 1.414 1.414-6.8 6.8z"></path></g></svg>
             </h2>
             <p class="text-[15px] text-gray-500">@${item.username}</p>
           </div>
