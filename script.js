@@ -1,4 +1,4 @@
-/* Logic and Data Fetching for SteoType (WITH CART SYSTEM) */
+/* Logic and Data Fetching for SteoType (WITH CART SYSTEM FIXED & WA FORMAT) */
 
 const SPREADSHEET_URL = "/api/stok";
 let allData = [];
@@ -10,7 +10,7 @@ let cart = [];
 // Fungsi untuk memurnikan harga jadi angka (cth: "50K" atau "Rp 50" jadi 50)
 const parseNum = (str) => parseInt((str||'').toString().replace(/[^0-9]/g, '')) || 0;
 
-// FUNGSI YANG DIPERBAIKI: Mengubah angka penjumlahan jadi format "K" (cth: 86 jadi "86K")
+// Fungsi mengubah angka penjumlahan jadi format "K" (cth: 86 jadi "86K")
 function formatHarga(num) {
   return num + "K";
 }
@@ -101,13 +101,16 @@ function proceedToCheckout() {
   }, 10);
   
   document.getElementById('btn-confirm-buy').onclick = function() {
-    let message = `Halo, saya mau order ${cart.length} akun:\n`;
+    // --- FORMAT WHATSAPP BARU SESUAI PERMINTAAN ---
+    let message = `Halo, saya mau order ${cart.length} akun:\n\n`;
     let sumHarga = 0;
     cart.forEach((item, index) => {
       message += `${index + 1}. ${item.kode} | ${item.username} (${item.harga})\n`;
       sumHarga += parseNum(item.harga);
     });
-    message += `Total: ${formatHarga(sumHarga)}`;
+    
+    // Menambahkan Total harga & Pertanyaan "Bisa di test dulu kak?"
+    message += `\nTotal: ${formatHarga(sumHarga)}\n\nBisa di test dulu kak?`;
     
     window.open(`https://wa.me/6285959161539?text=${encodeURIComponent(message)}`, '_blank');
     closeBuyModal();
