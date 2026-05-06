@@ -1,4 +1,4 @@
-/* Logic and Data Fetching for SteoType (WITH CART SYSTEM) */
+/* Logic and Data Fetching for SteoType (WITH CART SYSTEM FIXED) */
 
 const SPREADSHEET_URL = "/api/stok";
 let allData = [];
@@ -7,25 +7,22 @@ let currentTab = 'ready';
 // --- SISTEM KERANJANG BELANJA ---
 let cart = [];
 
-// Fungsi untuk memurnikan harga jadi angka (cth: "Rp 50.000" jadi 50000)
 const parseNum = (str) => parseInt((str||'').toString().replace(/[^0-9]/g, '')) || 0;
 
-// Fungsi mengubah angka jadi format Rupiah (cth: 50000 jadi "Rp 50.000")
 function formatHarga(num) {
   return "Rp " + num.toLocaleString('id-ID');
 }
 
 function toggleCart(kode, username, harga) {
-  const index = cart.findIndex(item => item.kode === kode);
+  // PERBAIKAN: Menggunakan 'username' sebagai penanda unik agar tidak ada tombol yang ikut terpencet
+  const index = cart.findIndex(item => item.username === username);
   if (index > -1) {
-    // Jika sudah ada di keranjang, hapus
     cart.splice(index, 1);
   } else {
-    // Jika belum ada, tambahkan
     cart.push({kode, username, harga});
   }
   updateCartUI();
-  renderProducts(); // Refresh warna tombol di list produk
+  renderProducts(); 
 }
 
 function updateCartUI() {
@@ -36,7 +33,7 @@ function updateCartUI() {
     badge.innerText = cart.length;
   } else {
     floatingCart.classList.add('hidden');
-    closeCartModal(); // Tutup keranjang jika kosong
+    closeCartModal(); 
   }
 }
 
@@ -248,7 +245,9 @@ function renderProducts() {
 
   filtered.forEach((item, index) => {
     const isReady = item.status_stok?.toLowerCase() === 'ready';
-    const inCart = cart.some(c => c.kode === item.kode); // Cek apakah produk ini ada di keranjang
+    
+    // PERBAIKAN: Cek di keranjang berdasarkan 'username' alih-alih 'kode'
+    const inCart = cart.some(c => c.username === item.username); 
     
     const cardHtml = `
       <div class="product-card bg-gray-800 rounded-2xl p-5 shadow-sm border ${inCart ? 'border-blue-500 shadow-blue-900/20 shadow-lg' : 'border-gray-700'} fade-in-down ${!isReady ? 'opacity-60' : ''}" style="animation-delay: ${index * 0.05}s">
@@ -318,6 +317,4 @@ function filterAccounts() {
   }
 }
 
-// Inisialisasi saat halaman dimuat
 window.onload = loadData;
-
