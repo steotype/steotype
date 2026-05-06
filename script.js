@@ -1,4 +1,4 @@
-/* Logic and Data Fetching for SteoType (FINAL WA BUTTON UPDATE) */
+/* Logic and Data Fetching for SteoType (FINAL ALL FIXED) */
 
 const SPREADSHEET_URL = "/api/stok";
 let allData = [];
@@ -96,7 +96,6 @@ function openCartModal() {
     content.classList.add('opacity-100', 'scale-100'); 
   }, 10);
 
-  // MENGUBAH TOMBOL CHECKOUT MENJADI TOMBOL WHATSAPP HIJAU
   const cartFooter = document.querySelector('.p-4.border-t.border-gray-700.bg-gray-900\\/50.rounded-b-2xl');
   cartFooter.innerHTML = `
     <div class="flex justify-between items-center mb-4">
@@ -149,8 +148,11 @@ function proceedToCheckout() {
   };
 }
 
-// --- MODAL TNC & CONFIRMATION ---
-function openModal() {
+// --- MODAL TNC & CONFIRMATION (DENGAN SISTEM INGATAN) ---
+let isFromCheckout = false; 
+
+function openModal(fromCheckout = false) {
+  isFromCheckout = fromCheckout; 
   const modal = document.getElementById('tncModal');
   const backdrop = document.getElementById('modalBackdrop');
   const content = document.getElementById('modalContent');
@@ -163,6 +165,13 @@ function openModal() {
   }, 10);
 }
 
+function openTncFromCheckout() {
+  closeBuyModal();
+  setTimeout(() => {
+    openModal(true);
+  }, 300);
+}
+
 function closeModal() {
   const modal = document.getElementById('tncModal');
   const backdrop = document.getElementById('modalBackdrop');
@@ -171,7 +180,23 @@ function closeModal() {
   backdrop.classList.add('opacity-0'); 
   content.classList.remove('opacity-100', 'scale-100'); 
   content.classList.add('opacity-0', 'scale-95');
-  setTimeout(() => { modal.classList.add('hidden'); }, 300);
+  
+  setTimeout(() => { 
+    modal.classList.add('hidden'); 
+    if (isFromCheckout) {
+      isFromCheckout = false; 
+      const buyModal = document.getElementById('buyModal');
+      const buyBackdrop = document.getElementById('buyModalBackdrop');
+      const buyContent = document.getElementById('buyModalContent');
+      buyModal.classList.remove('hidden');
+      setTimeout(() => { 
+        buyBackdrop.classList.remove('opacity-0'); 
+        buyBackdrop.classList.add('opacity-100'); 
+        buyContent.classList.remove('opacity-0', 'scale-95'); 
+        buyContent.classList.add('opacity-100', 'scale-100'); 
+      }, 10);
+    }
+  }, 300);
 }
 
 function closeBuyModal() {
