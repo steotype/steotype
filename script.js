@@ -1,4 +1,4 @@
-/* Logic and Data Fetching for SteoType (WITH CART SYSTEM FIXED & WA FORMAT) */
+/* Logic and Data Fetching for SteoType (CART SYSTEM FIXED + NO BLINKING) */
 
 const SPREADSHEET_URL = "/api/stok";
 let allData = [];
@@ -7,16 +7,13 @@ let currentTab = 'ready';
 // --- SISTEM KERANJANG BELANJA ---
 let cart = [];
 
-// Fungsi untuk memurnikan harga jadi angka (cth: "50K" atau "Rp 50" jadi 50)
 const parseNum = (str) => parseInt((str||'').toString().replace(/[^0-9]/g, '')) || 0;
 
-// Fungsi mengubah angka penjumlahan jadi format "K" (cth: 86 jadi "86K")
 function formatHarga(num) {
   return num + "K";
 }
 
 function toggleCart(kode, username, harga) {
-  // Menggunakan 'username' sebagai penanda unik agar tidak ada tombol yang ikut terpencet
   const index = cart.findIndex(item => item.username === username);
   if (index > -1) {
     cart.splice(index, 1);
@@ -24,7 +21,39 @@ function toggleCart(kode, username, harga) {
     cart.push({kode, username, harga});
   }
   updateCartUI();
-  renderProducts(); 
+  
+  // PERBAIKAN: Jangan memanggil renderProducts() lagi agar tidak berkedip.
+  // Gunakan fungsi sinkronisasi khusus di bawah ini:
+  syncCartUI(); 
+}
+
+// FUNGSI BARU: Mengubah warna tombol tanpa me-refresh seluruh grid produk
+function syncCartUI() {
+  document.querySelectorAll('.product-card').forEach(card => {
+    const username = card.dataset.username;
+    const inCart = cart.some(c => c.username === username);
+    const btn = card.querySelector('.btn-add-cart');
+    
+    if (inCart) {
+      // Ubah gaya kartu menjadi aktif (biru)
+      card.classList.add('border-blue-500', 'shadow-blue-900/20', 'shadow-lg');
+      card.classList.remove('border-gray-700');
+      // Ubah gaya tombol menjadi "Ditambahkan"
+      if(btn) {
+        btn.className = "btn-add-cart px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-900/20 outline-none";
+        btn.innerText = "Ditambahkan";
+      }
+    } else {
+      // Kembalikan gaya kartu ke mode normal (abu-abu)
+      card.classList.remove('border-blue-500', 'shadow-blue-900/20', 'shadow-lg');
+      card.classList.add('border-gray-700');
+      // Kembalikan gaya tombol menjadi "Tambah"
+      if(btn) {
+        btn.className = "btn-add-cart px-5 py-2.5 bg-gray-800 border border-gray-600 text-blue-400 text-sm font-semibold rounded-lg hover:bg-gray-700 hover:border-gray-500 hover:text-white transition shadow-sm outline-none";
+        btn.innerText = "Tambah";
+      }
+    }
+  });
 }
 
 function updateCartUI() {
@@ -101,7 +130,6 @@ function proceedToCheckout() {
   }, 10);
   
   document.getElementById('btn-confirm-buy').onclick = function() {
-    // --- FORMAT WHATSAPP BARU SESUAI PERMINTAAN ---
     let message = `Halo, saya mau order ${cart.length} akun:\n\n`;
     let sumHarga = 0;
     cart.forEach((item, index) => {
@@ -109,7 +137,6 @@ function proceedToCheckout() {
       sumHarga += parseNum(item.harga);
     });
     
-    // Menambahkan Total harga & Pertanyaan "Bisa di test dulu kak?"
     message += `\nTotal: ${formatHarga(sumHarga)}\n\nBisa di test dulu kak?`;
     
     window.open(`https://wa.me/6285959161539?text=${encodeURIComponent(message)}`, '_blank');
@@ -250,12 +277,11 @@ function renderProducts() {
 
   filtered.forEach((item, index) => {
     const isReady = item.status_stok?.toLowerCase() === 'ready';
-    
-    // Cek di keranjang berdasarkan 'username'
     const inCart = cart.some(c => c.username === item.username); 
     
+    // PERBAIKAN: Menambahkan data-username=".." dan class="btn-add-cart" agar mudah dicari oleh sistem
     const cardHtml = `
-      <div class="product-card bg-gray-800 rounded-2xl p-5 shadow-sm border ${inCart ? 'border-blue-500 shadow-blue-900/20 shadow-lg' : 'border-gray-700'} fade-in-down ${!isReady ? 'opacity-60' : ''}" style="animation-delay: ${index * 0.05}s">
+      <div class="product-card bg-gray-800 rounded-2xl p-5 shadow-sm border ${inCart ? 'border-blue-500 shadow-blue-900/20 shadow-lg' : 'border-gray-700'} fade-in-down ${!isReady ? 'opacity-60' : ''}" data-username="${item.username}" style="animation-delay: ${index * 0.05}s">
         <div class="flex justify-between items-start mb-4">
           <div>
             <h2 class="text-lg font-bold text-gray-100">Akun X ${item.tahun_akun}</h2>
@@ -280,9 +306,9 @@ function renderProducts() {
           </div>
           ${isReady ? 
             (inCart ? 
-              `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-900/20 outline-none">Ditambahkan</button>` 
+              `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="btn-add-cart px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-900/20 outline-none">Ditambahkan</button>` 
               : 
-              `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="px-5 py-2.5 bg-gray-800 border border-gray-600 text-blue-400 text-sm font-semibold rounded-lg hover:bg-gray-700 hover:border-gray-500 hover:text-white transition shadow-sm outline-none">Tambah</button>`
+              `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="btn-add-cart px-5 py-2.5 bg-gray-800 border border-gray-600 text-blue-400 text-sm font-semibold rounded-lg hover:bg-gray-700 hover:border-gray-500 hover:text-white transition shadow-sm outline-none">Tambah</button>`
             ) :
             `<button disabled class="px-5 py-2.5 bg-gray-700 text-gray-400 text-sm font-semibold rounded-lg cursor-not-allowed">Sold</button>`
           }
