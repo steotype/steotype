@@ -1,4 +1,4 @@
-/* Logic and Data Fetching for SteoType (WITH CART SYSTEM FIXED) */
+/* Logic and Data Fetching for SteoType (WITH CART SYSTEM) */
 
 const SPREADSHEET_URL = "/api/stok";
 let allData = [];
@@ -7,14 +7,16 @@ let currentTab = 'ready';
 // --- SISTEM KERANJANG BELANJA ---
 let cart = [];
 
+// Fungsi untuk memurnikan harga jadi angka (cth: "50K" atau "Rp 50" jadi 50)
 const parseNum = (str) => parseInt((str||'').toString().replace(/[^0-9]/g, '')) || 0;
 
+// FUNGSI YANG DIPERBAIKI: Mengubah angka penjumlahan jadi format "K" (cth: 86 jadi "86K")
 function formatHarga(num) {
-  return "Rp " + num.toLocaleString('id-ID');
+  return num + "K";
 }
 
 function toggleCart(kode, username, harga) {
-  // PERBAIKAN: Menggunakan 'username' sebagai penanda unik agar tidak ada tombol yang ikut terpencet
+  // Menggunakan 'username' sebagai penanda unik agar tidak ada tombol yang ikut terpencet
   const index = cart.findIndex(item => item.username === username);
   if (index > -1) {
     cart.splice(index, 1);
@@ -52,7 +54,7 @@ function openCartModal() {
         </div>
         <div class="flex items-center gap-4">
           <p class="text-sm font-bold text-blue-400">${item.harga}</p>
-          <button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}'); openCartModal();" class="text-gray-500 hover:text-red-400 transition bg-gray-800 p-1.5 rounded-md">
+          <button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}'); openCartModal();" class="text-gray-500 hover:text-red-400 transition bg-gray-800 p-1.5 rounded-md outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
           </button>
         </div>
@@ -246,7 +248,7 @@ function renderProducts() {
   filtered.forEach((item, index) => {
     const isReady = item.status_stok?.toLowerCase() === 'ready';
     
-    // PERBAIKAN: Cek di keranjang berdasarkan 'username' alih-alih 'kode'
+    // Cek di keranjang berdasarkan 'username'
     const inCart = cart.some(c => c.username === item.username); 
     
     const cardHtml = `
@@ -275,9 +277,9 @@ function renderProducts() {
           </div>
           ${isReady ? 
             (inCart ? 
-              `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-900/20">Ditambahkan</button>` 
+              `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-900/20 outline-none">Ditambahkan</button>` 
               : 
-              `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="px-5 py-2.5 bg-gray-800 border border-gray-600 text-blue-400 text-sm font-semibold rounded-lg hover:bg-gray-700 hover:border-gray-500 hover:text-white transition shadow-sm">Tambah</button>`
+              `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="px-5 py-2.5 bg-gray-800 border border-gray-600 text-blue-400 text-sm font-semibold rounded-lg hover:bg-gray-700 hover:border-gray-500 hover:text-white transition shadow-sm outline-none">Tambah</button>`
             ) :
             `<button disabled class="px-5 py-2.5 bg-gray-700 text-gray-400 text-sm font-semibold rounded-lg cursor-not-allowed">Sold</button>`
           }
