@@ -1,4 +1,4 @@
-/* Logic and Data Fetching for SteoType (X-PROFILE UI THEME + ALL FIXED) */
+/* Logic and Data Fetching for SteoType (X-PROFILE UI + ORIGINAL FOOTER) */
 
 const SPREADSHEET_URL = "/api/stok";
 let allData = [];
@@ -31,23 +31,17 @@ function syncCartUI() {
     const btn = card.querySelector('.btn-add-cart');
     
     if (inCart) {
-      // Style kartu saat masuk keranjang
       card.classList.add('border-blue-500', 'shadow-blue-900/20', 'shadow-lg');
       card.classList.remove('border-gray-800');
-      
-      // Style tombol bergaya "Following" (Putih) ala X Dark Mode
       if(btn) {
-        btn.className = "btn-add-cart px-4 py-1.5 bg-white text-black text-sm font-bold rounded-full hover:bg-gray-200 transition outline-none border border-transparent";
+        btn.className = "btn-add-cart px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-900/20 outline-none";
         btn.innerText = "Ditambahkan";
       }
     } else {
-      // Style normal
       card.classList.remove('border-blue-500', 'shadow-blue-900/20', 'shadow-lg');
-      card.classList.add('border-gray-800');
-      
-      // Style tombol bergaya "Follow" (Outline) ala X Dark Mode
+      card.classList.add('border-gray-700');
       if(btn) {
-        btn.className = "btn-add-cart px-4 py-1.5 bg-transparent border border-gray-500 text-white text-sm font-bold rounded-full hover:bg-gray-800 transition outline-none";
+        btn.className = "btn-add-cart px-5 py-2.5 bg-gray-800 border border-gray-600 text-blue-400 text-sm font-semibold rounded-lg hover:bg-gray-700 hover:border-gray-500 hover:text-white transition shadow-sm outline-none";
         btn.innerText = "Tambah";
       }
     }
@@ -154,7 +148,7 @@ function proceedToCheckout() {
   };
 }
 
-// --- MODAL TNC & CONFIRMATION (DENGAN SISTEM INGATAN) ---
+// --- MODAL TNC & CONFIRMATION ---
 let isFromCheckout = false; 
 
 function openModal(fromCheckout = false) {
@@ -271,9 +265,6 @@ function switchTab(tab) {
   renderProducts();
 }
 
-// ==========================================
-// RENDERING KARTU DENGAN UI PROFIL X
-// ==========================================
 function renderProducts() {
   const grid = document.getElementById('productGrid');
   grid.innerHTML = '';
@@ -318,7 +309,6 @@ function renderProducts() {
     const isReady = item.status_stok?.toLowerCase() === 'ready';
     const inCart = cart.some(c => c.username === item.username); 
     
-    // STRUKTUR HTML BARU ALA PROFIL X
     const cardHtml = `
       <div class="product-card bg-black rounded-2xl border ${inCart ? 'border-blue-500 shadow-blue-900/20 shadow-lg' : 'border-gray-800'} fade-in-down overflow-hidden ${!isReady ? 'opacity-60' : ''}" data-username="${item.username}" style="animation-delay: ${index * 0.05}s">
         
@@ -331,16 +321,6 @@ function renderProducts() {
           <div class="flex justify-between items-start -mt-10 mb-2 relative z-10">
             <div class="w-[72px] h-[72px] rounded-full border-4 border-black bg-gray-900 flex items-center justify-center text-gray-600 overflow-hidden">
               <svg class="w-10 h-10 mt-2" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-            </div>
-            <div class="pt-[44px]">
-              ${isReady ? 
-                (inCart ? 
-                  `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="btn-add-cart px-4 py-1.5 bg-white text-black text-sm font-bold rounded-full hover:bg-gray-200 transition outline-none border border-transparent">Ditambahkan</button>` 
-                  : 
-                  `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="btn-add-cart px-4 py-1.5 bg-transparent border border-gray-500 text-white text-sm font-bold rounded-full hover:bg-gray-800 transition outline-none">Tambah</button>`
-                ) :
-                `<button disabled class="px-4 py-1.5 bg-transparent border border-gray-700 text-gray-500 text-sm font-bold rounded-full cursor-not-allowed">Sold</button>`
-              }
             </div>
           </div>
 
@@ -373,8 +353,20 @@ function renderProducts() {
           </div>
 
           <div class="mt-2 pt-4 border-t border-gray-800 flex justify-between items-center">
-             <span class="text-xs text-gray-500 uppercase tracking-wider font-semibold">Investasi Akun</span>
-             <span class="text-xl font-bold text-white">${item.harga}</span>
+             <div>
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Harga</p>
+                <p class="text-xl font-bold text-blue-500">${item.harga}</p>
+             </div>
+             <div>
+              ${isReady ? 
+                (inCart ? 
+                  `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="btn-add-cart px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-900/20 outline-none">Ditambahkan</button>` 
+                  : 
+                  `<button onclick="toggleCart('${item.kode}', '${item.username}', '${item.harga}')" class="btn-add-cart px-5 py-2.5 bg-gray-800 border border-gray-600 text-blue-400 text-sm font-semibold rounded-lg hover:bg-gray-700 hover:border-gray-500 hover:text-white transition shadow-sm outline-none">Tambah</button>`
+                ) :
+                `<button disabled class="px-5 py-2.5 bg-gray-700 text-gray-500 text-sm font-semibold rounded-lg cursor-not-allowed">Sold</button>`
+              }
+             </div>
           </div>
         </div>
       </div>
