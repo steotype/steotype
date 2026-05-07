@@ -1,4 +1,4 @@
-/* Logic and Data Fetching for SteoType (INFINITE SCROLL + REVERSED LOGIC FIXED V2) */
+/* Logic and Data Fetching for SteoType (INFINITE SCROLL + REVERSED LOGIC + LINK AKUN FIXED) */
 
 const SPREADSHEET_URL = "/api/stok";
 let allData = []; 
@@ -316,7 +316,7 @@ function filterAccounts() {
 
 function renderProducts() {
   const grid = document.getElementById('productGrid');
-  grid.innerHTML = ''; // KOSONGKAN LAYAR DULU
+  grid.innerHTML = ''; 
   
   if (currentFilteredData.length === 0) {
     document.getElementById('noResults').classList.remove('hidden');
@@ -324,13 +324,12 @@ function renderProducts() {
   }
   document.getElementById('noResults').classList.add('hidden');
 
-  renderBatch(); // MASUKKAN 12 AKUN PERTAMA
+  renderBatch(); 
 }
 
 function renderBatch() {
   const grid = document.getElementById('productGrid');
   
-  // Ambil data sesuai jumlah yang sudah terpasang di grid sampai batas Limit
   const batch = currentFilteredData.slice(grid.children.length, displayLimit);
   
   batch.forEach((item, index) => {
@@ -364,6 +363,7 @@ function renderBatch() {
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.708 2H4.292C3.028 2 2 3.028 2 4.292v15.416C2 20.972 3.028 22 4.292 22h15.416C20.972 22 22 20.972 22 19.708V4.292C22 3.028 20.972 2 19.708 2zm.792 17.708c0 .437-.355.792-.792.792H4.292a.792.792 0 01-.792-.792V9h17v10.708zM4 7V4.292c0-.16.131-.292.292-.292h15.416c.16 0 .292.131.292.292V7H4z"/></svg>
                 Bergabung tahun ${item.tahun_akun}
              </span>
+             ${isReady ? `<a href="${item.link_akun}" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.96 14.945c-.067 0-.136-.01-.203-.027-1.13-.318-2.097-.986-2.795-1.932-.832-1.125-1.176-2.508-.968-3.893s.942-2.605 2.068-3.438l3.53-2.608c2.322-1.716 5.61-1.224 7.33 1.1.83 1.127 1.175 2.51.967 3.895s-.943 2.605-2.07 3.438l-1.48 1.094c-.333.246-.804.175-1.05-.158-.246-.334-.176-.804.158-1.05l1.48-1.095c.803-.592 1.327-1.463 1.476-2.45.148-.988-.098-1.975-.69-2.778-1.225-1.656-3.572-2.01-5.23-.784l-3.53 2.608c-.802.593-1.326 1.464-1.475 2.45-.15.99.097 1.975.69 2.778.498.675 1.187 1.15 1.992 1.377.4.114.633.528.52.928-.092.33-.394.547-.722.547zM7.27 22.054c-1.61 0-3.197-.735-4.225-2.125-.832-1.127-1.176-2.51-.968-3.894s.943-2.605 2.07-3.438l1.478-1.094c.334-.245.805-.175 1.05.158s.177.804-.157 1.05l-1.48 1.095c-.803.593-1.326 1.464-1.475 2.45-.148.99.097 1.975.69 2.778 1.225 1.657 3.57 2.01 5.23.785l3.528-2.608c.804-.592 1.326-1.462 1.475-2.45.148-.99-.098-1.975-.69-2.778-.498-.674-1.188-1.15-1.992-1.376-.4-.113-.633-.527-.52-.927.112-.4.528-.63.926-.522 1.13.318 2.096.986 2.794 1.932.833 1.126 1.176 2.508.968 3.893s-.942 2.605-2.068 3.438l-3.53 2.608c-.933.693-2.023 1.026-3.105 1.026z"/></svg> x.com/${item.username}</a>` : `<span class="flex items-center gap-1"><svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg> Link Privat</span>`}
           </div>
           <div class="flex gap-4 text-[15px] text-gray-400 mb-4">
             <p><span class="text-gray-100 font-bold">${item.postingan}</span> Posts</p>
@@ -392,7 +392,7 @@ function renderBatch() {
   isLoadingMore = false;
 }
 
-// --- INFINITE SCROLL HANDLER (SENSOR LEBIH PEKA) ---
+// --- INFINITE SCROLL HANDLER ---
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY || window.pageYOffset;
   const windowHeight = window.innerHeight;
@@ -401,14 +401,13 @@ window.addEventListener('scroll', () => {
     document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight
   );
 
-  // Jika jarak pandangan kita sudah mendekati 800px dari paling bawah layar
   if ((windowHeight + scrollY) >= (documentHeight - 800)) {
     if (!isLoadingMore && displayLimit < currentFilteredData.length) {
       isLoadingMore = true;
       displayLimit += 12;
       setTimeout(() => {
         renderBatch();
-      }, 100); // jeda sangat halus
+      }, 100); 
     }
   }
 });
