@@ -1,4 +1,4 @@
-/* Logic and Data Fetching for SteoType (INFINITE SCROLL + CUSTOM ICONS + CLEAN TEXT) */
+/* Logic and Data Fetching for SteoType (INFINITE SCROLL + CUSTOM ICONS + INFO MODAL) */
 
 const SPREADSHEET_URL = "/api/stok";
 let allData = []; 
@@ -209,6 +209,31 @@ function closeBuyModal() {
   setTimeout(() => { modal.classList.add('hidden'); }, 300);
 }
 
+// --- FUNGSI MODAL INFO STATUS ---
+function openInfoModal() {
+  const modal = document.getElementById('infoModal');
+  const backdrop = document.getElementById('infoModalBackdrop');
+  const content = document.getElementById('infoModalContent');
+  modal.classList.remove('hidden');
+  setTimeout(() => { 
+    backdrop.classList.remove('opacity-0'); 
+    backdrop.classList.add('opacity-100'); 
+    content.classList.remove('opacity-0', 'scale-95'); 
+    content.classList.add('opacity-100', 'scale-100'); 
+  }, 10);
+}
+
+function closeInfoModal() {
+  const modal = document.getElementById('infoModal');
+  const backdrop = document.getElementById('infoModalBackdrop');
+  const content = document.getElementById('infoModalContent');
+  backdrop.classList.remove('opacity-100'); 
+  backdrop.classList.add('opacity-0'); 
+  content.classList.remove('opacity-100', 'scale-100'); 
+  content.classList.add('opacity-0', 'scale-95');
+  setTimeout(() => { modal.classList.add('hidden'); }, 300);
+}
+
 // --- CORE DATA & FILTERING LOGIC ---
 async function loadData() {
   const grid = document.getElementById('productGrid');
@@ -361,10 +386,10 @@ function renderBatch() {
     // Logika HTMT = 🔥, MT = 👍🏻
     if (htmtLow.includes('htmt')) {
         htmtIcon = '🔥';
-        htmtColor = 'text-orange-400'; // Warna oranye kemerahan seperti api
+        htmtColor = 'text-orange-400'; // Warna oranye kemerahan
     } else if (htmtLow.includes('mt')) {
         htmtIcon = '👍🏻';
-        htmtColor = 'text-green-400'; // Warna hijau seperti "Aman"
+        htmtColor = 'text-green-400'; // Warna hijau
     }
     // ---------------------------------
     
