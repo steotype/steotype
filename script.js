@@ -1,9 +1,9 @@
-/* Logic and Data Fetching for SteoType (INFINITE SCROLL + CUSTOM ICONS + INFO MODAL) */
+/* Logic and Data Fetching for SteoType (INFINITE SCROLL + CUSTOM ICONS + INFO MODAL + CEK PROFIL BUTTON) */
 
 const SPREADSHEET_URL = "/api/stok";
 let allData = []; 
 let currentFilteredData = []; 
-let displayLimit = 12; // BATAS 12 AKUN PERTAMA
+let displayLimit = 12; 
 let currentTab = 'ready';
 let isLoadingMore = false;
 
@@ -372,24 +372,21 @@ function renderBatch() {
 
     const kesText = item.kesehatan || '-';
     const kesLow = kesText.toLowerCase().trim();
-    // Jika persis/mengandung "Go Green", muncul 🛡️, selain itu 🚦
     const kesIcon = kesLow.includes('go green') ? '🛡️' : '🚦';
     const kesColor = kesLow.includes('go green') ? 'text-green-400' : 'text-gray-400';
 
     const htmtText = item.status_htmt || '-';
     const htmtLow = htmtText.toLowerCase().trim();
     
-    // Default Status (Jika tidak tertulis MT atau HTMT)
     let htmtIcon = '⚡';
     let htmtColor = 'text-gray-400';
 
-    // Logika HTMT = 🔥, MT = 👍🏻
     if (htmtLow.includes('htmt')) {
         htmtIcon = '🔥';
-        htmtColor = 'text-orange-400'; // Warna oranye kemerahan
+        htmtColor = 'text-orange-400';
     } else if (htmtLow.includes('mt')) {
         htmtIcon = '👍🏻';
-        htmtColor = 'text-green-400'; // Warna hijau
+        htmtColor = 'text-green-400';
     }
     // ---------------------------------
     
@@ -404,28 +401,43 @@ function renderBatch() {
             <div class="w-[72px] h-[72px] rounded-full border-4 border-gray-800 bg-gray-900 flex items-center justify-center text-gray-600 overflow-hidden">
               <svg class="w-10 h-10 mt-2" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
             </div>
+            <div class="mt-12">
+              ${isReady ? 
+                `<a href="${item.link_akun}" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-gray-600 bg-gray-800 text-[13px] font-bold text-white hover:bg-gray-700 hover:border-gray-500 transition-colors shadow-sm outline-none">
+                  Cek Profil <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>` 
+                : 
+                `<span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-gray-700 bg-gray-900/50 text-[13px] font-bold text-gray-500 cursor-not-allowed">
+                  <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg> Privat
+                </span>`
+              }
+            </div>
           </div>
+
           <div class="mb-3">
             <h2 class="text-xl font-extrabold text-gray-100 flex items-center gap-1">Akun X ${item.tahun_akun}</h2>
             <p class="text-[15px] text-gray-400">@${item.username}</p>
           </div>
+
           <div class="text-[14px] text-gray-200 mb-3 space-y-1">
              <p>${emailIcon} Email: ${emailText}</p>
              <p>${telpIcon} Verif Telepon: ${telpText}</p>
              <p>${kesIcon} Kesehatan: <span class="${kesColor} font-semibold">${kesText}</span></p>
              <p>${htmtIcon} Status: <span class="${htmtColor} font-semibold">${htmtText}</span></p>
           </div>
+
           <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-400 mb-3">
              <span class="flex items-center gap-1">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.708 2H4.292C3.028 2 2 3.028 2 4.292v15.416C2 20.972 3.028 22 4.292 22h15.416C20.972 22 22 20.972 22 19.708V4.292C22 3.028 20.972 2 19.708 2zm.792 17.708c0 .437-.355.792-.792.792H4.292a.792.792 0 01-.792-.792V9h17v10.708zM4 7V4.292c0-.16.131-.292.292-.292h15.416c.16 0 .292.131.292.292V7H4z"/></svg>
                 Bergabung ${item.tahun_akun}
              </span>
-             ${isReady ? `<a href="${item.link_akun}" target="_blank" class="text-blue-400 hover:underline flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.96 14.945c-.067 0-.136-.01-.203-.027-1.13-.318-2.097-.986-2.795-1.932-.832-1.125-1.176-2.508-.968-3.893s.942-2.605 2.068-3.438l3.53-2.608c2.322-1.716 5.61-1.224 7.33 1.1.83 1.127 1.175 2.51.967 3.895s-.943 2.605-2.07 3.438l-1.48 1.094c-.333.246-.804.175-1.05-.158-.246-.334-.176-.804.158-1.05l1.48-1.095c.803-.592 1.327-1.463 1.476-2.45.148-.988-.098-1.975-.69-2.778-1.225-1.656-3.572-2.01-5.23-.784l-3.53 2.608c-.802.593-1.326 1.464-1.475 2.45-.15.99.097 1.975.69 2.778.498.675 1.187 1.15 1.992 1.377.4.114.633.528.52.928-.092.33-.394.547-.722.547zM7.27 22.054c-1.61 0-3.197-.735-4.225-2.125-.832-1.127-1.176-2.51-.968-3.894s.943-2.605 2.07-3.438l1.478-1.094c.334-.245.805-.175 1.05.158s.177.804-.157 1.05l-1.48 1.095c-.803.593-1.326 1.464-1.475 2.45-.148.99.097 1.975.69 2.778 1.225 1.657 3.57 2.01 5.23.785l3.528-2.608c.804-.592 1.326-1.462 1.475-2.45.148-.99-.098-1.975-.69-2.778-.498-.674-1.188-1.15-1.992-1.376-.4-.113-.633-.527-.52-.927.112-.4.528-.63.926-.522 1.13.318 2.096.986 2.794 1.932.833 1.126 1.176 2.508.968 3.893s-.942 2.605-2.068 3.438l-3.53 2.608c-.933.693-2.023 1.026-3.105 1.026z"/></svg> x.com/${item.username}</a>` : `<span class="flex items-center gap-1"><svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg> Link Privat</span>`}
           </div>
+
           <div class="flex gap-4 text-[15px] text-gray-400 mb-4">
             <p><span class="text-gray-100 font-bold">${item.postingan}</span> Posts</p>
             <p><span class="text-gray-100 font-bold">${item.followers}</span> Followers</p>
           </div>
+
           <div class="mt-2 pt-4 border-t border-gray-700 flex justify-between items-center">
              <div>
                 <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Harga</p>
@@ -441,6 +453,7 @@ function renderBatch() {
               }
              </div>
           </div>
+
         </div>
       </div>
     `;
