@@ -6,48 +6,68 @@
     <title>Dashboard Reseller - SteoType</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // SATPAM: Cek apakah sudah login
         const session = JSON.parse(localStorage.getItem('reseller_session'));
-        if (!session || !session.isLoggedIn) {
-            window.location.href = "login.html";
-        }
+        if (!session || !session.isLoggedIn) window.location.href = "login.html";
     </script>
 </head>
-<body class="bg-[#0a0a0a] text-white p-6">
-    <div class="max-w-4xl mx-auto">
-        <nav class="flex justify-between items-center mb-12">
-            <div>
-                <h1 class="text-xl font-bold tracking-tighter italic">STEO<span class="text-gray-500">TYPE</span></h1>
+<body class="bg-[#0a0a0a] text-white p-6 font-sans">
+    <div class="max-w-2xl mx-auto">
+        <div class="flex justify-between items-center mb-10">
+            <h1 class="text-xl font-bold italic">STEO<span class="text-gray-500">TYPE</span></h1>
+            <div class="text-right">
+                <p class="text-[10px] text-gray-500 uppercase font-bold" id="userDisplay"></p>
+                <button onclick="localStorage.clear(); location.reload();" class="text-[10px] text-red-400 font-bold uppercase">Logout</button>
             </div>
-            <div class="flex items-center gap-4">
-                <span class="text-xs font-semibold text-gray-400 uppercase tracking-widest" id="welcomeName"></span>
-                <button onclick="logout()" class="text-xs bg-red-500/10 text-red-400 px-3 py-1.5 rounded-lg font-bold border border-red-500/20">LOGOUT</button>
-            </div>
-        </nav>
+        </div>
 
         <div class="bg-blue-500/10 border border-blue-500/20 p-6 rounded-3xl mb-8">
-            <h2 class="text-lg font-bold mb-2">Halo, Reseller Terdaftar! 👋</h2>
-            <p class="text-gray-400 text-sm">Ini adalah ruang khusus untuk kamu. Di sini kamu bisa melihat stok dengan harga reseller atau informasi eksklusif lainnya.</p>
+            <h2 class="font-bold">Halo, <span id="nama"></span>!</h2>
+            <p class="text-xs text-gray-400 mt-1">Harga di bawah sudah dipotong diskon khusus reseller sebesar <span class="text-blue-400 font-bold" id="infoDiskon"></span>.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-[#161616] p-6 rounded-3xl border border-white/5">
-                <p class="text-gray-500 text-xs font-bold uppercase mb-2">Info Stok</p>
-                <p class="text-sm">Fitur stok reseller akan segera muncul di sini.</p>
-            </div>
+        <div id="stokList" class="space-y-3">
+            <p class="text-center text-gray-500 text-sm">Memuat stok reseller...</p>
         </div>
-
     </div>
 
     <script>
-        // Tampilkan nama reseller
-        document.getElementById('welcomeName').innerText = session.nama;
+        document.getElementById('nama').innerText = session.nama;
+        document.getElementById('userDisplay').innerText = session.nama;
+        document.getElementById('infoDiskon').innerText = session.diskon.includes('k') || session.diskon.includes('K') ? session.diskon.toUpperCase() : "Rp " + parseInt(session.diskon).toLocaleString('id-ID');
 
-        function logout() {
-            localStorage.removeItem('reseller_session');
-            window.location.href = "login.html";
+        async function loadStok() {
+            try {
+                const res = await fetch("/api/stok");
+                const data = await res.json();
+                const list = document.getElementById('stokList');
+                list.innerHTML = '';
+
+                // Hitung Nominal Diskon
+                let diskonVal = session.diskon.toLowerCase().replace('k', '');
+                let diskonFix = session.diskon.toLowerCase().includes('k') ? parseInt(diskonVal) * 1000 : parseInt(diskonVal);
+
+                data.forEach(item => {
+                    const hargaAsli = parseInt(item.harga.replace(/[^0-9]/g, ''));
+                    const hargaReseller = (hargaAsli - diskonFix).toLocaleString('id-ID');
+
+                    list.innerHTML += `
+                        <div class="bg-[#161616] border border-white/5 p-5 rounded-3xl flex justify-between items-center">
+                            <div>
+                                <p class="text-[9px] font-black text-blue-500 uppercase tracking-widest mb-1">${item.spek}</p>
+                                <h4 class="font-bold text-sm">${item.akun}</h4>
+                                <p class="text-xs text-gray-400 mt-1">Rp ${hargaReseller} <span class="line-through opacity-20 ml-1">Rp ${item.harga}</span></p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-[9px] font-bold ${item.status.toLowerCase() === 'ready' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
+                                ${item.status.toUpperCase()}
+                            </span>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                document.getElementById('stokList').innerHTML = "Gagal memuat data.";
+            }
         }
+        loadStok();
     </script>
 </body>
 </html>
-
