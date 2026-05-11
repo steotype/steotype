@@ -3,143 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Reseller - SteoType</title>
+    <title>Dashboard Partner - SteoType</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; }
-        .glass-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); }
-        .stok-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(12px); }
+        .card-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-hover:hover { transform: translateY(-8px); border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 20px 40px -20px rgba(0,0,0,0.7); }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
     </style>
     <script>
-        // Cek Sesi
         const session = JSON.parse(localStorage.getItem('reseller_session'));
         if (!session || !session.isLoggedIn) { window.location.href = "login.html"; }
     </script>
 </head>
-<body class="bg-[#0a0a0a] text-white p-6 antialiased">
-    <div class="max-w-6xl mx-auto">
-        
-        <nav class="flex justify-between items-center mb-10">
-            <div>
-                <h1 class="text-2xl font-extrabold italic tracking-tighter text-white">STEO<span class="text-gray-500">TYPE</span></h1>
-                <p class="text-[10px] text-blue-500 font-black uppercase tracking-[0.3em]">Reseller Dashboard</p>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="text-right hidden sm:block">
-                    <p id="userDisplay" class="text-[10px] text-gray-500 uppercase font-bold tracking-widest"></p>
-                </div>
-                <button onclick="localStorage.clear(); window.location.href='login.html';" 
-                    class="text-[10px] bg-red-500/10 text-red-400 px-4 py-2 rounded-xl font-black border border-red-500/20 hover:bg-red-500/20 transition-all uppercase">
-                    Logout
-                </button>
-            </div>
-        </nav>
+<body class="antialiased">
 
-        <div class="glass-card p-8 rounded-[2.5rem] mb-12 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div>
-                <h2 class="font-bold text-xl mb-1" id="welcomeName"></h2>
-                <p class="text-sm text-gray-400 font-medium">Katalog di bawah otomatis menggunakan harga mitra SteoType.</p>
+    <nav class="fixed top-0 w-full z-40 glass border-b border-white/5 py-4 px-6 flex justify-between items-center">
+        <h1 class="text-xl font-black italic tracking-tighter">STEO<span class="text-gray-500">TYPE</span></h1>
+        <div class="flex items-center gap-6">
+            <button onclick="toggleSidebarCart()" class="relative p-2 hover:bg-white/5 rounded-full transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <span id="cartBadge" class="absolute -top-1 -right-1 bg-blue-500 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+            </button>
+            <button onclick="localStorage.clear(); window.location.href='login.html';" class="text-[9px] font-black bg-red-500/10 text-red-500 px-4 py-2 rounded-xl border border-red-500/10 uppercase tracking-widest hover:bg-red-500/20 transition-all">Logout</button>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto pt-28 px-6 pb-20">
+        <div class="glass p-8 rounded-[2.5rem] mb-12 flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
+            <div class="relative z-10 text-center md:text-left">
+                <h2 class="text-2xl font-black mb-1">Halo, <span id="nmDisplay" class="text-blue-500"></span>! 👋</h2>
+                <p class="text-sm text-gray-500 font-medium">Panel khusus reseller dengan harga potongan otomatis.</p>
             </div>
-            <div class="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl text-center min-w-[150px]">
-                <p class="text-[9px] text-gray-500 font-black uppercase tracking-widest mb-1">Diskon Anda</p>
-                <p id="dscBadge" class="text-xl font-black text-blue-500"></p>
+            <div class="mt-6 md:mt-0 text-center bg-white/5 border border-white/10 px-8 py-4 rounded-3xl relative z-10">
+                <p class="text-[9px] text-gray-500 font-black uppercase tracking-widest mb-1 text-center">Benefit Diskon</p>
+                <p id="dscDisplay" class="text-2xl font-black text-white italic"></p>
             </div>
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-600/10 blur-[100px] rounded-full"></div>
         </div>
 
-        <div id="stokContainer" class="stok-grid">
-            <div class="col-span-full text-center py-20 text-gray-700 font-black uppercase tracking-[0.5em] animate-pulse text-xs">
-                Synchronizing Database...
-            </div>
+        <div id="stokContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="col-span-full text-center py-24 opacity-20 font-black uppercase tracking-[0.5em] text-xs">Menyambungkan Database...</div>
         </div>
+    </main>
 
+    <div id="cartSidebar" class="fixed inset-y-0 right-0 w-full max-w-sm glass border-l border-white/10 z-[100] transform translate-x-full transition-transform duration-500 p-8 flex flex-col bg-[#0a0a0a]/95">
+        <div class="flex justify-between items-center mb-8">
+            <h3 class="font-black text-xl italic uppercase tracking-tighter">Keranjang<span class="text-blue-500">.</span></h3>
+            <button onclick="toggleSidebarCart()" class="text-gray-500 hover:text-white text-3xl font-light">&times;</button>
+        </div>
+        <div id="cartItemsList" class="flex-1 space-y-4 overflow-y-auto pr-2">
+            <p class="text-center text-gray-600 text-xs mt-10 font-bold uppercase tracking-widest">Belum ada akun dipilih</p>
+        </div>
+        <div class="pt-8 border-t border-white/5 mt-8">
+            <div class="flex justify-between items-end mb-6">
+                <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Total Harga Partner</p>
+                <p id="cartTotal" class="text-2xl font-black text-white">Rp 0</p>
+            </div>
+            <button onclick="proceedToCheckout()" class="flex justify-center items-center gap-2 w-full py-4 bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#128C7E] hover:to-[#075E54] text-white font-black rounded-2xl transition shadow-lg shadow-green-900/20 outline-none uppercase text-[11px] tracking-widest">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                Pesan ke WhatsApp
+            </button>
+        </div>
     </div>
 
     <script>
         const API = "https://script.google.com/macros/s/AKfycbxM0LN44xzbUy4VDb8fVk_Olb3avz7m-AWlB_iKkDGprIjSayyaac4hBOlMYAznJGvB/exec";
+        let cart = [];
+
+        // UI & PARSE LOGIC
+        document.getElementById('nmDisplay').innerText = session.nama;
+        const rawDsc = String(session.diskon || "0").toLowerCase();
         
-        // ISI DATA PROFIL (Perbaikan error di bagian atas)
-        document.getElementById('userDisplay').innerText = session.nama;
-        document.getElementById('welcomeName').innerText = "Selamat Datang, " + session.nama + "!";
-
-        // Fungsi Pintar Harga (Bisa baca 50K, 10k, Rp 50.000)
         function parsePrice(input) {
-            if (!input) return 0;
-            let val = String(input).toLowerCase().trim();
-            if (val.includes('k')) {
-                // Mengambil angka sebelum 'k' dan dikali 1000
-                return parseFloat(val.replace('k', '').replace(/[^0-9.]/g, '')) * 1000;
-            }
-            return parseInt(val.replace(/[^0-9]/g, '')) || 0;
+            let s = String(input).toLowerCase().replace(/[^0-9k]/g, '');
+            if (s.includes('k')) return parseFloat(s.replace('k', '')) * 1000;
+            return parseInt(s) || 0;
         }
+        document.getElementById('dscDisplay').innerText = rawDsc.includes('k') ? rawDsc.toUpperCase() : "Rp " + parsePrice(rawDsc).toLocaleString('id-ID');
 
-        // Tampilkan Info Diskon
-        const diskonRaw = String(session.diskon || "0");
-        document.getElementById('dscBadge').innerText = diskonRaw.toLowerCase().includes('k') 
-            ? diskonRaw.toUpperCase() 
-            : "Rp " + parsePrice(diskonRaw).toLocaleString('id-ID');
-
+        // FETCH STOK
         async function loadStok() {
             const container = document.getElementById('stokContainer');
             try {
                 const res = await fetch(`${API}?action=get_stok`);
                 const data = await res.json();
                 container.innerHTML = '';
-
-                const potonganNominal = parsePrice(diskonRaw);
+                const diskon = parsePrice(rawDsc);
 
                 data.forEach(item => {
-                    const hargaAsli = parsePrice(item.harga);
-                    const hargaFinal = hargaAsli - potonganNominal;
-                    const isReady = String(item.status_stok || "").toLowerCase() === 'ready';
+                    const hAsli = parsePrice(item.harga);
+                    const hFinal = hAsli - diskon;
+                    const ready = String(item.status_stok).toLowerCase() === 'ready';
 
                     container.innerHTML += `
-                        <div class="glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-blue-500/40 transition-all duration-500 hover:-translate-y-1">
-                            <div>
-                                <div class="flex justify-between items-start mb-4">
-                                    <span class="text-[9px] font-black bg-blue-500/10 text-blue-500 px-3 py-1 rounded-full border border-blue-500/10 uppercase tracking-widest">
-                                        Account ${item.tahun_akun || '-'}
-                                    </span>
-                                    <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase ${isReady ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
-                                        ${(item.status_stok || 'UNKNOWN').toUpperCase()}
-                                    </span>
+                        <div class="product-card glass p-6 rounded-[2.5rem] flex flex-col card-hover h-full transition-all duration-300" data-username="${item.username}">
+                            <div class="flex justify-between items-start mb-6">
+                                <span class="bg-black/40 text-[9px] font-mono text-gray-300 px-3 py-1.5 rounded-xl border border-white/10 uppercase tracking-widest shadow-inner">KODE: ${item.kode || '-'}</span>
+                                <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded-lg ${ready ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}">${item.status_stok}</span>
+                            </div>
+                            <h3 class="text-xl font-black mb-2 tracking-tight">@${item.username}</h3>
+                            <div class="flex gap-4 text-xs text-gray-400 mb-6">
+                                <p><span class="text-white font-bold">${item.postingan || 0}</span> Posts</p>
+                                <p><span class="text-white font-bold">${item.followers || 0}</span> Followers</p>
+                            </div>
+                            
+                            <div class="space-y-2 mb-8 flex-1">
+                                <div class="flex justify-between text-[11px] bg-white/5 p-2 rounded-xl">
+                                    <span class="text-gray-400 font-bold uppercase tracking-widest">Kesehatan</span>
+                                    <span class="${String(item.kesehatan).toLowerCase().includes('aman') ? 'text-green-400' : 'text-yellow-400'} font-bold">${item.kesehatan}</span>
                                 </div>
-                                <h3 class="text-lg font-extrabold text-white mb-2 group-hover:text-blue-400 transition-colors">@${item.username || 'NoName'}</h3>
-                                <div class="space-y-2 mb-6">
-                                    <div class="flex items-center text-xs text-gray-400">
-                                        <span class="w-20 font-bold uppercase text-[9px] text-gray-600">Followers</span>
-                                        <span class="text-white">${item.followers || '0'}</span>
-                                    </div>
-                                    <div class="flex items-center text-xs text-gray-400">
-                                        <span class="w-20 font-bold uppercase text-[9px] text-gray-600">Kesehatan</span>
-                                        <span class="${String(item.kesehatan || '').toLowerCase() === 'aman' ? 'text-green-400' : 'text-yellow-400'} font-bold">${item.kesehatan || '-'}</span>
-                                    </div>
-                                    <div class="flex items-center text-xs text-gray-400">
-                                        <span class="w-20 font-bold uppercase text-[9px] text-gray-600">Verif</span>
-                                        <span class="text-white">${item.verif_telepon || '-'}</span>
-                                    </div>
+                                <div class="flex justify-between text-[11px] bg-white/5 p-2 rounded-xl">
+                                    <span class="text-gray-400 font-bold uppercase tracking-widest">Verif Telepon</span>
+                                    <span class="text-white font-bold">${item.verif_telepon || '-'}</span>
                                 </div>
                             </div>
 
-                            <div class="pt-4 border-t border-white/5 flex justify-between items-end">
+                            <div class="pt-6 border-t border-white/10 flex justify-between items-end">
                                 <div>
-                                    <p class="text-[9px] text-gray-600 font-bold uppercase mb-1">Partner Price</p>
-                                    <p class="text-xl font-black text-white">Rp ${Math.max(0, hargaFinal).toLocaleString('id-ID')}</p>
-                                    <p class="text-[10px] text-gray-700 line-through font-bold">Rp ${hargaAsli.toLocaleString('id-ID')}</p>
+                                    <p class="text-[9px] text-gray-500 font-black uppercase mb-1 tracking-widest">Reseller Price</p>
+                                    <p class="text-xl font-black text-blue-500">Rp ${Math.max(0, hFinal).toLocaleString('id-ID')}</p>
+                                    <p class="text-[10px] text-gray-600 line-through font-bold">Rp ${hAsli.toLocaleString('id-ID')}</p>
                                 </div>
-                                <a href="${item.link_akun || '#'}" target="_blank" class="bg-white text-black p-3 rounded-2xl hover:bg-blue-500 hover:text-white transition-all shadow-lg active:scale-90">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                                    </svg>
-                                </a>
+                                ${ready ? 
+                                    `<button onclick="toggleCart('${item.kode}', '${item.username}', ${Math.max(0, hFinal)})" class="btn-add-cart px-5 py-3 bg-gray-800 border border-gray-600 text-blue-400 text-xs font-black rounded-xl hover:bg-gray-700 hover:text-white transition shadow-sm outline-none uppercase tracking-widest">Tambah</button>` : 
+                                    `<button disabled class="px-5 py-3 bg-gray-900 text-gray-600 text-xs font-black rounded-xl cursor-not-allowed uppercase tracking-widest border border-white/5">Sold</button>`
+                                }
                             </div>
                         </div>`;
                 });
             } catch (e) {
-                container.innerHTML = `<div class="col-span-full text-center p-10 bg-red-500/5 border border-red-500/10 rounded-3xl text-red-500 text-xs font-bold uppercase tracking-widest">Gagal Memuat Database Akun</div>`;
+                container.innerHTML = `<div class="col-span-full text-center py-10 glass rounded-3xl text-red-500 text-xs font-bold uppercase tracking-widest">Gagal Sinkronisasi Database</div>`;
             }
         }
+
+        // --- SISTEM KERANJANG (Sama Persis dengan Publik) ---
+        function toggleSidebarCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            sidebar.classList.toggle('translate-x-full');
+        }
+
+        function toggleCart(kode, username, harga) {
+            const index = cart.findIndex(item => item.username === username);
+            if (index > -1) {
+                cart.splice(index, 1); // Hapus jika sudah ada
+            } else {
+                cart.push({kode, username, harga}); // Tambah jika belum
+            }
+            updateCartUI();
+            syncCartUI(); 
+        }
+
+        function syncCartUI() {
+            document.querySelectorAll('.product-card').forEach(card => {
+                const username = card.dataset.username;
+                const inCart = cart.some(c => c.username === username);
+                const btn = card.querySelector('.btn-add-cart');
+                
+                if (inCart) {
+                    card.classList.add('border-blue-500', 'shadow-blue-900/20', 'shadow-xl');
+                    card.classList.remove('border-white/5');
+                    if(btn) {
+                        btn.className = "btn-add-cart px-5 py-3 bg-blue-600 text-white text-xs font-black rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-900/20 outline-none uppercase tracking-widest";
+                        btn.innerText = "Terpilih";
+                    }
+                } else {
+                    card.classList.remove('border-blue-500', 'shadow-blue-900/20', 'shadow-xl');
+                    card.classList.add('border-white/5');
+                    if(btn) {
+                        btn.className = "btn-add-cart px-5 py-3 bg-gray-800 border border-gray-600 text-blue-400 text-xs font-black rounded-xl hover:bg-gray-700 hover:text-white transition shadow-sm outline-none uppercase tracking-widest";
+                        btn.innerText = "Tambah";
+                    }
+                }
+            });
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cartItemsList');
+            const badge = document.getElementById('cartBadge');
+            const total = document.getElementById('cartTotal');
+            
+            list.innerHTML = '';
+            let totalVal = 0;
+
+            if (cart.length > 0) {
+                badge.classList.remove('hidden');
+                badge.innerText = cart.length;
+                
+                cart.forEach((item) => {
+                    totalVal += item.harga;
+                    list.innerHTML += `
+                        <div class="flex justify-between items-center py-4 border-b border-gray-800">
+                            <div>
+                                <p class="text-xs font-black text-gray-400 mb-1 tracking-widest">${item.kode}</p>
+                                <p class="text-sm font-bold text-white">@${item.username}</p>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <p class="text-sm font-black text-blue-500">Rp ${item.harga.toLocaleString('id-ID')}</p>
+                                <button onclick="toggleCart('${item.kode}', '${item.username}', ${item.harga})" class="text-gray-600 hover:text-red-500 transition bg-white/5 hover:bg-red-500/10 p-2 rounded-xl outline-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                </button>
+                            </div>
+                        </div>`;
+                });
+            } else {
+                badge.classList.add('hidden');
+                list.innerHTML = '<p class="text-center text-gray-600 text-xs mt-10 font-bold uppercase tracking-widest">Belum ada akun dipilih</p>';
+            }
+
+            total.innerText = "Rp " + totalVal.toLocaleString('id-ID');
+        }
+
+        // --- CHECKOUT WHATSAPP (Sesuai Skrip Publik) ---
+        function proceedToCheckout() {
+            if (cart.length === 0) return alert("Keranjang masih kosong!");
+            
+            // Format Pesan Persis Seperti Versi Publik
+            let message = `Halo, saya reseller *${session.nama}* mau order ${cart.length} akun:\n\n`;
+            let sumHarga = 0;
+            
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.kode} | ${item.username} (Rp ${item.harga.toLocaleString('id-ID')})\n`;
+                sumHarga += item.harga;
+            });
+            
+            message += `\nTotal: Rp ${sumHarga.toLocaleString('id-ID')}\n\nBisa di test dulu kak?`;
+            
+            // Link WhatsApp Sesuai Nomor di Skrip Publik
+            window.open(`https://wa.me/6285959161539?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
         loadStok();
     </script>
 </body>
