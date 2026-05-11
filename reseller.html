@@ -5,131 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Reseller - SteoType</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; }
-        .glass-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); }
-    </style>
     <script>
-        // PROTEKSI: Cek apakah session ada, jika tidak tendang ke login
-        const rawSession = localStorage.getItem('reseller_session');
-        const session = rawSession ? JSON.parse(rawSession) : null;
-        
-        if (!session || !session.isLoggedIn) {
-            window.location.href = "login.html";
-        }
+        // SATPAM: Cek Sesi dengan aman
+        const getSession = () => {
+            try {
+                const s = localStorage.getItem('reseller_session');
+                return s ? JSON.parse(s) : null;
+            } catch (e) { return null; }
+        };
+        const session = getSession();
+        if (!session || !session.isLoggedIn) { window.location.href = "login.html"; }
     </script>
 </head>
-<body class="bg-[#0a0a0a] text-white p-6 antialiased">
+<body class="bg-[#0a0a0a] text-white p-6 font-sans">
     <div class="max-w-2xl mx-auto">
-        
-        <nav class="flex justify-between items-center mb-10">
-            <h1 class="text-xl font-extrabold italic tracking-tighter">STEO<span class="text-gray-500">TYPE</span></h1>
-            <div class="flex flex-col items-end">
-                <span id="userDisplay" class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1"></span>
+        <div class="flex justify-between items-center mb-10">
+            <h1 class="text-xl font-bold italic tracking-tighter text-white">STEO<span class="text-gray-500">TYPE</span></h1>
+            <div class="text-right">
+                <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1" id="userDisplay"></p>
                 <button onclick="localStorage.clear(); window.location.href='login.html';" 
-                    class="text-[9px] bg-red-500/10 text-red-400 px-2.5 py-1 rounded-lg font-black border border-red-500/20 hover:bg-red-500/20 transition-all uppercase">
-                    Logout
+                    class="text-[9px] bg-red-500/10 text-red-400 px-3 py-1.5 rounded-lg font-bold border border-red-500/20">
+                    LOGOUT
                 </button>
             </div>
-        </nav>
+        </div>
 
-        <div class="glass-card p-6 rounded-[2rem] mb-8 relative overflow-hidden">
-            <div class="relative z-10">
-                <h2 class="font-bold text-lg">Halo, <span id="namaDisplay" class="text-blue-400"></span>! 👋</h2>
-                <p class="text-[11px] text-gray-400 mt-2 leading-relaxed font-medium">
-                    Katalog khusus dengan potongan diskon otomatis sebesar 
-                    <span id="infoDiskon" class="text-white bg-white/10 px-2 py-0.5 rounded font-bold"></span>.
-                </p>
-            </div>
-            <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-600/10 blur-3xl rounded-full"></div>
+        <div class="bg-blue-500/10 border border-blue-500/20 p-6 rounded-3xl mb-8">
+            <h2 class="font-bold text-lg text-white">Halo, <span id="nmDisplay"></span>!</h2>
+            <p class="text-[11px] text-gray-400 mt-1">Harga otomatis didiskon sebesar <span id="dscDisplay" class="text-blue-400 font-bold"></span>.</p>
         </div>
 
         <div id="stokList" class="space-y-3">
-            <div id="loading" class="text-center py-20">
-                <div class="animate-spin inline-block w-6 h-6 border-[3px] border-blue-500 border-t-transparent rounded-full mb-4"></div>
-                <p class="text-gray-600 text-[10px] font-black uppercase tracking-widest">Sinkronisasi Data...</p>
+            <div class="text-center py-12 text-gray-600 text-[10px] font-black uppercase tracking-[0.2em] animate-pulse">
+                Menghubungkan ke API...
             </div>
         </div>
-
-        <footer class="mt-16 mb-8 text-center">
-            <p class="text-[9px] text-gray-700 font-black uppercase tracking-[0.3em]">Exclusively for Partners</p>
-        </footer>
     </div>
 
     <script>
-        // Ambil diskon dari session dengan proteksi "Anti-Undefined"
-        const getDiskon = () => {
-            if (!session || !session.diskon) return "0";
-            return session.diskon.toString().toLowerCase();
-        };
-
-        const rawDiskon = getDiskon();
+        // Mencegah error 'toLowerCase' dengan pengecekan bertahap
+        const rawDiskon = (session && session.diskon) ? String(session.diskon).toLowerCase() : "0";
         
-        // Tampilan UI Awal
-        document.getElementById('namaDisplay').innerText = session ? session.nama : "Reseller";
+        document.getElementById('nmDisplay').innerText = session ? session.nama : "Reseller";
         document.getElementById('userDisplay').innerText = session ? session.nama : "Guest";
-        document.getElementById('infoDiskon').innerText = rawDiskon.includes('k') 
+        document.getElementById('dscDisplay').innerText = rawDiskon.includes('k') 
             ? rawDiskon.toUpperCase() 
             : "Rp " + (parseInt(rawDiskon) || 0).toLocaleString('id-ID');
 
         async function loadStok() {
             const list = document.getElementById('stokList');
             try {
-                // Tarik data dari functions/api/stok.js
+                // Mengambil data dari Cloudflare Functions /api/stok.js
                 const res = await fetch("/api/stok");
-                if (!res.ok) throw new Error("Status " + res.status);
+                if (!res.ok) throw new Error("API Offline (Status: " + res.status + ")");
                 
                 const data = await res.json();
-                if (!Array.isArray(data)) throw new Error("Data API tidak valid");
+                if (!Array.isArray(data)) throw new Error("Format data salah.");
 
-                list.innerHTML = ''; // Hapus loading
+                list.innerHTML = '';
 
-                // Hitung Nominal Diskon
-                let diskonVal = rawDiskon.replace('k', '');
-                let nominalPotongan = rawDiskon.includes('k') ? (parseInt(diskonVal) || 0) * 1000 : (parseInt(diskonVal) || 0);
+                // Hitung Diskon
+                let dVal = rawDiskon.replace('k', '');
+                let dFix = rawDiskon.includes('k') ? (parseInt(dVal) || 0) * 1000 : (parseInt(dVal) || 0);
 
                 data.forEach(item => {
-                    // Bersihkan harga dari Rp dan titik
-                    let hargaBersih = parseInt(item.harga.replace(/[^0-9]/g, '')) || 0;
-                    let hargaFinal = hargaBersih - nominalPotongan;
-                    if (hargaFinal < 0) hargaFinal = 0;
+                    let hAsli = parseInt(item.harga.replace(/[^0-9]/g, '')) || 0;
+                    let hFinal = hAsli - dFix;
+                    if (hFinal < 0) hFinal = 0;
 
                     list.innerHTML += `
-                        <div class="glass-card p-5 rounded-[1.5rem] flex justify-between items-center group hover:border-blue-500/40 transition-all duration-300">
-                            <div class="flex-1">
+                        <div class="bg-[#161616] border border-white/5 p-5 rounded-3xl flex justify-between items-center group hover:border-blue-500/30 transition-all">
+                            <div>
                                 <p class="text-[9px] font-black text-blue-500 uppercase tracking-widest mb-1">${item.spek}</p>
-                                <h4 class="font-bold text-sm text-white group-hover:text-blue-100">${item.akun}</h4>
-                                <div class="flex items-center gap-2 mt-2">
-                                    <p class="text-xs font-bold text-white">Rp ${hargaFinal.toLocaleString('id-ID')}</p>
-                                    <span class="text-[9px] text-gray-600 line-through">Rp ${item.harga}</span>
-                                </div>
+                                <h4 class="font-bold text-sm text-white">${item.akun}</h4>
+                                <p class="text-xs text-gray-500 mt-2">
+                                    Rp ${hFinal.toLocaleString('id-ID')} 
+                                    <span class="line-through opacity-20 ml-2 text-[10px]">Rp ${item.harga}</span>
+                                </p>
                             </div>
-                            <div class="ml-4">
-                                <span class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-tighter ${item.status.toLowerCase() === 'ready' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
-                                    ${item.status}
-                                </span>
-                            </div>
-                        </div>
-                    `;
+                            <span class="px-3 py-1.5 rounded-xl text-[9px] font-black ${item.status.toLowerCase() === 'ready' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
+                                ${item.status.toUpperCase()}
+                            </span>
+                        </div>`;
                 });
-
             } catch (e) {
-                console.error("Fetch Error:", e);
                 list.innerHTML = `
-                    <div class="bg-red-500/5 border border-red-500/10 p-8 rounded-[2rem] text-center">
-                        <div class="w-10 h-10 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span class="text-red-500 font-bold text-lg">!</span>
-                        </div>
-                        <p class="text-red-400 text-[10px] font-black uppercase tracking-widest mb-1">Koneksi API Gagal</p>
-                        <p class="text-white/40 text-[9px] mb-4">${e.message}</p>
-                        <button onclick="location.reload()" class="bg-white text-black text-[9px] px-6 py-2.5 rounded-full font-black uppercase hover:bg-gray-200 transition-all shadow-lg">Coba Muat Ulang</button>
-                    </div>
-                `;
+                    <div class="bg-red-500/10 border border-red-500/20 p-8 rounded-3xl text-center">
+                        <p class="text-red-400 text-xs font-bold uppercase mb-2 tracking-widest">Koneksi API Gagal</p>
+                        <p class="text-white/40 text-[10px] mb-4">${e.message}</p>
+                        <button onclick="location.reload()" class="bg-white/10 text-white text-[9px] px-5 py-2 rounded-full font-black uppercase">Coba Lagi</button>
+                    </div>`;
             }
         }
-
-        // Jalankan fetch stok
         loadStok();
     </script>
 </body>
