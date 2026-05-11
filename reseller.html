@@ -13,27 +13,37 @@
 <body class="bg-[#0a0a0a] text-white p-6 font-sans">
     <div class="max-w-2xl mx-auto">
         <div class="flex justify-between items-center mb-10">
-            <h1 class="text-xl font-bold italic">STEO<span class="text-gray-500">TYPE</span></h1>
+            <h1 class="text-xl font-bold italic tracking-tighter">STEO<span class="text-gray-500">TYPE</span></h1>
             <div class="text-right">
-                <p class="text-[10px] text-gray-500 uppercase font-bold" id="userDisplay"></p>
-                <button onclick="localStorage.clear(); location.reload();" class="text-[10px] text-red-400 font-bold uppercase">Logout</button>
+                <p class="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1" id="userDisplay"></p>
+                <button onclick="localStorage.clear(); location.reload();" class="text-[10px] bg-red-500/10 text-red-400 px-2 py-1 rounded-md font-bold border border-red-500/20">LOGOUT</button>
             </div>
         </div>
 
         <div class="bg-blue-500/10 border border-blue-500/20 p-6 rounded-3xl mb-8">
-            <h2 class="font-bold">Halo, <span id="nama"></span>!</h2>
-            <p class="text-xs text-gray-400 mt-1">Harga di bawah sudah dipotong diskon khusus reseller sebesar <span class="text-blue-400 font-bold" id="infoDiskon"></span>.</p>
+            <h2 class="font-bold text-lg">Halo, <span id="nama"></span>! 👋</h2>
+            <p class="text-xs text-gray-400 mt-2 leading-relaxed">
+                Harga di bawah otomatis dipotong diskon khusus reseller sebesar 
+                <span class="text-blue-400 font-bold bg-blue-400/10 px-2 py-0.5 rounded" id="infoDiskon"></span> 
+                dari harga publik.
+            </p>
         </div>
 
         <div id="stokList" class="space-y-3">
-            <p class="text-center text-gray-500 text-sm">Memuat stok reseller...</p>
+            <div class="text-center py-10">
+                <div class="animate-spin inline-block w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full mb-3"></div>
+                <p class="text-gray-500 text-xs font-medium">Sinkronisasi stok eksklusif...</p>
+            </div>
         </div>
     </div>
 
     <script>
         document.getElementById('nama').innerText = session.nama;
         document.getElementById('userDisplay').innerText = session.nama;
-        document.getElementById('infoDiskon').innerText = session.diskon.includes('k') || session.diskon.includes('K') ? session.diskon.toUpperCase() : "Rp " + parseInt(session.diskon).toLocaleString('id-ID');
+        
+        // Format Tampilan Diskon
+        let diskonText = session.diskon.toString().toLowerCase();
+        document.getElementById('infoDiskon').innerText = diskonText.includes('k') ? diskonText.toUpperCase() : "Rp " + parseInt(diskonText).toLocaleString('id-ID');
 
         async function loadStok() {
             try {
@@ -42,29 +52,34 @@
                 const list = document.getElementById('stokList');
                 list.innerHTML = '';
 
-                // Hitung Nominal Diskon
-                let diskonVal = session.diskon.toLowerCase().replace('k', '');
-                let diskonFix = session.diskon.toLowerCase().includes('k') ? parseInt(diskonVal) * 1000 : parseInt(diskonVal);
+                // Logika Perhitungan Diskon
+                let dVal = diskonText.replace('k', '');
+                let dFix = diskonText.includes('k') ? parseInt(dVal) * 1000 : parseInt(dVal);
+                if (isNaN(dFix)) dFix = 0;
 
                 data.forEach(item => {
-                    const hargaAsli = parseInt(item.harga.replace(/[^0-9]/g, ''));
-                    const hargaReseller = (hargaAsli - diskonFix).toLocaleString('id-ID');
+                    let hAsli = parseInt(item.harga.replace(/[^0-9]/g, '')) || 0;
+                    let hReseller = hAsli - dFix;
+                    if (hReseller < 0) hReseller = 0;
 
                     list.innerHTML += `
-                        <div class="bg-[#161616] border border-white/5 p-5 rounded-3xl flex justify-between items-center">
+                        <div class="bg-[#161616] border border-white/5 p-5 rounded-3xl flex justify-between items-center group hover:border-blue-500/30 transition-all">
                             <div>
-                                <p class="text-[9px] font-black text-blue-500 uppercase tracking-widest mb-1">${item.spek}</p>
-                                <h4 class="font-bold text-sm">${item.akun}</h4>
-                                <p class="text-xs text-gray-400 mt-1">Rp ${hargaReseller} <span class="line-through opacity-20 ml-1">Rp ${item.harga}</span></p>
+                                <p class="text-[9px] font-black text-blue-500 uppercase tracking-[0.15em] mb-1">${item.spek}</p>
+                                <h4 class="font-bold text-sm text-white">${item.akun}</h4>
+                                <p class="text-xs text-gray-500 mt-1.5 font-medium">
+                                    Rp ${hReseller.toLocaleString('id-ID')} 
+                                    <span class="line-through opacity-20 ml-1.5 text-[10px]">Rp ${item.harga}</span>
+                                </p>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-[9px] font-bold ${item.status.toLowerCase() === 'ready' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
+                            <span class="px-3 py-1.5 rounded-xl text-[9px] font-black ${item.status.toLowerCase() === 'ready' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
                                 ${item.status.toUpperCase()}
                             </span>
                         </div>
                     `;
                 });
             } catch (e) {
-                document.getElementById('stokList').innerHTML = "Gagal memuat data.";
+                document.getElementById('stokList').innerHTML = `<p class="text-center text-red-400 text-xs py-10">Gagal memuat data. Periksa koneksi API.</p>`;
             }
         }
         loadStok();
