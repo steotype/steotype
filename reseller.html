@@ -8,17 +8,19 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #0b0e14; } /* Warna dasar gelap sesuai gambar */
+    body { font-family: 'Inter', sans-serif; background-color: #0b0e14; }
     .glass-card { background: #151923; border: 1px solid rgba(255, 255, 255, 0.05); }
     .skeleton { background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
     @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body class="text-gray-200 min-h-screen relative pb-8">
 
   <script>
     const session = JSON.parse(localStorage.getItem('reseller_session') || '{}');
-    if (!session.isLoggedIn || !session.token) {
+    if (!session.isLoggedIn) {
       window.location.href = "login.html";
     }
   </script>
@@ -35,8 +37,8 @@
 
   <main class="px-6 w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto space-y-6"> 
     
-    <div class="glass-card rounded-3xl p-6 text-center shadow-lg">
-      <h2 class="text-2xl font-bold text-white mb-2">Halo, <span id="partnerName" class="text-blue-400">...</span>! 👋</h2>
+    <div class="glass-card rounded-3xl p-6 text-center shadow-lg fade-in-up">
+      <h2 class="text-2xl font-bold text-white mb-2">Halo, <span id="partnerName" class="text-blue-400">Partner</span>! 👋</h2>
       <p class="text-sm text-gray-400 mb-6">Katalog mitra dengan penyesuaian harga otomatis.</p>
       
       <div class="bg-[#0b0e14] border border-gray-700/50 rounded-2xl p-4 inline-block min-w-[180px]">
@@ -45,19 +47,19 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-3 fade-in-down">
-      <button onclick="openModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 transition-all outline-none">
+    <div class="grid grid-cols-2 gap-3 fade-in-up" style="animation-delay: 0.1s;">
+      <button onclick="openModal('tncModal')" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 transition-all outline-none">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
         S&K (TNC)
       </button>
-      <button onclick="openInfoModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 transition-all outline-none">
+      <button onclick="openModal('infoModal')" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 transition-all outline-none">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
         Info Akun
       </button>
     </div>
 
-    <div class="grid grid-cols-2 gap-2.5 fade-in-down">
-      <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-all outline-none">
+    <div class="grid grid-cols-2 gap-2.5 fade-in-up" style="animation-delay: 0.2s;">
+      <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg transition-all outline-none">
         READY (<span id="count-ready">0</span>)
       </button>
       <button onclick="switchTab('sold')" id="btn-sold" class="w-full py-2.5 rounded-xl border border-gray-700 bg-[#151923] text-xs font-bold text-gray-400 transition-all outline-none">
@@ -71,7 +73,7 @@
       </button>
     </div>
 
-    <div class="flex gap-3 fade-in-down">
+    <div class="flex gap-3 fade-in-up" style="animation-delay: 0.3s;">
       <div class="relative flex-1">
         <input type="text" id="searchInput" onkeyup="renderProducts()" placeholder="Cari (MT, Tahun)..." class="w-full h-full bg-[#151923] border border-gray-700 text-gray-200 text-sm rounded-xl block pl-10 pr-3 py-3 outline-none focus:border-blue-500 transition-colors">
         <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
@@ -101,38 +103,35 @@
 
     <div id="productGrid" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
-    <div id="noResults" class="hidden text-center py-12 fade-in-down max-w-md mx-auto">
-      <div class="bg-gray-800/50 rounded-2xl p-8 border border-gray-700/50 inline-block w-full">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
+    <div id="noResults" class="hidden text-center py-12 fade-in-up max-w-md mx-auto">
+      <div class="bg-gray-800/50 rounded-2xl p-8 border border-gray-700/50 inline-block w-full text-center">
         <p class="text-gray-400 text-sm font-medium">Akun tidak ditemukan di kategori ini.</p>
       </div>
     </div>
   </main>
 
-  <button id="floatingCart" onclick="openCartModal()" class="fixed bottom-5 left-5 z-40 bg-blue-600 hover:bg-blue-500 text-white p-3 rounded-full shadow-lg shadow-blue-900/40 transition-transform transform hover:scale-110 flex items-center justify-center outline-none hidden fade-in-down">
+  <button id="floatingCart" onclick="openCartModal()" class="fixed bottom-5 left-5 z-40 bg-blue-600 hover:bg-blue-500 text-white p-3 rounded-full shadow-lg shadow-blue-900/40 transition-transform transform hover:scale-110 flex items-center justify-center outline-none hidden">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
     <span id="cartBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-gray-900">0</span>
   </button>
 
   <div id="cartModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="cartModalBackdrop" onclick="closeCartModal()"></div>
-    <div class="relative bg-[#151923] border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="cartModalContent">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeCartModal()"></div>
+    <div class="relative bg-[#151923] border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
         <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
           Keranjang Partner
         </h3>
-        <button onclick="closeCartModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <button onclick="closeCartModal()" class="text-gray-400 hover:text-white transition">✕</button>
       </div>
       <div id="cartItemsList" class="p-4 overflow-y-auto space-y-3 max-h-[40vh]"></div>
-      <div class="p-4 border-t border-gray-700 bg-[#0b0e14] rounded-b-2xl">
+      <div class="p-4 border-t border-gray-700 bg-[#0b0e14]">
         <div class="flex justify-between items-center mb-4">
-          <span class="text-gray-400 text-sm">Total Harga Diskon</span>
+          <span class="text-gray-400 text-sm">Total Bayar (Diskon)</span>
           <span id="cartTotal" class="text-xl font-bold text-blue-400">Rp 0</span>
         </div>
-        <button onclick="checkoutWA()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20 outline-none">
+        <button onclick="checkoutWA()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20">
           Kirim ke WhatsApp
         </button>
       </div>
@@ -140,70 +139,63 @@
   </div>
 
   <div id="tncModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="modalBackdrop" onclick="closeModal()"></div>
-    <div class="relative bg-[#151923] border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="modalContent">
-      <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100">Syarat & Ketentuan</h3>
-        <button onclick="closeModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-      </div>
-      <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed text-gray-400">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal('tncModal')"></div>
+    <div class="relative bg-[#151923] border border-gray-700 rounded-2xl w-[90%] max-w-md p-6 shadow-2xl">
+      <h3 class="text-lg font-bold text-white mb-4">Syarat & Ketentuan</h3>
+      <div class="space-y-3 text-sm text-gray-400 max-h-[50vh] overflow-y-auto pr-2">
         <p>1. Garansi 60 Jam sejak akun dikirim.</p>
         <p>2. Garansi batal jika data pemulihan diubah atau dipindah tangan.</p>
         <p>3. Semua penjualan final (tidak ada refund uang).</p>
       </div>
-      <div class="p-4 border-t border-gray-700 bg-[#0b0e14] rounded-b-2xl">
-        <button onclick="closeModal()" class="w-full py-2.5 bg-blue-600 text-white font-bold rounded-xl outline-none">Tutup</button>
-      </div>
+      <button onclick="closeModal('tncModal')" class="w-full mt-6 py-2.5 bg-blue-600 text-white font-bold rounded-xl outline-none">Tutup</button>
     </div>
   </div>
 
   <div id="infoModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="infoModalBackdrop" onclick="closeInfoModal()"></div>
-    <div class="relative bg-[#151923] border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="infoModalContent">
-      <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100">Info Akun</h3>
-        <button onclick="closeInfoModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-      </div>
-      <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed text-gray-400">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal('infoModal')"></div>
+    <div class="relative bg-[#151923] border border-gray-700 rounded-2xl w-[90%] max-w-md p-6 shadow-2xl">
+      <h3 class="text-lg font-bold text-white mb-4">Info Akun</h3>
+      <div class="space-y-3 text-sm text-gray-400">
         <p><strong>Non HTMT:</strong> Mention belum bekerja.</p>
         <p><strong>Masuk MT:</strong> Mention pasti masuk tab orang lain.</p>
         <p><strong>Masuk HTMT:</strong> Kualitas premium, tweet tembus pencarian Hashtag.</p>
       </div>
-      <div class="p-4 border-t border-gray-700 bg-[#0b0e14] rounded-b-2xl">
-        <button onclick="closeInfoModal()" class="w-full py-2.5 bg-gray-700 text-white font-bold rounded-xl outline-none">Tutup</button>
-      </div>
+      <button onclick="closeModal('infoModal')" class="w-full mt-6 py-2.5 bg-gray-700 text-white font-bold rounded-xl outline-none">Tutup</button>
     </div>
   </div>
 
   <script>
-    const SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbxUQQKI2MNo3jqESMvdV1O7prnqVm34SBKtXduzkExaCwR6k1m2tPggh5_CmHxwSWXg/exec?action=get_stok";
+    const SPREADSHEET_URL = "api/reseller?action=get_stok";
     let allAccounts = [];
     let cart = [];
     let currentTab = 'ready';
 
-    // Set UI Partner & Hitung Diskon
+    // Inisialisasi UI Partner
     document.getElementById('partnerName').innerText = session.nama;
-    let diskonVal = session.diskon || 0;
-    let diskonNum = 0;
-    if (String(diskonVal).toLowerCase().includes('k')) {
-      diskonNum = parseFloat(String(diskonVal).toLowerCase().replace('k', '')) * 1000;
-    } else {
-      diskonNum = parseInt(String(diskonVal).replace(/[^0-9]/g, '')) || 0;
+    
+    // Parsing Diskon
+    function parsePrice(input) {
+      if (!input) return 0;
+      let val = String(input).toLowerCase().trim();
+      if (val.includes('k')) return parseFloat(val.replace('k', '').replace(/[^0-9.]/g, '')) * 1000;
+      let num = parseInt(val.replace(/[^0-9]/g, ''));
+      return isNaN(num) ? 0 : num;
     }
+
+    const diskonNum = parsePrice(session.diskon);
     document.getElementById('partnerDiscount').innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(diskonNum);
 
-    // 1. FUNGSI LOAD DATA (MENGGUNAKAN TOKEN KEAMANAN)
+    // 1. FUNGSI LOAD DATA
     async function loadData() {
       const loader = document.getElementById('loadingIndicator');
       try {
-        const response = await fetch(`${SPREADSHEET_URL}&token=${session.token}`);
+        const response = await fetch(SPREADSHEET_URL);
         const data = await response.json();
         
         allAccounts = data.map(item => {
           item.searchIndex = JSON.stringify(item).toLowerCase();
-          // Harga Matang dari Google Script Backend
-          item.hAsli = item.harga_asli_num || 0;
-          item.hFinal = item.harga_final_num || 0; 
+          item.hAsli = parsePrice(item.harga);
+          item.hFinal = Math.max(0, item.hAsli - diskonNum); 
           return item;
         });
 
@@ -212,18 +204,18 @@
         renderProducts();
       } catch (e) {
         loader.style.display = 'none';
-        alert("Koneksi gagal. Pastikan file Cloudflare reseller.js sudah diupdate dengan link Google Script terbaru.");
+        alert("Gagal memuat database. Pastikan koneksi internet stabil.");
       }
     }
 
-    // 2. FUNGSI TABS (4 MENU)
+    // 2. FUNGSI TABS
     function switchTab(tab) {
       currentTab = tab;
       const tabs = ['ready', 'sold', 'mt', 'htmt'];
       tabs.forEach(t => {
         const btn = document.getElementById(`btn-${t}`);
         if(t === tab) {
-          btn.className = 'w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-all outline-none';
+          btn.className = 'w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg transition-all outline-none';
         } else {
           btn.className = 'w-full py-2.5 rounded-xl border border-gray-700 bg-[#151923] text-xs font-bold text-gray-400 hover:bg-gray-800 transition-all outline-none';
         }
@@ -234,12 +226,12 @@
     function updateCounts() {
       const tabs = ['ready', 'sold', 'mt', 'htmt'];
       tabs.forEach(t => {
-        const count = allAccounts.filter(item => String(item.status).toLowerCase() === t).length;
+        const count = allAccounts.filter(item => String(item.status).toLowerCase().trim() === t).length;
         document.getElementById(`count-${t}`).innerText = count;
       });
     }
 
-    // 3. FUNGSI RENDER, SORT & FILTER
+    // 3. RENDER PRODUK
     function renderProducts() {
       const grid = document.getElementById('productGrid');
       const noResults = document.getElementById('noResults');
@@ -249,11 +241,12 @@
       const sortValue = document.getElementById('sortSelect').value;
 
       let filtered = allAccounts.filter(item => {
-        const matchTab = String(item.status).toLowerCase() === currentTab;
+        const matchTab = String(item.status).toLowerCase().trim() === currentTab;
         const matchSearch = item.searchIndex.includes(searchTerm);
         return matchTab && matchSearch;
       });
 
+      // Sorting Logic
       if (sortValue !== 'default') {
         filtered.sort((a, b) => {
           if (sortValue === 'harga-asc') return a.hFinal - b.hFinal;
@@ -278,7 +271,7 @@
         noResults.classList.add('hidden');
         filtered.forEach(item => {
           const div = document.createElement('div');
-          div.className = 'glass-card rounded-[2rem] p-6 hover:border-gray-600 transition-all fade-in-up relative overflow-hidden flex flex-col justify-between';
+          div.className = 'glass-card rounded-[2rem] p-6 hover:border-gray-600 transition-all flex flex-col justify-between fade-in-up';
           
           const hargaAsliStr = new Intl.NumberFormat('id-ID').format(item.hAsli);
           const hargaFinalStr = new Intl.NumberFormat('id-ID').format(item.hFinal);
@@ -290,21 +283,18 @@
                 <span class="bg-blue-500/10 text-blue-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-blue-500/20">ID: ${item.id}</span>
                 <span class="text-gray-500 text-[11px] font-bold bg-[#0b0e14] px-3 py-1 rounded-full">${item.tahun || '-'}</span>
               </div>
-              
               <div>
-                <h3 class="text-white font-black text-xl tracking-tight leading-tight">${item.kategori}</h3>
-                <p class="text-gray-500 text-xs mt-1.5 font-medium">${item.username || 'Private'}</p>
+                <h3 class="text-white font-black text-xl tracking-tight leading-tight uppercase">${item.kategori}</h3>
+                <p class="text-gray-500 text-xs mt-1.5 font-medium">${item.username || 'Protected'}</p>
               </div>
-
               <div class="pt-2">
                 <p class="text-[11px] text-gray-500 font-medium line-through">Rp ${hargaAsliStr}</p>
                 <p class="text-blue-400 font-black text-2xl tracking-tighter">Rp ${hargaFinalStr}</p>
               </div>
             </div>
-
             <div class="mt-5">
               ${allowBuy ? 
-                `<button onclick="addToCart('${item.id}')" class="w-full bg-white text-black font-black py-3.5 rounded-xl hover:bg-gray-200 transition-transform transform hover:scale-[1.02] text-[11px] uppercase tracking-widest shadow-lg shadow-white/5 outline-none">Tambah</button>` 
+                `<button onclick="addToCart('${item.id}')" class="w-full bg-white text-black font-black py-3.5 rounded-xl hover:bg-gray-200 transition-transform transform active:scale-95 text-[11px] uppercase tracking-widest outline-none">Tambah</button>` 
                 : `<button disabled class="w-full bg-gray-800 text-gray-500 font-black py-3.5 rounded-xl text-[11px] uppercase tracking-widest cursor-not-allowed outline-none">TERJUAL</button>`
               }
             </div>
@@ -314,7 +304,7 @@
       }
     }
 
-    // 4. LOGIKA KERANJANG
+    // 4. KERANJANG & CHECKOUT
     function addToCart(id) {
       const item = allAccounts.find(i => i.id == id);
       if(!cart.find(c => c.id == id)) {
@@ -333,11 +323,6 @@
 
     function openCartModal() {
       document.getElementById('cartModal').classList.remove('hidden');
-      setTimeout(() => {
-        document.getElementById('cartModalBackdrop').classList.remove('opacity-0');
-        document.getElementById('cartModalContent').classList.remove('opacity-0', 'scale-95');
-      }, 10);
-      
       const list = document.getElementById('cartItemsList');
       list.innerHTML = '';
       let total = 0;
@@ -348,12 +333,12 @@
         div.className = 'flex justify-between items-center bg-[#0b0e14] p-4 rounded-xl border border-gray-700/50';
         div.innerHTML = `
           <div>
-            <p class="text-[10px] font-black text-blue-500 uppercase tracking-wider mb-0.5">${item.id}</p>
-            <p class="text-xs text-white font-bold truncate max-w-[150px]">${item.kategori}</p>
+            <p class="text-[10px] font-black text-blue-500 uppercase mb-0.5">${item.id}</p>
+            <p class="text-xs text-white font-bold truncate max-w-[150px] uppercase">${item.kategori}</p>
           </div>
           <div class="flex items-center gap-4">
             <p class="text-sm font-black text-white">Rp ${new Intl.NumberFormat('id-ID').format(item.hFinal)}</p>
-            <button onclick="removeItem(${index})" class="text-gray-500 hover:text-red-400 outline-none">✕</button>
+            <button onclick="removeItem(${index})" class="text-red-500 outline-none">✕</button>
           </div>
         `;
         list.appendChild(div);
@@ -368,11 +353,7 @@
       updateCartUI();
     }
 
-    function closeCartModal() {
-      document.getElementById('cartModalBackdrop').classList.add('opacity-0');
-      document.getElementById('cartModalContent').classList.add('opacity-0', 'scale-95');
-      setTimeout(() => { document.getElementById('cartModal').classList.add('hidden'); }, 300);
-    }
+    function closeCartModal() { document.getElementById('cartModal').classList.add('hidden'); }
 
     function checkoutWA() {
       let message = `Halo Admin SteoType,\nSaya Partner: *${session.nama}*\n\nIngin membeli akun berikut:\n`;
@@ -382,34 +363,18 @@
         total += item.hFinal;
       });
       message += `\n*Total Pembayaran: Rp ${new Intl.NumberFormat('id-ID').format(total)}*\nMohon instruksi pembayarannya.`;
-      
       window.open(`https://wa.me/6285959161539?text=${encodeURIComponent(message)}`, '_blank');
     }
 
-    // 5. MODAL TNC
-    function openModal() {
-      document.getElementById('tncModal').classList.remove('hidden');
-      setTimeout(() => { document.getElementById('modalBackdrop').classList.remove('opacity-0'); document.getElementById('modalContent').classList.remove('opacity-0', 'scale-95'); }, 10);
-    }
-    function closeModal() {
-      document.getElementById('modalBackdrop').classList.add('opacity-0'); document.getElementById('modalContent').classList.add('opacity-0', 'scale-95');
-      setTimeout(() => { document.getElementById('tncModal').classList.add('hidden'); }, 300);
-    }
-    function openInfoModal() {
-      document.getElementById('infoModal').classList.remove('hidden');
-      setTimeout(() => { document.getElementById('infoModalBackdrop').classList.remove('opacity-0'); document.getElementById('infoModalContent').classList.remove('opacity-0', 'scale-95'); }, 10);
-    }
-    function closeInfoModal() {
-      document.getElementById('infoModalBackdrop').classList.add('opacity-0'); document.getElementById('infoModalContent').classList.add('opacity-0', 'scale-95');
-      setTimeout(() => { document.getElementById('infoModal').classList.add('hidden'); }, 300);
-    }
+    // MODAL HELPERS
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     function logout() {
       localStorage.removeItem('reseller_session');
       window.location.href = "login.html";
     }
 
-    // Eksekusi Awal
     loadData();
   </script>
 </body>
