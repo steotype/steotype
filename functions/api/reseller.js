@@ -1,9 +1,8 @@
 export async function onRequest(context) {
-  // Tangkap semua parameter (termasuk token keamanan yang baru)
   const url = new URL(context.request.url);
   const queryString = url.search; 
 
-  // LINK GOOGLE SCRIPT BARU (Sistem Keamanan & Token)
+  // LINK GOOGLE SCRIPT TERBARU
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUQQKI2MNo3jqESMvdV1O7prnqVm34SBKtXduzkExaCwR6k1m2tPggh5_CmHxwSWXg/exec" + queryString;
 
   try {
@@ -15,7 +14,7 @@ export async function onRequest(context) {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Cache-Control": "no-store" // Memastikan harga selalu update
+        "Cache-Control": "no-store" 
       }
     });
   } catch (error) {
