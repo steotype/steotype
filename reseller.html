@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Partner Area - SteoType</title>
+  <title>Partner Portal - SteoType</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #0f1115; }
-    .glass { background: rgba(15, 17, 21, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-    #navbar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    body { font-family: 'Inter', sans-serif; background-color: #0b0e14; } /* Warna dasar gelap sesuai gambar */
+    .glass-card { background: #151923; border: 1px solid rgba(255, 255, 255, 0.05); }
+    .skeleton { background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+    @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
   </style>
 </head>
-<body class="bg-gray-900 text-gray-200 min-h-screen relative">
+<body class="text-gray-200 min-h-screen relative pb-8">
 
   <script>
     const session = JSON.parse(localStorage.getItem('reseller_session') || '{}');
@@ -22,69 +23,75 @@
     }
   </script>
 
-  <nav id="navbar" class="fixed top-0 w-full z-[100] glass py-4 px-6 flex justify-between items-center">
+  <div class="px-6 pt-6 pb-4 w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto flex justify-between items-start">
     <div>
-      <h1 class="text-xl font-black italic tracking-tighter text-white">STEO<span class="text-gray-500">TYPE</span></h1>
-      <p class="text-[9px] text-blue-500 font-bold tracking-widest uppercase">Halo, <span id="partnerName">...</span></p>
+      <h1 class="text-2xl font-black italic tracking-tighter text-white leading-none">STEO<span class="text-gray-500">TYPE</span></h1>
+      <p class="text-[10px] text-blue-500 font-bold tracking-[0.2em] uppercase mt-1">Partner Portal</p>
     </div>
-    
-    <button onclick="logout()" class="text-[9px] font-black bg-red-500/10 text-red-500 px-4 py-2 rounded-xl border border-red-500/10 uppercase tracking-widest hover:bg-red-500/20 transition-all outline-none">
-      Keluar
+    <button onclick="logout()" class="text-[10px] font-bold bg-red-500/5 text-red-400 px-4 py-2 rounded-xl border border-red-500/10 uppercase tracking-widest hover:bg-red-500/10 transition-all outline-none">
+      Logout
     </button>
-  </nav>
+  </div>
 
-  <main class="px-6 w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto pb-8 relative z-0 pt-28"> 
+  <main class="px-6 w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto space-y-6"> 
     
-    <div class="max-w-md mx-auto space-y-5">
+    <div class="glass-card rounded-3xl p-6 text-center shadow-lg">
+      <h2 class="text-2xl font-bold text-white mb-2">Halo, <span id="partnerName" class="text-blue-400">...</span>! 👋</h2>
+      <p class="text-sm text-gray-400 mb-6">Katalog mitra dengan penyesuaian harga otomatis.</p>
       
-      <div class="grid grid-cols-2 gap-3 fade-in-down">
-        <button onclick="openModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 hover:bg-gray-800/60 transition-all outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-          S&K (TNC)
-        </button>
-        <button onclick="openInfoModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 hover:bg-gray-800/60 transition-all outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Info Akun
-        </button>
+      <div class="bg-[#0b0e14] border border-gray-700/50 rounded-2xl p-4 inline-block min-w-[180px]">
+        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">Benefit Diskon</p>
+        <p class="text-xl font-black text-white italic tracking-tight" id="partnerDiscount">Rp 0</p>
       </div>
+    </div>
 
-      <div class="grid grid-cols-2 gap-2.5 fade-in-down">
-        <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-all outline-none">
-          READY (<span id="count-ready">0</span>)
-        </button>
-        <button onclick="switchTab('sold')" id="btn-sold" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">
-          SOLD (<span id="count-sold">0</span>)
-        </button>
-        <button onclick="switchTab('mt')" id="btn-mt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">
-          MASUK MT (<span id="count-mt">0</span>)
-        </button>
-        <button onclick="switchTab('htmt')" id="btn-htmt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">
-          MASUK HTMT (<span id="count-htmt">0</span>)
-        </button>
-      </div>
+    <div class="grid grid-cols-2 gap-3 fade-in-down">
+      <button onclick="openModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 transition-all outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+        S&K (TNC)
+      </button>
+      <button onclick="openInfoModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 transition-all outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        Info Akun
+      </button>
+    </div>
 
-      <div class="flex gap-3 fade-in-down relative z-20">
-        <div class="relative flex-1">
-          <input type="text" id="searchInput" onkeyup="renderProducts()" placeholder="Cari (MT, Tahun)..." class="w-full h-full bg-gray-800/80 border border-gray-700 text-gray-200 text-sm rounded-xl block pl-10 pr-3 py-3 outline-none focus:border-blue-500 focus:bg-gray-800 transition-colors">
-          <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          </div>
-        </div>
-        
-        <div class="relative w-[48px] flex-shrink-0">
-          <select id="sortSelect" onchange="renderProducts()" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 appearance-none">
-            <option value="default">Urutan Default</option>
-            <option value="harga-asc">Termurah</option>
-            <option value="harga-desc">Termahal</option>
-            <option value="followers-desc">Foll Terbanyak</option>
-            <option value="tahun-asc">Paling Tua</option>
-          </select>
-          <div class="w-full h-full bg-gray-800/80 border border-gray-700 rounded-xl flex items-center justify-center text-gray-400 transition-colors pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
-          </div>
+    <div class="grid grid-cols-2 gap-2.5 fade-in-down">
+      <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-all outline-none">
+        READY (<span id="count-ready">0</span>)
+      </button>
+      <button onclick="switchTab('sold')" id="btn-sold" class="w-full py-2.5 rounded-xl border border-gray-700 bg-[#151923] text-xs font-bold text-gray-400 transition-all outline-none">
+        SOLD (<span id="count-sold">0</span>)
+      </button>
+      <button onclick="switchTab('mt')" id="btn-mt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-[#151923] text-xs font-bold text-gray-400 transition-all outline-none">
+        MASUK MT (<span id="count-mt">0</span>)
+      </button>
+      <button onclick="switchTab('htmt')" id="btn-htmt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-[#151923] text-xs font-bold text-gray-400 transition-all outline-none">
+        MASUK HTMT (<span id="count-htmt">0</span>)
+      </button>
+    </div>
+
+    <div class="flex gap-3 fade-in-down">
+      <div class="relative flex-1">
+        <input type="text" id="searchInput" onkeyup="renderProducts()" placeholder="Cari (MT, Tahun)..." class="w-full h-full bg-[#151923] border border-gray-700 text-gray-200 text-sm rounded-xl block pl-10 pr-3 py-3 outline-none focus:border-blue-500 transition-colors">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
       </div>
-    </div> 
+      
+      <div class="relative w-[48px] flex-shrink-0">
+        <select id="sortSelect" onchange="renderProducts()" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 appearance-none">
+          <option value="default">Urutan Default</option>
+          <option value="harga-asc">Termurah</option>
+          <option value="harga-desc">Termahal</option>
+          <option value="followers-desc">Foll Terbanyak</option>
+          <option value="tahun-asc">Paling Tua</option>
+        </select>
+        <div class="w-full h-full bg-[#151923] border border-gray-700 rounded-xl flex items-center justify-center text-gray-400 transition-colors pointer-events-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+        </div>
+      </div>
+    </div>
     
     <div id="loadingIndicator" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="skeleton h-64 w-full rounded-2xl"></div>
@@ -111,22 +118,22 @@
 
   <div id="cartModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="cartModalBackdrop" onclick="closeCartModal()"></div>
-    <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="cartModalContent">
+    <div class="relative bg-[#151923] border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="cartModalContent">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
         <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
           Keranjang Partner
         </h3>
-        <button onclick="closeCartModal()" class="text-gray-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <button onclick="closeCartModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div id="cartItemsList" class="p-4 overflow-y-auto space-y-3 max-h-[40vh]"></div>
-      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
+      <div class="p-4 border-t border-gray-700 bg-[#0b0e14] rounded-b-2xl">
         <div class="flex justify-between items-center mb-4">
           <span class="text-gray-400 text-sm">Total Harga Diskon</span>
           <span id="cartTotal" class="text-xl font-bold text-blue-400">Rp 0</span>
         </div>
-        <button onclick="checkoutWA()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20">
-          Kirim ke WhatsApp Admin
+        <button onclick="checkoutWA()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20 outline-none">
+          Kirim ke WhatsApp
         </button>
       </div>
     </div>
@@ -134,17 +141,17 @@
 
   <div id="tncModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="modalBackdrop" onclick="closeModal()"></div>
-    <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="modalContent">
+    <div class="relative bg-[#151923] border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="modalContent">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">Syarat & Ketentuan</h3>
-        <button onclick="closeModal()" class="text-gray-400 hover:text-white transition outline-none">✕</button>
+        <h3 class="text-lg font-bold text-gray-100">Syarat & Ketentuan</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed text-gray-400">
         <p>1. Garansi 60 Jam sejak akun dikirim.</p>
         <p>2. Garansi batal jika data pemulihan diubah atau dipindah tangan.</p>
         <p>3. Semua penjualan final (tidak ada refund uang).</p>
       </div>
-      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
+      <div class="p-4 border-t border-gray-700 bg-[#0b0e14] rounded-b-2xl">
         <button onclick="closeModal()" class="w-full py-2.5 bg-blue-600 text-white font-bold rounded-xl outline-none">Tutup</button>
       </div>
     </div>
@@ -152,44 +159,38 @@
 
   <div id="infoModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="infoModalBackdrop" onclick="closeInfoModal()"></div>
-    <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="infoModalContent">
+    <div class="relative bg-[#151923] border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="infoModalContent">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">Info Akun</h3>
-        <button onclick="closeInfoModal()" class="text-gray-400 hover:text-white transition outline-none">✕</button>
+        <h3 class="text-lg font-bold text-gray-100">Info Akun</h3>
+        <button onclick="closeInfoModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed text-gray-400">
         <p><strong>Non HTMT:</strong> Mention belum bekerja.</p>
         <p><strong>Masuk MT:</strong> Mention pasti masuk tab orang lain.</p>
         <p><strong>Masuk HTMT:</strong> Kualitas premium, tweet tembus pencarian Hashtag.</p>
       </div>
-      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
+      <div class="p-4 border-t border-gray-700 bg-[#0b0e14] rounded-b-2xl">
         <button onclick="closeInfoModal()" class="w-full py-2.5 bg-gray-700 text-white font-bold rounded-xl outline-none">Tutup</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Konfigurasi
     const SPREADSHEET_URL = "/api/reseller?action=get_stok";
     let allAccounts = [];
     let cart = [];
     let currentTab = 'ready';
 
-    // Tampilkan Nama Partner
+    // Set UI Partner & Hitung Diskon
     document.getElementById('partnerName').innerText = session.nama;
-
-    // Smart Header Animasi
-    let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', function() {
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      if (scrollTop > lastScrollTop && scrollTop > 60) {
-        navbar.style.transform = 'translateY(-100%)';
-      } else {
-        navbar.style.transform = 'translateY(0)';
-      }
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
-    }, { passive: true });
+    let diskonVal = session.diskon || 0;
+    let diskonNum = 0;
+    if (String(diskonVal).toLowerCase().includes('k')) {
+      diskonNum = parseFloat(String(diskonVal).toLowerCase().replace('k', '')) * 1000;
+    } else {
+      diskonNum = parseInt(String(diskonVal).replace(/[^0-9]/g, '')) || 0;
+    }
+    document.getElementById('partnerDiscount').innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(diskonNum);
 
     // 1. FUNGSI LOAD DATA (MENGGUNAKAN TOKEN KEAMANAN)
     async function loadData() {
@@ -200,7 +201,7 @@
         
         allAccounts = data.map(item => {
           item.searchIndex = JSON.stringify(item).toLowerCase();
-          // Variabel harga dari server
+          // Harga Matang dari Google Script Backend
           item.hAsli = item.harga_asli_num || 0;
           item.hFinal = item.harga_final_num || 0; 
           return item;
@@ -211,8 +212,7 @@
         renderProducts();
       } catch (e) {
         loader.style.display = 'none';
-        alert("Sesi berakhir atau koneksi gagal. Silakan login ulang.");
-        logout();
+        alert("Koneksi gagal. Pastikan file Cloudflare reseller.js sudah diupdate dengan link Google Script terbaru.");
       }
     }
 
@@ -225,7 +225,7 @@
         if(t === tab) {
           btn.className = 'w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-all outline-none';
         } else {
-          btn.className = 'w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none';
+          btn.className = 'w-full py-2.5 rounded-xl border border-gray-700 bg-[#151923] text-xs font-bold text-gray-400 hover:bg-gray-800 transition-all outline-none';
         }
       });
       renderProducts();
@@ -248,14 +248,12 @@
       const searchTerm = document.getElementById('searchInput').value.toLowerCase();
       const sortValue = document.getElementById('sortSelect').value;
 
-      // Filter berdasarkan Tab dan Pencarian
       let filtered = allAccounts.filter(item => {
         const matchTab = String(item.status).toLowerCase() === currentTab;
         const matchSearch = item.searchIndex.includes(searchTerm);
         return matchTab && matchSearch;
       });
 
-      // Sorting
       if (sortValue !== 'default') {
         filtered.sort((a, b) => {
           if (sortValue === 'harga-asc') return a.hFinal - b.hFinal;
@@ -280,7 +278,7 @@
         noResults.classList.add('hidden');
         filtered.forEach(item => {
           const div = document.createElement('div');
-          div.className = 'bg-gray-800/50 rounded-[2rem] p-6 border border-gray-700/50 hover:border-gray-600 transition-all fade-in-up relative overflow-hidden group flex flex-col justify-between';
+          div.className = 'glass-card rounded-[2rem] p-6 hover:border-gray-600 transition-all fade-in-up relative overflow-hidden flex flex-col justify-between';
           
           const hargaAsliStr = new Intl.NumberFormat('id-ID').format(item.hAsli);
           const hargaFinalStr = new Intl.NumberFormat('id-ID').format(item.hFinal);
@@ -290,16 +288,12 @@
             <div class="space-y-4">
               <div class="flex justify-between items-start">
                 <span class="bg-blue-500/10 text-blue-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-blue-500/20">ID: ${item.id}</span>
-                <span class="text-gray-500 text-[11px] font-bold bg-gray-900/50 px-3 py-1 rounded-full">${item.tahun || '-'}</span>
+                <span class="text-gray-500 text-[11px] font-bold bg-[#0b0e14] px-3 py-1 rounded-full">${item.tahun || '-'}</span>
               </div>
               
               <div>
                 <h3 class="text-white font-black text-xl tracking-tight leading-tight">${item.kategori}</h3>
-                <p class="text-gray-500 text-xs mt-1.5 font-medium flex items-center gap-1.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" /></svg>
-                  ${item.username || 'Private'}
-                </p>
-                ${item.followers ? `<p class="text-gray-500 text-[10px] mt-1 font-bold">FOLL: ${item.followers}</p>` : ''}
+                <p class="text-gray-500 text-xs mt-1.5 font-medium">${item.username || 'Private'}</p>
               </div>
 
               <div class="pt-2">
@@ -310,7 +304,7 @@
 
             <div class="mt-5">
               ${allowBuy ? 
-                `<button onclick="addToCart('${item.id}')" class="w-full bg-white text-black font-black py-3.5 rounded-xl hover:bg-gray-200 transition-transform transform hover:scale-[1.02] text-[11px] uppercase tracking-widest shadow-lg shadow-white/5 outline-none">Tambah ke Keranjang</button>` 
+                `<button onclick="addToCart('${item.id}')" class="w-full bg-white text-black font-black py-3.5 rounded-xl hover:bg-gray-200 transition-transform transform hover:scale-[1.02] text-[11px] uppercase tracking-widest shadow-lg shadow-white/5 outline-none">Tambah</button>` 
                 : `<button disabled class="w-full bg-gray-800 text-gray-500 font-black py-3.5 rounded-xl text-[11px] uppercase tracking-widest cursor-not-allowed outline-none">TERJUAL</button>`
               }
             </div>
@@ -320,7 +314,7 @@
       }
     }
 
-    // 4. LOGIKA KERANJANG & CHECKOUT
+    // 4. LOGIKA KERANJANG
     function addToCart(id) {
       const item = allAccounts.find(i => i.id == id);
       if(!cart.find(c => c.id == id)) {
@@ -351,7 +345,7 @@
       cart.forEach((item, index) => {
         total += item.hFinal;
         const div = document.createElement('div');
-        div.className = 'flex justify-between items-center bg-gray-900/50 p-4 rounded-xl border border-gray-700/50';
+        div.className = 'flex justify-between items-center bg-[#0b0e14] p-4 rounded-xl border border-gray-700/50';
         div.innerHTML = `
           <div>
             <p class="text-[10px] font-black text-blue-500 uppercase tracking-wider mb-0.5">${item.id}</p>
@@ -359,7 +353,7 @@
           </div>
           <div class="flex items-center gap-4">
             <p class="text-sm font-black text-white">Rp ${new Intl.NumberFormat('id-ID').format(item.hFinal)}</p>
-            <button onclick="removeItem(${index})" class="text-gray-500 hover:text-red-400 p-1 outline-none"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg></button>
+            <button onclick="removeItem(${index})" class="text-gray-500 hover:text-red-400 outline-none">✕</button>
           </div>
         `;
         list.appendChild(div);
@@ -392,29 +386,21 @@
       window.open(`https://wa.me/6285959161539?text=${encodeURIComponent(message)}`, '_blank');
     }
 
-    // 5. MODAL TNC & INFO
+    // 5. MODAL TNC
     function openModal() {
       document.getElementById('tncModal').classList.remove('hidden');
-      setTimeout(() => {
-        document.getElementById('modalBackdrop').classList.remove('opacity-0');
-        document.getElementById('modalContent').classList.remove('opacity-0', 'scale-95');
-      }, 10);
+      setTimeout(() => { document.getElementById('modalBackdrop').classList.remove('opacity-0'); document.getElementById('modalContent').classList.remove('opacity-0', 'scale-95'); }, 10);
     }
     function closeModal() {
-      document.getElementById('modalBackdrop').classList.add('opacity-0');
-      document.getElementById('modalContent').classList.add('opacity-0', 'scale-95');
+      document.getElementById('modalBackdrop').classList.add('opacity-0'); document.getElementById('modalContent').classList.add('opacity-0', 'scale-95');
       setTimeout(() => { document.getElementById('tncModal').classList.add('hidden'); }, 300);
     }
     function openInfoModal() {
       document.getElementById('infoModal').classList.remove('hidden');
-      setTimeout(() => {
-        document.getElementById('infoModalBackdrop').classList.remove('opacity-0');
-        document.getElementById('infoModalContent').classList.remove('opacity-0', 'scale-95');
-      }, 10);
+      setTimeout(() => { document.getElementById('infoModalBackdrop').classList.remove('opacity-0'); document.getElementById('infoModalContent').classList.remove('opacity-0', 'scale-95'); }, 10);
     }
     function closeInfoModal() {
-      document.getElementById('infoModalBackdrop').classList.add('opacity-0');
-      document.getElementById('infoModalContent').classList.add('opacity-0', 'scale-95');
+      document.getElementById('infoModalBackdrop').classList.add('opacity-0'); document.getElementById('infoModalContent').classList.add('opacity-0', 'scale-95');
       setTimeout(() => { document.getElementById('infoModal').classList.add('hidden'); }, 300);
     }
 
