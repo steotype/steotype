@@ -5,18 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Partner Area - SteoType</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #0f1115; color: #e5e7eb; }
-    .glass { background: rgba(15, 17, 21, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-    .card-glass { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease; }
-    .card-glass:hover { border-color: rgba(59, 130, 246, 0.3); background: rgba(255, 255, 255, 0.04); }
-    #navbar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    body { font-family: 'Inter', sans-serif; background-color: #0f1115; }
     .skeleton { background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
     @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
   </style>
 </head>
-<body class="min-h-screen pb-20">
+<body class="bg-gray-900 text-gray-200 min-h-screen relative">
 
   <script>
     const session = JSON.parse(localStorage.getItem('reseller_session') || '{}');
@@ -25,21 +22,19 @@
     }
   </script>
 
-  <nav id="navbar" class="fixed top-0 w-full z-[100] glass py-4 px-6 flex justify-between items-center">
-    <div>
-        <h1 class="text-xl font-black italic tracking-tighter text-white">STEO<span class="text-gray-500">TYPE</span></h1>
-        <p class="text-[9px] text-blue-500 font-bold tracking-widest uppercase">Partner: <span id="partnerName" class="text-white">...</span></p>
-    </div>
-    <button onclick="logout()" class="text-[9px] font-black bg-red-500/10 text-red-500 px-4 py-2 rounded-xl border border-red-500/10 uppercase tracking-widest hover:bg-red-500/20 transition-all">
-      Keluar
-    </button>
-  </nav>
-
-  <main class="px-6 w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto pt-28">
+  <main class="px-6 w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto pb-8 relative z-0 pt-8"> 
     
-    <div class="max-w-md mx-auto space-y-5 mb-10">
+    <div class="max-w-md mx-auto mb-6 flex justify-between items-center bg-gray-800/30 p-4 rounded-2xl border border-white/5">
+      <div>
+        <p class="text-[9px] text-gray-500 font-black uppercase tracking-[0.2em]">Partner Active</p>
+        <p class="text-white font-bold text-sm" id="partnerName">...</p>
+      </div>
+      <button onclick="logout()" class="text-[9px] bg-red-500/10 text-red-500 px-3 py-1.5 rounded-lg border border-red-500/10 font-black uppercase tracking-widest hover:bg-red-500/20 transition-all">Keluar</button>
+    </div>
+
+    <div class="max-w-md mx-auto space-y-5">
       <div class="grid grid-cols-2 gap-2.5">
-        <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg transition-all outline-none">
+        <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-all outline-none">
           READY (<span id="count-ready">0</span>)
         </button>
         <button onclick="switchTab('sold')" id="btn-sold" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">
@@ -48,51 +43,49 @@
       </div>
 
       <div class="relative">
-        <input type="text" id="searchInput" onkeyup="filterAccounts()" placeholder="Cari akun..." class="w-full bg-gray-800/80 border border-gray-700 text-gray-200 text-sm rounded-xl pl-10 pr-4 py-3 outline-none focus:border-blue-500 transition-colors">
+        <input type="text" id="searchInput" onkeyup="filterAccounts()" placeholder="Cari akun..." class="w-full bg-gray-800/80 border border-gray-700 text-gray-200 text-sm rounded-xl block pl-10 pr-3 py-3 outline-none focus:border-blue-500 transition-colors">
         <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
       </div>
+    </div> 
+    
+    <div id="loadingIndicator" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="skeleton h-64 w-full rounded-2xl"></div>
+      <div class="skeleton h-64 w-full rounded-2xl"></div>
+      <div class="skeleton h-64 w-full rounded-2xl"></div>
     </div>
 
-    <div id="loadingIndicator" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="skeleton h-64 rounded-2xl"></div>
-      <div class="skeleton h-64 rounded-2xl"></div>
-      <div class="skeleton h-64 rounded-2xl"></div>
-    </div>
+    <div id="productGrid" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
-    <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </main>
 
-  <button id="floatingCart" onclick="openCart()" class="fixed bottom-6 left-6 z-50 bg-blue-600 p-4 rounded-full shadow-2xl hidden flex items-center justify-center">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-    </svg>
-    <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#0f1115]">0</span>
+  <button id="floatingCart" onclick="openCartModal()" class="fixed bottom-5 left-5 z-40 bg-blue-600 text-white p-3 rounded-full shadow-lg transition-transform transform hover:scale-110 flex items-center justify-center hidden">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+    <span id="cartBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-gray-900">0</span>
   </button>
 
   <div id="cartModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-6">
-    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCart()"></div>
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCartModal()"></div>
     <div class="relative bg-gray-900 border border-gray-800 w-full max-w-md rounded-3xl overflow-hidden shadow-2xl">
-        <div class="p-6 border-b border-gray-800 flex justify-between items-center">
-            <h3 class="font-bold text-white uppercase tracking-widest text-xs">Keranjang Partner</h3>
-            <button onclick="closeCart()" class="text-gray-500 hover:text-white">✕</button>
+        <div class="p-5 border-b border-gray-800 flex justify-between items-center">
+            <h3 class="font-bold text-white uppercase tracking-widest text-[10px]">Keranjang Partner</h3>
+            <button onclick="closeCartModal()" class="text-gray-500 hover:text-white text-lg">✕</button>
         </div>
-        <div id="cartList" class="p-6 max-h-[50vh] overflow-y-auto space-y-4"></div>
-        <div class="p-6 bg-gray-800/50">
+        <div id="cartList" class="p-5 max-h-[40vh] overflow-y-auto space-y-3"></div>
+        <div class="p-5 bg-gray-800/50">
             <div class="flex justify-between mb-4">
-                <span class="text-gray-400 text-xs font-bold uppercase tracking-widest">Total Harga</span>
+                <span class="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Total Bayar</span>
                 <span id="totalPrice" class="text-blue-400 font-black text-lg">Rp 0</span>
             </div>
-            <button onclick="checkoutWA()" class="w-full bg-white text-black font-black py-4 rounded-2xl uppercase tracking-tighter text-sm hover:bg-gray-200 transition-all">
-                Kirim Pesanan ke WA
+            <button onclick="checkoutWA()" class="w-full bg-white text-black font-black py-4 rounded-2xl uppercase tracking-widest text-[10px] hover:bg-gray-200 transition-all">
+                Kirim ke WhatsApp
             </button>
         </div>
     </div>
   </div>
 
   <script>
-    // CONFIG
     const SPREADSHEET_URL = "/api/reseller?action=get_stok";
     let allData = [];
     let cart = [];
@@ -100,20 +93,11 @@
 
     document.getElementById('partnerName').innerText = session.nama;
 
-    // SMART HEADER LOGIC
-    let lastScroll = 0;
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.pageYOffset;
-      const nav = document.getElementById('navbar');
-      if (currentScroll > lastScroll && currentScroll > 60) nav.style.transform = 'translateY(-100%)';
-      else nav.style.transform = 'translateY(0)';
-      lastScroll = currentScroll;
-    });
-
-    // LOAD DATA FROM SECURE API
+    // FUNGSI LOAD DATA (DENGAN TOKEN KEAMANAN)
     async function loadData() {
       const loader = document.getElementById('loadingIndicator');
       try {
+        // Mengirim token ke server agar harga dipotong di sisi Google Script
         const response = await fetch(`${SPREADSHEET_URL}&token=${session.token}`);
         allData = await response.json();
         
@@ -121,72 +105,51 @@
         renderProducts();
         updateCounts();
       } catch (e) {
-        console.error(e);
-        alert("Gagal memuat data. Sesi mungkin kedaluwarsa.");
+        loader.style.display = 'none';
+        alert("Sesi berakhir atau server bermasalah. Silakan login ulang.");
+        logout();
       }
     }
 
     function renderProducts() {
       const grid = document.getElementById('productGrid');
       grid.innerHTML = '';
-
-      const filtered = allData.filter(item => {
-        const statusMatch = String(item.status).toLowerCase() === currentTab;
-        const searchInput = document.getElementById('searchInput').value.toLowerCase();
-        const searchMatch = JSON.stringify(item).toLowerCase().includes(searchInput);
+      
+      const searchVal = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = allData.filter(i => {
+        const statusMatch = String(i.status).toLowerCase() === currentTab;
+        const searchMatch = JSON.stringify(i).toLowerCase().includes(searchVal);
         return statusMatch && searchMatch;
       });
 
       filtered.forEach(item => {
         const div = document.createElement('div');
-        div.className = 'card-glass rounded-[2rem] p-6 flex flex-col space-y-4';
+        div.className = 'bg-gray-800/30 border border-gray-700/50 rounded-2xl p-6 flex flex-col space-y-4 hover:border-gray-600 transition-all';
         
-        // HARGA DIAMBIL LANGSUNG DARI SERVER (harga_final_num)
-        const displayPrice = new Intl.NumberFormat('id-ID').format(item.harga_final_num);
-        const originalPrice = new Intl.NumberFormat('id-ID').format(item.harga_asli_num);
+        // Harga matang dari server
+        const priceFinal = new Intl.NumberFormat('id-ID').format(item.harga_final_num);
+        const priceOriginal = new Intl.NumberFormat('id-ID').format(item.harga_asli_num);
 
         div.innerHTML = `
-          <div class="flex justify-between items-start">
-            <span class="bg-blue-500/10 text-blue-500 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-blue-500/10">ID: ${item.id}</span>
-            <span class="text-gray-500 text-[10px] font-bold">${item.tahun || ''}</span>
+          <div class="flex justify-between items-center">
+            <span class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">ID: ${item.id}</span>
+            <span class="text-[10px] text-gray-500 font-bold">${item.tahun || ''}</span>
           </div>
           <div>
-            <h3 class="text-white font-black text-lg tracking-tight uppercase">${item.kategori || 'Akun X'}</h3>
-            <p class="text-gray-500 text-xs mt-1 font-medium">${item.username || 'Maintained Account'}</p>
+            <h3 class="text-white font-bold text-base uppercase tracking-tight">${item.kategori}</h3>
+            <p class="text-gray-500 text-[11px] font-medium">${item.username || 'Protected Account'}</p>
           </div>
-          <div class="pt-2">
-            <p class="text-[10px] text-gray-500 line-through">Rp ${originalPrice}</p>
-            <p class="text-blue-400 font-black text-xl tracking-tighter">Rp ${displayPrice}</p>
+          <div class="pt-1">
+            <p class="text-[10px] text-gray-600 line-through">Rp ${priceOriginal}</p>
+            <p class="text-blue-400 font-black text-xl tracking-tighter">Rp ${priceFinal}</p>
           </div>
           ${currentTab === 'ready' ? 
-            `<button onclick="addToCart('${item.id}')" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white hover:text-black transition-all text-xs uppercase tracking-widest">Tambah</button>` 
+            `<button onclick="addToCart('${item.id}')" class="w-full bg-white text-black font-bold py-2.5 rounded-xl text-[10px] uppercase tracking-widest hover:bg-gray-200 transition-all">Tambah</button>` 
             : ''}
         `;
         grid.appendChild(div);
       });
     }
-
-    function switchTab(tab) {
-      currentTab = tab;
-      const btnReady = document.getElementById('btn-ready');
-      const btnSold = document.getElementById('btn-sold');
-      
-      if(tab === 'ready') {
-        btnReady.className = 'w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg transition-all outline-none';
-        btnSold.className = 'w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none';
-      } else {
-        btnSold.className = 'w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg transition-all outline-none';
-        btnReady.className = 'w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none';
-      }
-      renderProducts();
-    }
-
-    function updateCounts() {
-      document.getElementById('count-ready').innerText = allData.filter(i => String(i.status).toLowerCase() === 'ready').length;
-      document.getElementById('count-sold').innerText = allData.filter(i => String(i.status).toLowerCase() === 'sold').length;
-    }
-
-    function filterAccounts() { renderProducts(); }
 
     function addToCart(id) {
       const item = allData.find(i => i.id == id);
@@ -197,14 +160,14 @@
     }
 
     function updateCartUI() {
-      const count = document.getElementById('cartCount');
-      const floatBtn = document.getElementById('floatingCart');
-      count.innerText = cart.length;
-      if(cart.length > 0) floatBtn.classList.remove('hidden');
-      else floatBtn.classList.add('hidden');
+      const badge = document.getElementById('cartBadge');
+      const btn = document.getElementById('floatingCart');
+      badge.innerText = cart.length;
+      if(cart.length > 0) btn.classList.remove('hidden');
+      else btn.classList.add('hidden');
     }
 
-    function openCart() {
+    function openCartModal() {
       document.getElementById('cartModal').classList.remove('hidden');
       const list = document.getElementById('cartList');
       let total = 0;
@@ -213,15 +176,15 @@
       cart.forEach((item, index) => {
         total += item.harga_final_num;
         const div = document.createElement('div');
-        div.className = 'flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/5';
+        div.className = 'flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/5';
         div.innerHTML = `
-          <div>
-            <p class="text-[10px] font-black text-blue-500 uppercase">${item.id}</p>
-            <p class="text-xs text-white font-bold">${item.kategori}</p>
+          <div class="text-[10px]">
+            <p class="font-black text-blue-500 uppercase">${item.id}</p>
+            <p class="text-white font-bold">${item.kategori}</p>
           </div>
-          <div class="flex items-center gap-4">
-            <p class="text-sm font-black text-white">Rp ${new Intl.NumberFormat('id-ID').format(item.harga_final_num)}</p>
-            <button onclick="removeItem(${index})" class="text-red-500 text-lg">✕</button>
+          <div class="flex items-center gap-3">
+            <p class="text-xs font-black text-white">Rp ${new Intl.NumberFormat('id-ID').format(item.harga_final_num)}</p>
+            <button onclick="removeItem(${index})" class="text-red-500">✕</button>
           </div>
         `;
         list.appendChild(div);
@@ -231,12 +194,26 @@
 
     function removeItem(index) {
       cart.splice(index, 1);
-      if(cart.length === 0) closeCart();
-      else openCart();
+      if(cart.length === 0) closeCartModal();
+      else openCartModal();
       updateCartUI();
     }
 
-    function closeCart() { document.getElementById('cartModal').classList.add('hidden'); }
+    function closeCartModal() { document.getElementById('cartModal').classList.add('hidden'); }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('btn-ready').className = tab === 'ready' ? 'w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg' : 'w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400';
+      document.getElementById('btn-sold').className = tab === 'sold' ? 'w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg' : 'w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400';
+      renderProducts();
+    }
+
+    function updateCounts() {
+      document.getElementById('count-ready').innerText = allData.filter(i => String(i.status).toLowerCase() === 'ready').length;
+      document.getElementById('count-sold').innerText = allData.filter(i => String(i.status).toLowerCase() === 'sold').length;
+    }
+
+    function filterAccounts() { renderProducts(); }
 
     function checkoutWA() {
       let message = `Halo Admin SteoType, Saya Partner: ${session.nama}\n\nIngin membeli akun berikut:\n`;
@@ -246,9 +223,7 @@
         total += item.harga_final_num;
       });
       message += `\nTotal Pembayaran: Rp ${new Intl.NumberFormat('id-ID').format(total)}\nMohon instruksi pembayarannya.`;
-      
-      const waUrl = `https://wa.me/6285959161539?text=${encodeURIComponent(message)}`;
-      window.open(waUrl, '_blank');
+      window.open(`https://wa.me/6285959161539?text=${encodeURIComponent(message)}`, '_blank');
     }
 
     function logout() {
