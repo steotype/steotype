@@ -7,13 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
-        /* Menggunakan 100dvh agar pas dengan layar HP meskipun ada address bar */
         body { 
             background-color: #0a0a0a; 
             font-family: 'Inter', sans-serif; 
             height: 100dvh; 
             width: 100vw; 
-            overflow: hidden; /* Mengunci total agar tidak bisa di-scroll */
+            overflow: hidden; 
             margin: 0;
             padding: 0;
             display: flex;
@@ -25,6 +24,11 @@
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        input:-webkit-autofill {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px #111827 inset !important;
+            transition: background-color 5000s ease-in-out 0s;
         }
     </style>
 </head>
@@ -38,15 +42,17 @@
         <p class="text-blue-500 text-[10px] uppercase tracking-[0.3em] font-black mb-10">Partner Portal</p>
         
         <form id="loginForm" class="space-y-5">
-            <div class="relative">
-                <input type="text" id="username" placeholder="Username Partner" required 
-                    class="w-full bg-gray-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium focus:outline-none focus:border-blue-500 focus:bg-gray-900 transition-all placeholder-gray-600">
+            <div class="relative text-left">
+                <label class="text-[10px] text-gray-500 font-bold uppercase tracking-widest ml-4 mb-1 block">Username</label>
+                <input type="text" id="username" placeholder="Masukkan Username" required 
+                    class="w-full bg-gray-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium focus:outline-none focus:border-blue-500 focus:bg-gray-900 transition-all placeholder-gray-700">
             </div>
-            <div class="relative">
-                <input type="password" id="password" placeholder="Password" required 
-                    class="w-full bg-gray-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium focus:outline-none focus:border-blue-500 focus:bg-gray-900 transition-all placeholder-gray-600">
+            <div class="relative text-left">
+                <label class="text-[10px] text-gray-500 font-bold uppercase tracking-widest ml-4 mb-1 block">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required 
+                    class="w-full bg-gray-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium focus:outline-none focus:border-blue-500 focus:bg-gray-900 transition-all placeholder-gray-700">
             </div>
-            <button type="submit" id="btn" class="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-gray-200 active:scale-95 transition-all uppercase tracking-widest text-xs mt-2 shadow-xl shadow-white/5 outline-none">
+            <button type="submit" id="btn" class="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-gray-200 active:scale-95 transition-all uppercase tracking-widest text-xs mt-4 shadow-xl shadow-white/5 outline-none">
                 Masuk
             </button>
         </form>
@@ -54,40 +60,58 @@
     </div>
 
     <script>
-        // Jalur API tersamar
+        // Gunakan path API yang sudah disamarkan lewat Cloudflare Workers
         const API = "/api/reseller";
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn');
             const msg = document.getElementById('msg');
+            const userInp = document.getElementById('username').value;
+            const passInp = document.getElementById('password').value;
+
             btn.disabled = true; 
             btn.innerHTML = `<svg class="animate-spin h-4 w-4 text-black mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+            msg.innerText = "";
 
             try {
-                const res = await fetch(`${API}?action=login&username=${encodeURIComponent(username.value)}&password=${encodeURIComponent(password.value)}`);
+                // Memanggil Google Script via Cloudflare Workers
+                const res = await fetch(`${API}?action=login&username=${encodeURIComponent(userInp)}&password=${encodeURIComponent(passInp)}`);
                 const data = await res.json();
 
                 if (data.status === "success") {
+                    // SIMPAN SESSION LENGKAP DENGAN TOKEN KE BROWSER
                     localStorage.setItem('reseller_session', JSON.stringify({
                         isLoggedIn: true,
                         nama: data.nama,
-                        diskon: data.diskon || "0"
+                        diskon: data.diskon,
+                        token: data.token // TOKEN PENTING UNTUK KEAMANAN
                     }));
+
                     msg.className = "mt-8 text-green-400 font-bold uppercase tracking-widest text-[10px]";
                     msg.innerText = "Akses Diberikan. Membuka Katalog...";
+                    
+                    // Redirect ke halaman dashboard partner
                     setTimeout(() => window.location.href = "reseller.html", 1200);
                 } else {
                     msg.className = "mt-8 text-red-400 uppercase tracking-widest text-[10px]";
-                    msg.innerText = data.message || "Login Gagal.";
-                    btn.disabled = false; btn.innerText = "MASUK";
+                    msg.innerText = data.message || "Username atau Password Salah";
+                    btn.disabled = false; 
+                    btn.innerText = "Masuk";
                 }
             } catch (e) {
                 msg.className = "mt-8 text-red-400 uppercase tracking-widest text-[10px]";
-                msg.innerText = "Server tidak merespon.";
-                btn.disabled = false; btn.innerText = "MASUK";
+                msg.innerText = "Koneksi Bermasalah atau Server Down";
+                btn.disabled = false; 
+                btn.innerText = "Masuk";
             }
         });
+
+        // Cek jika sudah login, langsung lempar ke reseller.html
+        const checkSession = JSON.parse(localStorage.getItem('reseller_session') || '{}');
+        if (checkSession.isLoggedIn && checkSession.token) {
+            window.location.href = "reseller.html";
+        }
     </script>
 </body>
 </html>
