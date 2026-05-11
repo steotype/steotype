@@ -3,635 +3,260 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SteoType - Dashboard Reseller</title>
-
+  <title>Partner Area - SteoType</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
   <style>
-    /* Custom Styles dari style.css */
-    .fade-in-down { opacity: 0; transform: translateY(-20px); animation: fadeInDown 0.6s ease forwards; }
-    @keyframes fadeInDown { to { opacity: 1; transform: translateY(0); } }
-    .skeleton {
-      background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
-      background-size: 200% 100%;
-      animation: loading 1.5s infinite;
-    }
+    body { font-family: 'Inter', sans-serif; background-color: #0f1115; color: #e5e7eb; }
+    .glass { background: rgba(15, 17, 21, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .card-glass { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease; }
+    .card-glass:hover { border-color: rgba(59, 130, 246, 0.3); background: rgba(255, 255, 255, 0.04); }
+    #navbar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .skeleton { background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
     @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
   </style>
+</head>
+<body class="min-h-screen pb-20">
 
   <script>
-    // SISTEM SATPAM RESELLER
-    const session = JSON.parse(localStorage.getItem('reseller_session'));
-    if (!session || !session.isLoggedIn) { window.location.href = "login.html"; }
+    const session = JSON.parse(localStorage.getItem('reseller_session') || '{}');
+    if (!session.isLoggedIn || !session.token) {
+      window.location.href = "login.html";
+    }
   </script>
-</head>
-<body class="bg-gray-900 text-gray-200 min-h-screen relative font-sans">
 
-  <main class="px-6 w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto pb-8 relative z-0 pt-8"> 
-    
-    <div class="max-w-md md:max-w-full mx-auto mb-8 fade-in-down">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h1 class="text-2xl font-black italic tracking-tighter text-white">STEO<span class="text-gray-500">TYPE</span></h1>
-                <p class="text-[10px] text-blue-500 font-bold uppercase tracking-[0.3em]">Partner Portal</p>
-            </div>
-            <button onclick="localStorage.clear(); window.location.href='login.html';" class="text-[10px] bg-red-500/10 text-red-500 px-4 py-2 rounded-xl border border-red-500/10 uppercase tracking-widest hover:bg-red-500/20 transition-all font-bold outline-none">Logout</button>
-        </div>
-
-        <div class="bg-gray-800 border border-gray-700 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center shadow-xl">
-            <div class="text-center md:text-left mb-4 md:mb-0">
-                <h2 class="text-xl font-bold mb-1 text-white">Halo, <span id="nmDisplay" class="text-blue-400"></span>! 👋</h2>
-                <p class="text-xs text-gray-400">Katalog mitra dengan penyesuaian harga otomatis.</p>
-            </div>
-            <div class="bg-gray-900 border border-gray-700 px-6 py-3 rounded-xl text-center shadow-inner">
-                <p class="text-[9px] text-gray-500 font-black uppercase tracking-widest mb-1 text-center">Benefit Diskon</p>
-                <p id="dscDisplay" class="text-lg font-bold text-white italic"></p>
-            </div>
-        </div>
+  <nav id="navbar" class="fixed top-0 w-full z-[100] glass py-4 px-6 flex justify-between items-center">
+    <div>
+        <h1 class="text-xl font-black italic tracking-tighter text-white">STEO<span class="text-gray-500">TYPE</span></h1>
+        <p class="text-[9px] text-blue-500 font-bold tracking-widest uppercase">Partner: <span id="partnerName" class="text-white">...</span></p>
     </div>
+    <button onclick="logout()" class="text-[9px] font-black bg-red-500/10 text-red-500 px-4 py-2 rounded-xl border border-red-500/10 uppercase tracking-widest hover:bg-red-500/20 transition-all">
+      Keluar
+    </button>
+  </nav>
 
-    <div class="max-w-md mx-auto space-y-5">
-      
-      <div class="grid grid-cols-2 gap-3 fade-in-down">
-        <button onclick="openModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 hover:bg-gray-800/60 transition-all outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-          S&K (TNC)
-        </button>
-        <button onclick="openInfoModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 hover:bg-gray-800/60 transition-all outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Info Akun
-        </button>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2.5 fade-in-down">
-        <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-all outline-none">
+  <main class="px-6 w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto pt-28">
+    
+    <div class="max-w-md mx-auto space-y-5 mb-10">
+      <div class="grid grid-cols-2 gap-2.5">
+        <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg transition-all outline-none">
           READY (<span id="count-ready">0</span>)
         </button>
         <button onclick="switchTab('sold')" id="btn-sold" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">
           SOLD (<span id="count-sold">0</span>)
         </button>
-        <button onclick="switchTab('mt')" id="btn-mt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">
-          MASUK MT (<span id="count-mt">0</span>)
-        </button>
-        <button onclick="switchTab('htmt')" id="btn-htmt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">
-          MASUK HTMT (<span id="count-htmt">0</span>)
-        </button>
       </div>
 
-      <div class="flex gap-3 fade-in-down relative z-20">
-        <div class="relative flex-1">
-          <input type="text" id="searchInput" onkeyup="filterAccounts()" placeholder="Cari (MT, Tahun)..." class="w-full h-full bg-gray-800/80 border border-gray-700 text-gray-200 text-sm rounded-xl block pl-10 pr-3 py-3 outline-none focus:border-blue-500 focus:bg-gray-800 transition-colors">
-          <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          </div>
+      <div class="relative">
+        <input type="text" id="searchInput" onkeyup="filterAccounts()" placeholder="Cari akun..." class="w-full bg-gray-800/80 border border-gray-700 text-gray-200 text-sm rounded-xl pl-10 pr-4 py-3 outline-none focus:border-blue-500 transition-colors">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
         </div>
-        <div class="relative w-[48px] flex-shrink-0">
-          <select id="sortSelect" onchange="renderProducts()" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 appearance-none">
-            <option value="default">Urutan Default</option>
-            <option value="harga-asc">Termurah</option>
-            <option value="harga-desc">Termahal</option>
-            <option value="followers-desc">Foll Terbanyak</option>
-            <option value="tahun-asc">Paling Tua</option>
-          </select>
-          <div class="w-full h-full bg-gray-800/80 border border-gray-700 rounded-xl flex items-center justify-center text-gray-400 transition-colors pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
-          </div>
-        </div>
-      </div>
-    </div> 
-    
-    <div id="loadingIndicator" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="skeleton h-64 w-full rounded-2xl"></div>
-      <div class="skeleton h-64 w-full rounded-2xl hidden md:block"></div>
-      <div class="skeleton h-64 w-full rounded-2xl hidden lg:block"></div>
-    </div>
-
-    <div id="productGrid" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-
-    <div id="noResults" class="hidden text-center py-12 fade-in-down max-w-md mx-auto">
-      <div class="bg-gray-800/50 rounded-2xl p-8 border border-gray-700/50 inline-block w-full">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-600 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <p class="text-gray-400 text-sm font-medium">Akun tidak ditemukan di kategori ini.</p>
       </div>
     </div>
 
+    <div id="loadingIndicator" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="skeleton h-64 rounded-2xl"></div>
+      <div class="skeleton h-64 rounded-2xl"></div>
+      <div class="skeleton h-64 rounded-2xl"></div>
+    </div>
+
+    <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </main>
 
-  <a href="https://wa.me/6285959161539" target="_blank" class="fixed bottom-5 right-5 z-40 bg-[#25D366] hover:bg-[#128C7E] text-white p-2.5 rounded-full shadow-lg shadow-green-900/40 transition-transform transform hover:scale-110 flex items-center justify-center outline-none fade-in-down" style="animation-delay: 0.3s;">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-  </a>
-
-  <button id="floatingCart" onclick="openCartModal()" class="fixed bottom-5 left-5 z-40 bg-blue-600 hover:bg-blue-500 text-white p-3 rounded-full shadow-lg shadow-blue-900/40 transition-transform transform hover:scale-110 flex items-center justify-center outline-none hidden fade-in-down">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-    <span id="cartBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-gray-900">0</span>
+  <button id="floatingCart" onclick="openCart()" class="fixed bottom-6 left-6 z-50 bg-blue-600 p-4 rounded-full shadow-2xl hidden flex items-center justify-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+    <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#0f1115]">0</span>
   </button>
 
-  <div id="cartModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="cartModalBackdrop" onclick="closeCartModal()"></div>
-    <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="cartModalContent">
-      <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-          Keranjang Reseller
-        </h3>
-        <button onclick="closeCartModal()" class="text-gray-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-      </div>
-      
-      <div id="cartItemsList" class="p-4 overflow-y-auto space-y-3 max-h-[40vh]"></div>
-      
-      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
-        <div class="flex justify-between items-center mb-4">
-          <span class="text-gray-400 text-sm">Total Estimasi</span>
-          <span id="cartTotal" class="text-xl font-bold text-blue-400">Rp 0</span>
+  <div id="cartModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-6">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCart()"></div>
+    <div class="relative bg-gray-900 border border-gray-800 w-full max-w-md rounded-3xl overflow-hidden shadow-2xl">
+        <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+            <h3 class="font-bold text-white uppercase tracking-widest text-xs">Keranjang Partner</h3>
+            <button onclick="closeCart()" class="text-gray-500 hover:text-white">✕</button>
         </div>
-        <button onclick="proceedToCheckout()" class="flex justify-center items-center gap-2 w-full py-3 bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#128C7E] hover:to-[#075E54] text-white font-bold rounded-xl transition shadow-lg shadow-green-900/20 outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-          Lanjut ke WhatsApp
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div id="tncModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="modalBackdrop" onclick="closeModal()"></div>
-    <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="modalContent">
-      <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Syarat & Ketentuan Reseller
-        </h3>
-        <button onclick="closeModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-      </div>
-      <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed">
-        <p class="text-xs text-gray-400 italic mb-1">Syarat dan ketentuan garansi partner tetap berlaku sama:</p>
-        <div class="bg-blue-500/5 border border-blue-500/10 p-4 rounded-xl"><h4 class="font-bold text-blue-400 mb-1.5 flex items-center gap-1.5"><span>⏱️</span> 1. Garansi 60 Jam</h4><p class="text-gray-400 text-[13px]">Garansi berlaku selama 2 hari 12 jam (60 jam) sejak akun dikirim. Berlaku untuk gagal login akibat masalah kredensial.</p></div>
-        <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl"><h4 class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5"><span>⚠️</span> 2. Garansi Hangus</h4><p class="text-gray-400 text-[13px]">Garansi hangus jika pembeli akhir mengubah data pemulihan (email utama/recovery).</p></div>
-        <div class="bg-orange-500/5 border border-orange-500/10 p-4 rounded-xl"><h4 class="font-bold text-orange-400 mb-1.5 flex items-center gap-1.5"><span>🔄</span> 3. Refund & Penukaran</h4><p class="text-gray-400 text-[13px]">Semua penjualan bersifat final. Penukaran akun hanya untuk kesalahan murni dari pihak SteoType.</p></div>
-        <div class="bg-gray-500/5 border border-gray-600/30 p-4 rounded-xl"><h4 class="font-bold text-gray-300 mb-1.5 flex items-center gap-1.5"><span>⚖️</span> 4. Tanggung Jawab Penggunaan</h4><p class="text-gray-400 text-[13px]">Kami tidak bertanggung jawab atas penggunaan akun oleh pembeli Anda yang melanggar hukum.</p></div>
-      </div>
-      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
-        <button onclick="closeModal()" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20 outline-none">Saya Mengerti</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="infoModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="infoModalBackdrop" onclick="closeInfoModal()"></div>
-    <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="infoModalContent">
-      <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Info Kualitas Akun
-        </h3>
-        <button onclick="closeInfoModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-      </div>
-      <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed">
-        <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl"><h4 class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5"><span>🔴</span> 1. Non HTMT</h4><p class="text-gray-400 text-[13px]">Visibilitas dibatasi algoritma X. Mention (@) tidak masuk. Kurang direkomendasikan untuk promosi.</p></div>
-        <div class="bg-green-500/5 border border-green-500/10 p-4 rounded-xl"><h4 class="font-bold text-green-400 mb-1.5 flex items-center gap-1.5"><span>👍🏻</span> 2. Masuk MT</h4><p class="text-gray-400 text-[13px]">Status "Sehat". Mention (@) pasti masuk meskipun belum saling follow. Aman untuk farming & interaksi.</p></div>
-        <div class="bg-orange-500/5 border border-orange-500/10 p-4 rounded-xl"><h4 class="font-bold text-orange-400 mb-1.5 flex items-center gap-1.5"><span>🔥</span> 3. Masuk HTMT</h4><p class="text-gray-400 text-[13px]">Kualitas premium terbaik. Mention masuk dan tweet bisa menembus pencarian Hashtag (#).</p></div>
-      </div>
-      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
-        <button onclick="closeInfoModal()" class="w-full py-2.5 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl transition shadow-sm outline-none">Tutup</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="buyModal" class="fixed inset-0 z-[80] hidden flex items-center justify-center">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="buyModalBackdrop" onclick="closeBuyModal()"></div>
-    <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[85%] max-w-sm flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="buyModalContent">
-      <div class="p-6 text-center space-y-4">
-        <div class="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-2 border border-blue-500/20">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+        <div id="cartList" class="p-6 max-h-[50vh] overflow-y-auto space-y-4"></div>
+        <div class="p-6 bg-gray-800/50">
+            <div class="flex justify-between mb-4">
+                <span class="text-gray-400 text-xs font-bold uppercase tracking-widest">Total Harga</span>
+                <span id="totalPrice" class="text-blue-400 font-black text-lg">Rp 0</span>
+            </div>
+            <button onclick="checkoutWA()" class="w-full bg-white text-black font-black py-4 rounded-2xl uppercase tracking-tighter text-sm hover:bg-gray-200 transition-all">
+                Kirim Pesanan ke WA
+            </button>
         </div>
-        <h3 class="text-lg font-bold text-gray-100">Konfirmasi Pesanan</h3>
-        <p class="text-sm text-gray-400">Saya menyatakan pesanan ini sudah benar dan menyetujui seluruh <button onclick="openTncFromCheckout()" class="text-blue-400 hover:underline outline-none">S&K</button>.</p>
-      </div>
-      <div class="flex border-t border-gray-700">
-        <button onclick="closeBuyModal()" class="flex-1 py-3.5 text-sm font-semibold text-gray-400 hover:text-white transition border-r border-gray-700 outline-none">Batal</button>
-        <button id="btn-confirm-buy" class="flex-1 py-3.5 text-sm font-bold text-blue-500 hover:text-blue-400 transition outline-none">Setuju & Kirim WA</button>
-      </div>
     </div>
   </div>
 
   <script>
+    // CONFIG
     const SPREADSHEET_URL = "/api/reseller?action=get_stok";
-    let allData = []; 
-    let currentFilteredData = []; 
-    let displayLimit = 12; 
-    let currentTab = 'ready';
-    let isLoadingMore = false;
+    let allData = [];
     let cart = [];
+    let currentTab = 'ready';
 
-    // INISIALISASI BANNER RESELLER
-    const diskonRaw = String(session.diskon || "0").toLowerCase();
-    
-    function parsePrice(input) {
-        let val = String(input).toLowerCase().trim();
-        if (val.includes('k')) return parseFloat(val.replace('k', '').replace(/[^0-9.]/g, '')) * 1000;
-        return parseInt(val.replace(/[^0-9]/g, '')) || 0;
-    }
-    
-    const dscNominal = parsePrice(diskonRaw);
-    document.getElementById('nmDisplay').innerText = session.nama;
-    document.getElementById('dscDisplay').innerText = diskonRaw.includes('k') ? diskonRaw.toUpperCase() : "Rp " + dscNominal.toLocaleString('id-ID');
+    document.getElementById('partnerName').innerText = session.nama;
 
-    // FUNGSI KERANJANG
-    function toggleCart(kode, username, hargaAsli, hargaFinal) {
-      const index = cart.findIndex(item => item.username === username);
-      if (index > -1) { cart.splice(index, 1); } 
-      else { cart.push({kode, username, hargaAsli, hargaFinal}); }
-      updateCartUI();
-      syncCartUI(); 
-    }
+    // SMART HEADER LOGIC
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      const nav = document.getElementById('navbar');
+      if (currentScroll > lastScroll && currentScroll > 60) nav.style.transform = 'translateY(-100%)';
+      else nav.style.transform = 'translateY(0)';
+      lastScroll = currentScroll;
+    });
 
-    function syncCartUI() {
-      document.querySelectorAll('.product-card').forEach(card => {
-        const username = card.dataset.username;
-        const inCart = cart.some(c => c.username === username);
-        const btn = card.querySelector('.btn-add-cart');
-        
-        if (inCart) {
-          card.classList.add('border-blue-500', 'shadow-blue-900/20', 'shadow-lg');
-          card.classList.remove('border-gray-700');
-          if(btn) {
-            btn.className = "btn-add-cart px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-900/20 outline-none";
-            btn.innerText = "Terpilih";
-          }
-        } else {
-          card.classList.remove('border-blue-500', 'shadow-blue-900/20', 'shadow-lg');
-          card.classList.add('border-gray-700');
-          if(btn) {
-            btn.className = "btn-add-cart px-5 py-2.5 bg-gray-800 border border-gray-600 text-blue-400 text-sm font-semibold rounded-lg hover:bg-gray-700 hover:border-gray-500 hover:text-white transition shadow-sm outline-none";
-            btn.innerText = "Tambah";
-          }
-        }
-      });
-    }
-
-    function updateCartUI() {
-      const badge = document.getElementById('cartBadge');
-      const floatingCart = document.getElementById('floatingCart');
-      if (cart.length > 0) {
-        floatingCart.classList.remove('hidden');
-        badge.innerText = cart.length;
-      } else {
-        floatingCart.classList.add('hidden');
-        closeCartModal(); 
-      }
-    }
-
-    function openCartModal() {
-      const cartList = document.getElementById('cartItemsList');
-      cartList.innerHTML = '';
-      let totalHarga = 0;
-      
-      cart.forEach((item) => {
-        totalHarga += item.hargaFinal;
-        cartList.innerHTML += `
-          <div class="flex justify-between items-center py-2 border-b border-gray-700/50">
-            <div>
-              <p class="text-sm font-bold text-gray-200">${item.kode}</p>
-              <p class="text-xs text-gray-400 font-mono">@${item.username}</p>
-            </div>
-            <div class="flex items-center gap-4">
-              <p class="text-sm font-bold text-blue-400">Rp ${item.hargaFinal.toLocaleString('id-ID')}</p>
-              <button onclick="toggleCart('${item.kode}', '${item.username}', ${item.hargaAsli}, ${item.hargaFinal}); openCartModal();" class="text-gray-500 hover:text-red-400 transition bg-gray-800 p-1.5 rounded-md outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-              </button>
-            </div>
-          </div>
-        `;
-      });
-      
-      document.getElementById('cartTotal').innerText = "Rp " + totalHarga.toLocaleString('id-ID');
-      
-      const modal = document.getElementById('cartModal');
-      const backdrop = document.getElementById('cartModalBackdrop');
-      const content = document.getElementById('cartModalContent');
-      modal.classList.remove('hidden');
-      setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); content.classList.replace('opacity-0', 'opacity-100'); content.classList.replace('scale-95', 'scale-100'); }, 10);
-    }
-
-    function closeCartModal() {
-      const modal = document.getElementById('cartModal');
-      const backdrop = document.getElementById('cartModalBackdrop');
-      const content = document.getElementById('cartModalContent');
-      backdrop.classList.replace('opacity-100', 'opacity-0'); content.classList.replace('opacity-100', 'opacity-0'); content.classList.replace('scale-100', 'scale-95');
-      setTimeout(() => { modal.classList.add('hidden'); }, 300);
-    }
-
-    function proceedToCheckout() {
-      closeCartModal();
-      const modal = document.getElementById('buyModal');
-      const backdrop = document.getElementById('buyModalBackdrop');
-      const content = document.getElementById('buyModalContent');
-      modal.classList.remove('hidden');
-      setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); content.classList.replace('opacity-0', 'opacity-100'); content.classList.replace('scale-95', 'scale-100'); }, 10);
-      
-      document.getElementById('btn-confirm-buy').onclick = function() {
-        let message = `Halo, saya reseller *${session.nama}* mau order ${cart.length} akun:\n\n`;
-        let sumHarga = 0;
-        cart.forEach((item, index) => {
-          message += `${index + 1}. ${item.kode} | ${item.username} (Rp ${item.hargaFinal.toLocaleString('id-ID')})\n`;
-          sumHarga += item.hargaFinal;
-        });
-        message += `\nTotal: Rp ${sumHarga.toLocaleString('id-ID')}\n\nBisa di test dulu kak?`;
-        window.open(`https://wa.me/6285959161539?text=${encodeURIComponent(message)}`, '_blank');
-        closeBuyModal();
-      };
-    }
-
-    // FUNGSI MODAL LAINNYA
-    let isFromCheckout = false; 
-    function openModal(fromCheckout = false) {
-      isFromCheckout = fromCheckout; 
-      const modal = document.getElementById('tncModal');
-      const backdrop = document.getElementById('modalBackdrop');
-      const content = document.getElementById('modalContent');
-      modal.classList.remove('hidden');
-      setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); content.classList.replace('opacity-0', 'opacity-100'); content.classList.replace('scale-95', 'scale-100'); }, 10);
-    }
-
-    function openTncFromCheckout() { closeBuyModal(); setTimeout(() => { openModal(true); }, 300); }
-
-    function closeModal() {
-      const modal = document.getElementById('tncModal');
-      const backdrop = document.getElementById('modalBackdrop');
-      const content = document.getElementById('modalContent');
-      backdrop.classList.replace('opacity-100', 'opacity-0'); content.classList.replace('opacity-100', 'opacity-0'); content.classList.replace('scale-100', 'scale-95');
-      setTimeout(() => { 
-        modal.classList.add('hidden'); 
-        if (isFromCheckout) {
-          isFromCheckout = false; 
-          const buyModal = document.getElementById('buyModal');
-          const buyBackdrop = document.getElementById('buyModalBackdrop');
-          const buyContent = document.getElementById('buyModalContent');
-          buyModal.classList.remove('hidden');
-          setTimeout(() => { buyBackdrop.classList.replace('opacity-0', 'opacity-100'); buyContent.classList.replace('opacity-0', 'opacity-100'); buyContent.classList.replace('scale-95', 'scale-100'); }, 10);
-        }
-      }, 300);
-    }
-
-    function closeBuyModal() {
-      const modal = document.getElementById('buyModal');
-      const backdrop = document.getElementById('buyModalBackdrop');
-      const content = document.getElementById('buyModalContent');
-      backdrop.classList.replace('opacity-100', 'opacity-0'); content.classList.replace('opacity-100', 'opacity-0'); content.classList.replace('scale-100', 'scale-95');
-      setTimeout(() => { modal.classList.add('hidden'); }, 300);
-    }
-
-    function openInfoModal() {
-      const modal = document.getElementById('infoModal');
-      const backdrop = document.getElementById('infoModalBackdrop');
-      const content = document.getElementById('infoModalContent');
-      modal.classList.remove('hidden');
-      setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); content.classList.replace('opacity-0', 'opacity-100'); content.classList.replace('scale-95', 'scale-100'); }, 10);
-    }
-
-    function closeInfoModal() {
-      const modal = document.getElementById('infoModal');
-      const backdrop = document.getElementById('infoModalBackdrop');
-      const content = document.getElementById('infoModalContent');
-      backdrop.classList.replace('opacity-100', 'opacity-0'); content.classList.replace('opacity-100', 'opacity-0'); content.classList.replace('scale-100', 'scale-95');
-      setTimeout(() => { modal.classList.add('hidden'); }, 300);
-    }
-
-    // CORE DATA FETCHING
+    // LOAD DATA FROM SECURE API
     async function loadData() {
-      const grid = document.getElementById('productGrid');
       const loader = document.getElementById('loadingIndicator');
       try {
-        const response = await fetch(SPREADSHEET_URL);
-        const rawData = await response.json();
+        const response = await fetch(`${SPREADSHEET_URL}&token=${session.token}`);
+        allData = await response.json();
         
-        allData = rawData.map(item => {
-          let fVal = (item.followers || '').toString().trim();
-          let hVal = (item.status_htmt || '').toLowerCase();
-          let extra = ` f${fVal} `;
-          if(hVal.includes('mt')) extra += 'mt masuk mt ';
-          if(hVal.includes('ht')) extra += 'ht masuk ht ';
-          item.searchIndex = (JSON.stringify(item).toLowerCase() + extra);
-
-          // Kalkulasi Harga Pintar Reseller
-          item.hAsliNum = parsePrice(item.harga);
-          item.hFinalNum = Math.max(0, item.hAsliNum - dscNominal);
-
-          return item;
-        });
-
         loader.style.display = 'none';
+        renderProducts();
         updateCounts();
-        applyFilters(); 
       } catch (e) {
-        loader.style.display = 'none';
-        grid.innerHTML = '<p class="text-center text-red-400 py-10 max-w-md mx-auto font-bold uppercase tracking-widest text-xs">Gagal memuat database reseller.</p>';
+        console.error(e);
+        alert("Gagal memuat data. Sesi mungkin kedaluwarsa.");
       }
     }
 
-    function updateCounts() {
-      const readyCount = allData.filter(item => item.status_stok?.toLowerCase() === 'ready').length;
-      const soldCount = allData.filter(item => item.status_stok?.toLowerCase() === 'sold').length;
-      const mtCount = allData.filter(item => { 
-        const isReady = item.status_stok?.toLowerCase() === 'ready'; 
-        const htmtVal = item.status_htmt?.toLowerCase() || ''; 
-        return isReady && htmtVal.includes('mt') && !htmtVal.includes('ht'); 
-      }).length;
-      const htmtCount = allData.filter(item => { 
-        const isReady = item.status_stok?.toLowerCase() === 'ready'; 
-        const htmtVal = item.status_htmt?.toLowerCase() || ''; 
-        return isReady && htmtVal.includes('ht'); 
-      }).length;
-      
-      document.getElementById('count-ready').innerText = readyCount;
-      document.getElementById('count-sold').innerText = soldCount;
-      document.getElementById('count-mt').innerText = mtCount;
-      document.getElementById('count-htmt').innerText = htmtCount;
+    function renderProducts() {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+
+      const filtered = allData.filter(item => {
+        const statusMatch = String(item.status).toLowerCase() === currentTab;
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const searchMatch = JSON.stringify(item).toLowerCase().includes(searchInput);
+        return statusMatch && searchMatch;
+      });
+
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'card-glass rounded-[2rem] p-6 flex flex-col space-y-4';
+        
+        // HARGA DIAMBIL LANGSUNG DARI SERVER (harga_final_num)
+        const displayPrice = new Intl.NumberFormat('id-ID').format(item.harga_final_num);
+        const originalPrice = new Intl.NumberFormat('id-ID').format(item.harga_asli_num);
+
+        div.innerHTML = `
+          <div class="flex justify-between items-start">
+            <span class="bg-blue-500/10 text-blue-500 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-blue-500/10">ID: ${item.id}</span>
+            <span class="text-gray-500 text-[10px] font-bold">${item.tahun || ''}</span>
+          </div>
+          <div>
+            <h3 class="text-white font-black text-lg tracking-tight uppercase">${item.kategori || 'Akun X'}</h3>
+            <p class="text-gray-500 text-xs mt-1 font-medium">${item.username || 'Maintained Account'}</p>
+          </div>
+          <div class="pt-2">
+            <p class="text-[10px] text-gray-500 line-through">Rp ${originalPrice}</p>
+            <p class="text-blue-400 font-black text-xl tracking-tighter">Rp ${displayPrice}</p>
+          </div>
+          ${currentTab === 'ready' ? 
+            `<button onclick="addToCart('${item.id}')" class="w-full bg-white/5 border border-white/10 text-white font-bold py-3 rounded-xl hover:bg-white hover:text-black transition-all text-xs uppercase tracking-widest">Tambah</button>` 
+            : ''}
+        `;
+        grid.appendChild(div);
+      });
     }
 
     function switchTab(tab) {
       currentTab = tab;
-      const tabs = ['ready', 'sold', 'mt', 'htmt'];
-      tabs.forEach(t => { 
-        const btn = document.getElementById(`btn-${t}`); 
-        btn.className = (t === tab) ? 
-          "w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-all outline-none" :
-          "w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none";
-      });
-      document.getElementById('searchInput').value = '';
-      document.getElementById('sortSelect').value = 'default';
-      applyFilters();
-    }
-
-    function applyFilters() {
-      let filtered = [];
+      const btnReady = document.getElementById('btn-ready');
+      const btnSold = document.getElementById('btn-sold');
       
-      if (currentTab === 'ready' || currentTab === 'sold') {
-        filtered = allData.filter(item => item.status_stok?.toLowerCase() === currentTab);
-      } else if (currentTab === 'mt') {
-        filtered = allData.filter(item => { 
-          const isReady = item.status_stok?.toLowerCase() === 'ready'; 
-          const htmtVal = item.status_htmt?.toLowerCase() || ''; 
-          return isReady && htmtVal.includes('mt') && !htmtVal.includes('ht'); 
-        });
-      } else if (currentTab === 'htmt') {
-        filtered = allData.filter(item => { 
-          const isReady = item.status_stok?.toLowerCase() === 'ready'; 
-          const htmtVal = item.status_htmt?.toLowerCase() || ''; 
-          return isReady && htmtVal.includes('ht'); 
-        });
+      if(tab === 'ready') {
+        btnReady.className = 'w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg transition-all outline-none';
+        btnSold.className = 'w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none';
+      } else {
+        btnSold.className = 'w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg transition-all outline-none';
+        btnReady.className = 'w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none';
       }
-
-      const searchInput = document.getElementById('searchInput').value.toLowerCase().trim();
-      if (searchInput !== "") {
-        filtered = filtered.filter(item => item.searchIndex.includes(searchInput));
-      }
-
-      const sortVal = document.getElementById('sortSelect').value;
-      if (sortVal === 'harga-asc') {
-        filtered.sort((a, b) => a.hFinalNum - b.hFinalNum);
-      } else if (sortVal === 'harga-desc') {
-        filtered.sort((a, b) => b.hFinalNum - a.hFinalNum);
-      } else if (sortVal === 'followers-desc') {
-        filtered.sort((a, b) => parsePrice(b.followers) - parsePrice(a.followers));
-      } else if (sortVal === 'tahun-asc') {
-        filtered.sort((a, b) => parsePrice(a.tahun_akun) - parsePrice(b.tahun_akun));
-      } 
-
-      currentFilteredData = filtered;
-      displayLimit = 12; 
       renderProducts();
     }
 
-    function filterAccounts() { applyFilters(); }
-
-    function renderProducts() {
-      const grid = document.getElementById('productGrid');
-      grid.innerHTML = ''; 
-      if (currentFilteredData.length === 0) {
-        document.getElementById('noResults').classList.remove('hidden');
-        return;
-      }
-      document.getElementById('noResults').classList.add('hidden');
-      renderBatch(); 
+    function updateCounts() {
+      document.getElementById('count-ready').innerText = allData.filter(i => String(i.status).toLowerCase() === 'ready').length;
+      document.getElementById('count-sold').innerText = allData.filter(i => String(i.status).toLowerCase() === 'sold').length;
     }
 
-    function renderBatch() {
-      const grid = document.getElementById('productGrid');
-      const batch = currentFilteredData.slice(grid.children.length, displayLimit);
+    function filterAccounts() { renderProducts(); }
+
+    function addToCart(id) {
+      const item = allData.find(i => i.id == id);
+      if(!cart.find(c => c.id == id)) {
+        cart.push(item);
+        updateCartUI();
+      }
+    }
+
+    function updateCartUI() {
+      const count = document.getElementById('cartCount');
+      const floatBtn = document.getElementById('floatingCart');
+      count.innerText = cart.length;
+      if(cart.length > 0) floatBtn.classList.remove('hidden');
+      else floatBtn.classList.add('hidden');
+    }
+
+    function openCart() {
+      document.getElementById('cartModal').classList.remove('hidden');
+      const list = document.getElementById('cartList');
+      let total = 0;
+      list.innerHTML = '';
       
-      batch.forEach((item) => {
-        const isReady = item.status_stok?.toLowerCase() === 'ready';
-        const inCart = cart.some(c => c.username === item.username); 
-
-        // Ikon Custom
-        const telpText = item.verif_telepon || '-';
-        const telpLow = telpText.toLowerCase().trim();
-        const telpIcon = (telpLow === 'tidak' || telpLow === 'kosong' || telpLow === '-' || telpLow === '') ? '❌' : '✅';
-
-        const emailText = item.email || '-';
-        const emailLow = emailText.toLowerCase().trim();
-        const emailIcon = (emailLow === 'tidak' || emailLow === 'kosong' || emailLow === '-' || emailLow === '') ? '❌' : '✅';
-
-        const kesText = item.kesehatan || '-';
-        const kesLow = kesText.toLowerCase().trim();
-        const kesIcon = kesLow.includes('go green') ? '🛡️' : '🚦';
-        const kesColor = kesLow.includes('go green') ? 'text-green-400' : 'text-gray-400';
-
-        const htmtText = item.status_htmt || '-';
-        const htmtLow = htmtText.toLowerCase().trim();
-        let htmtIcon = '⚡'; let htmtColor = 'text-gray-400';
-        if (htmtLow.includes('htmt')) { htmtIcon = '🔥'; htmtColor = 'text-orange-400'; } 
-        else if (htmtLow.includes('mt')) { htmtIcon = '👍🏻'; htmtColor = 'text-green-400'; }
-        
-        const cardHtml = `
-          <div class="product-card bg-gray-800 rounded-2xl border ${inCart ? 'border-blue-500 shadow-blue-900/20 shadow-lg' : 'border-gray-700'} fade-in-down overflow-hidden ${!isReady ? 'opacity-60' : ''}" data-username="${item.username}">
-            <div class="h-24 bg-gray-900 relative">
-               <span class="absolute top-3 left-3 px-2 py-1 bg-black/60 text-gray-300 text-[10px] font-mono rounded backdrop-blur border border-gray-700">KODE: ${item.kode}</span>
-               <span class="absolute top-3 right-3 px-2.5 py-1 ${isReady ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'} text-[10px] uppercase font-bold rounded backdrop-blur">${item.status_stok}</span>
-            </div>
-            <div class="px-4 pb-4">
-              <div class="flex justify-between items-start -mt-10 mb-2 relative z-10">
-                <div class="w-[72px] h-[72px] rounded-full border-4 border-gray-800 bg-gray-900 flex items-center justify-center text-gray-600 overflow-hidden">
-                  <svg class="w-10 h-10 mt-2" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                </div>
-                <div class="mt-12">
-                  ${isReady ? 
-                    `<a href="${item.link_akun}" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-gray-600 bg-gray-800 text-[13px] font-bold text-white hover:bg-gray-700 hover:border-gray-500 transition-colors shadow-sm outline-none">
-                      Cek Profil <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                    </a>` 
-                    : 
-                    `<span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-gray-700 bg-gray-900/50 text-[13px] font-bold text-gray-500 cursor-not-allowed">
-                      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg> Privat
-                    </span>`
-                  }
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <h2 class="text-xl font-extrabold text-gray-100 flex items-center gap-1">Akun X ${item.tahun_akun}</h2>
-                <p class="text-[15px] text-gray-400">@${item.username}</p>
-              </div>
-
-              <div class="text-[14px] text-gray-200 mb-3 space-y-1">
-                 <p>${emailIcon} Email: ${emailText}</p>
-                 <p>${telpIcon} Verif Telepon: ${telpText}</p>
-                 <p>${kesIcon} Kesehatan: <span class="${kesColor} font-semibold">${kesText}</span></p>
-                 <p>${htmtIcon} Status: <span class="${htmtColor} font-semibold">${htmtText}</span></p>
-              </div>
-
-              <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-400 mb-3">
-                 <span class="flex items-center gap-1">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19.708 2H4.292C3.028 2 2 3.028 2 4.292v15.416C2 20.972 3.028 22 4.292 22h15.416C20.972 22 22 20.972 22 19.708V4.292C22 3.028 20.972 2 19.708 2zm.792 17.708c0 .437-.355.792-.792.792H4.292a.792.792 0 01-.792-.792V9h17v10.708zM4 7V4.292c0-.16.131-.292.292-.292h15.416c.16 0 .292.131.292.292V7H4z"/></svg>
-                    Bergabung ${item.tahun_akun}
-                 </span>
-              </div>
-
-              <div class="flex gap-4 text-[15px] text-gray-400 mb-4">
-                <p><span class="text-gray-100 font-bold">${item.postingan}</span> Posts</p>
-                <p><span class="text-gray-100 font-bold">${item.followers}</span> Followers</p>
-              </div>
-
-              <div class="mt-2 pt-4 border-t border-gray-700 flex justify-between items-center">
-                 <div>
-                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider mb-0.5">Partner Price</p>
-                    <p class="text-xl font-bold text-blue-500">Rp ${item.hFinalNum.toLocaleString('id-ID')}</p>
-                    <p class="text-[10px] text-gray-600 line-through font-bold">Rp ${item.hAsliNum.toLocaleString('id-ID')}</p>
-                 </div>
-                 <div>
-                  ${isReady ? 
-                    (inCart ? 
-                      `<button onclick="toggleCart('${item.kode}', '${item.username}', ${item.hAsliNum}, ${item.hFinalNum})" class="btn-add-cart px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-900/20 outline-none">Terpilih</button>` : 
-                      `<button onclick="toggleCart('${item.kode}', '${item.username}', ${item.hAsliNum}, ${item.hFinalNum})" class="btn-add-cart px-5 py-2.5 bg-gray-800 border border-gray-600 text-blue-400 text-sm font-semibold rounded-lg hover:bg-gray-700 hover:border-gray-500 hover:text-white transition shadow-sm outline-none">Tambah</button>`
-                    ) :
-                    `<button disabled class="px-5 py-2.5 bg-gray-700 text-gray-500 text-sm font-semibold rounded-lg cursor-not-allowed">Sold</button>`
-                  }
-                 </div>
-              </div>
-
-            </div>
+      cart.forEach((item, index) => {
+        total += item.harga_final_num;
+        const div = document.createElement('div');
+        div.className = 'flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/5';
+        div.innerHTML = `
+          <div>
+            <p class="text-[10px] font-black text-blue-500 uppercase">${item.id}</p>
+            <p class="text-xs text-white font-bold">${item.kategori}</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <p class="text-sm font-black text-white">Rp ${new Intl.NumberFormat('id-ID').format(item.harga_final_num)}</p>
+            <button onclick="removeItem(${index})" class="text-red-500 text-lg">✕</button>
           </div>
         `;
-        grid.insertAdjacentHTML('beforeend', cardHtml);
+        list.appendChild(div);
       });
-      isLoadingMore = false;
+      document.getElementById('totalPrice').innerText = `Rp ${new Intl.NumberFormat('id-ID').format(total)}`;
     }
 
-    // INFINITE SCROLL
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY || window.pageYOffset;
-      const windowHeight = window.innerHeight;
-      const documentHeight = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+    function removeItem(index) {
+      cart.splice(index, 1);
+      if(cart.length === 0) closeCart();
+      else openCart();
+      updateCartUI();
+    }
 
-      if ((windowHeight + scrollY) >= (documentHeight - 800)) {
-        if (!isLoadingMore && displayLimit < currentFilteredData.length) {
-          isLoadingMore = true; displayLimit += 12;
-          setTimeout(() => { renderBatch(); }, 100); 
-        }
-      }
-    });
+    function closeCart() { document.getElementById('cartModal').classList.add('hidden'); }
 
-    window.onload = loadData;
+    function checkoutWA() {
+      let message = `Halo Admin SteoType, Saya Partner: ${session.nama}\n\nIngin membeli akun berikut:\n`;
+      let total = 0;
+      cart.forEach((item, i) => {
+        message += `${i+1}. ID: ${item.id} - ${item.kategori} (Rp ${new Intl.NumberFormat('id-ID').format(item.harga_final_num)})\n`;
+        total += item.harga_final_num;
+      });
+      message += `\nTotal Pembayaran: Rp ${new Intl.NumberFormat('id-ID').format(total)}\nMohon instruksi pembayarannya.`;
+      
+      const waUrl = `https://wa.me/6285959161539?text=${encodeURIComponent(message)}`;
+      window.open(waUrl, '_blank');
+    }
+
+    function logout() {
+      localStorage.removeItem('reseller_session');
+      window.location.href = "login.html";
+    }
+
+    loadData();
   </script>
 </body>
 </html>
