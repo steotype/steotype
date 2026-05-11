@@ -1,9 +1,10 @@
 export async function onRequest(context) {
+  // Tangkap semua parameter yang dikirim dari website
   const url = new URL(context.request.url);
   const queryString = url.search; 
 
   // LINK GOOGLE SCRIPT TERBARU
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUQQKI2MNo3jqESMvdV1O7prnqVm34SBKtXduzkExaCwR6k1m2tPggh5_CmHxwSWXg/exec" + queryString;
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyxQyiE0A1_seUgpO_6a2mFlJOc5iSFKEy6xK-uFdXqOAC66EABmTUmctXJX34YSRs/exec" + queryString;
 
   try {
     const response = await fetch(GOOGLE_SCRIPT_URL);
@@ -14,7 +15,7 @@ export async function onRequest(context) {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Cache-Control": "no-store" 
+        "Cache-Control": "no-store" // Memastikan Cloudflare tidak menyimpan cache basi
       }
     });
   } catch (error) {
