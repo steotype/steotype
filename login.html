@@ -60,7 +60,6 @@
     </div>
 
     <script>
-        // Gunakan path API yang sudah disamarkan lewat Cloudflare Workers
         const API = "/api/reseller";
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -75,23 +74,20 @@
             msg.innerText = "";
 
             try {
-                // Memanggil Google Script via Cloudflare Workers
                 const res = await fetch(`${API}?action=login&username=${encodeURIComponent(userInp)}&password=${encodeURIComponent(passInp)}`);
                 const data = await res.json();
 
                 if (data.status === "success") {
-                    // SIMPAN SESSION LENGKAP DENGAN TOKEN KE BROWSER
+                    // PENYIMPANAN SESI & TOKEN DARI SERVER
                     localStorage.setItem('reseller_session', JSON.stringify({
                         isLoggedIn: true,
                         nama: data.nama,
                         diskon: data.diskon,
-                        token: data.token // TOKEN PENTING UNTUK KEAMANAN
+                        token: data.token 
                     }));
 
                     msg.className = "mt-8 text-green-400 font-bold uppercase tracking-widest text-[10px]";
                     msg.innerText = "Akses Diberikan. Membuka Katalog...";
-                    
-                    // Redirect ke halaman dashboard partner
                     setTimeout(() => window.location.href = "reseller.html", 1200);
                 } else {
                     msg.className = "mt-8 text-red-400 uppercase tracking-widest text-[10px]";
@@ -107,7 +103,7 @@
             }
         });
 
-        // Cek jika sudah login, langsung lempar ke reseller.html
+        // Redirect otomatis jika token sudah ada
         const checkSession = JSON.parse(localStorage.getItem('reseller_session') || '{}');
         if (checkSession.isLoggedIn && checkSession.token) {
             window.location.href = "reseller.html";
