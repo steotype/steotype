@@ -24,20 +24,27 @@
       theme: {
         extend: {
           colors: {
-            bgDark: '#0f1115',      /* Warna background paling luar */
-            cardDark: '#1a1d24',    /* Warna background kartu */
-            btnCyan: '#8bd5e5',     /* Warna biru muda tombol */
-            textNavy: '#162842',    /* Warna teks biru tua di dalam tombol */
-            textSub: '#8a8d93'      /* Warna teks abu-abu deskripsi */
+            bgDark: '#0f1115',
+            cardDark: '#1a1d24',
+            btnCyan: '#8bd5e5',
+            textNavy: '#162842',
+            textSub: '#8a8d93'
           }
         }
       }
     }
   </script>
 </head>
-<body class="bg-bgDark min-h-screen flex flex-col items-center justify-center p-5 relative overflow-hidden font-sans">
+<body class="bg-bgDark min-h-screen flex flex-col items-center justify-center p-5 pt-24 relative overflow-hidden font-sans">
 
-  <div class="absolute top-10 right-10 opacity-10 transform rotate-45">
+  <nav class="fixed top-0 left-0 w-full z-[100] bg-bgDark/80 backdrop-blur-md border-b border-white/5 py-4 px-6 flex justify-between items-center transition-transform duration-300">
+    <h1 class="text-xl font-black italic tracking-tighter text-white">STEO<span class="text-gray-500">TYPE</span></h1>
+    <a href="login.html" class="text-[9px] font-black bg-btnCyan/10 text-btnCyan px-4 py-2 rounded-xl border border-btnCyan/10 uppercase tracking-widest hover:bg-btnCyan/20 transition-all outline-none">
+      Area Reseller
+    </a>
+  </nav>
+
+  <div class="absolute top-24 right-10 opacity-10 transform rotate-45">
     <div class="flex gap-2"><div class="w-1 h-8 bg-white rounded"></div><div class="w-1 h-8 bg-white rounded"></div><div class="w-1 h-8 bg-white rounded"></div></div>
   </div>
   <div class="absolute bottom-10 left-10 opacity-10 transform -rotate-45">
@@ -48,11 +55,8 @@
     
     <div class="mb-8">
       <img src="profil.png" alt="Profile" class="w-[84px] h-[84px] rounded-full object-cover mb-6 border-2 border-gray-800">
-      
       <p class="text-gray-500 text-[10px] tracking-[0.3em] font-medium mb-1">T E O</p>
-      
       <h1 class="text-white text-4xl font-normal mb-4">SteoType</h1>
-      
       <p class="text-textSub text-[15px] leading-relaxed">
         Carefully prepared for optimal results.<br>
         A seamless and refined experience without compromise.
@@ -60,7 +64,6 @@
     </div>
 
     <div class="space-y-4">
-      
       <a href="https://wa.me/6285959161539" target="_blank" class="w-full bg-btnCyan text-textNavy font-bold text-[15px] py-4 px-6 rounded-full flex justify-between items-center transition-transform transform hover:scale-[1.02] hover:bg-opacity-90 shadow-lg shadow-btnCyan/20">
         <span>WhatsApp</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
@@ -74,7 +77,6 @@
           <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z"/>
         </svg>
       </a>
-
     </div>
   </div>
 
