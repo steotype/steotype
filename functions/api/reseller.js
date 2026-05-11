@@ -1,21 +1,23 @@
 export async function onRequest(context) {
-  // Tangkap semua parameter yang dikirim dari website
+  // 1. Tangkap semua parameter dari website (?action=login atau ?action=get_stok)
   const url = new URL(context.request.url);
   const queryString = url.search; 
 
-  // LINK GOOGLE SCRIPT TERBARU
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwyxQyiE0A1_seUgpO_6a2mFlJOc5iSFKEy6xK-uFdXqOAC66EABmTUmctXJX34YSRs/exec" + queryString;
+  // 2. Tempelkan ke URL Asli Google Script kamu (yang disembunyikan)
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwEP7HCvgiPynomYfw3y2appnZUK3aXhIsv4Mk3oOQAqxi4yC6f1h-Z0eeWCq900zN/exec" + queryString;
 
   try {
+    // 3. Ambil data dari Google secara diam-diam
     const response = await fetch(GOOGLE_SCRIPT_URL);
     const data = await response.json();
 
+    // 4. Kirim hasilnya ke website
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Cache-Control": "no-store" // Memastikan Cloudflare tidak menyimpan cache basi
+        "Cache-Control": "no-store" // Memastikan data login/stok selalu baru
       }
     });
   } catch (error) {
