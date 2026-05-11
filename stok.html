@@ -16,29 +16,12 @@
   <meta name="twitter:title" content="SteoType - Stok Akun X" />
   <meta name="twitter:description" content="Ready-to-Use X Accounts" />
   <meta name="twitter:image" content="https://raw.githubusercontent.com/steotype/steotype/e2b7df9199d8a9fff23b53e6885da69938fcc171/linkp.jpg" />
-  
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-  
-  <style>
-    body { font-family: 'Inter', sans-serif; background-color: #0f1115; }
-    .glass { background: rgba(15, 17, 21, 0.9); backdrop-blur-md; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-    /* Transisi halus untuk Smart Header */
-    #navbar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-  </style>
 </head>
 <body class="bg-gray-900 text-gray-200 min-h-screen relative">
 
-  <nav id="navbar" class="fixed top-0 w-full z-[100] glass py-4 px-6 flex justify-between items-center">
-    <h1 class="text-xl font-black italic tracking-tighter text-white">STEO<span class="text-gray-500">TYPE</span></h1>
-    
-    <a href="login.html" class="text-[9px] font-black bg-blue-500/10 text-blue-500 px-4 py-2 rounded-xl border border-blue-500/10 uppercase tracking-widest hover:bg-blue-500/20 transition-all outline-none">
-      Area Reseller
-    </a>
-  </nav>
-
-  <main class="px-6 w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto pb-8 relative z-0 pt-28"> 
+  <main class="px-6 w-full max-w-md md:max-w-3xl lg:max-w-5xl mx-auto pb-8 relative z-0 pt-8"> 
     
     <div class="max-w-md mx-auto space-y-5">
       
@@ -119,7 +102,7 @@
     <span id="cartBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-gray-900">0</span>
   </button>
 
-  <div id="cartModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center">
+  <div id="cartModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="cartModalBackdrop" onclick="closeCartModal()"></div>
     <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="cartModalContent">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
@@ -129,18 +112,23 @@
         </h3>
         <button onclick="closeCartModal()" class="text-gray-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
-      <div id="cartItemsList" class="p-4 overflow-y-auto space-y-3 max-h-[40vh]"></div>
+      
+      <div id="cartItemsList" class="p-4 overflow-y-auto space-y-3 max-h-[40vh]">
+        </div>
+      
       <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
         <div class="flex justify-between items-center mb-4">
           <span class="text-gray-400 text-sm">Total Harga</span>
           <span id="cartTotal" class="text-xl font-bold text-blue-400">Rp 0</span>
         </div>
-        <button onclick="proceedToCheckout()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20">Checkout Sekarang</button>
+        <button onclick="proceedToCheckout()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20">
+          Checkout Sekarang
+        </button>
       </div>
     </div>
   </div>
 
-  <div id="tncModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center">
+  <div id="tncModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="modalBackdrop" onclick="closeModal()"></div>
     <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="modalContent">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
@@ -150,16 +138,53 @@
         </h3>
         <button onclick="closeModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
+      
       <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed">
         <p class="text-xs text-gray-400 italic mb-1">Dengan melakukan pembelian, Anda dianggap menyetujui poin-poin berikut:</p>
-        <div class="bg-blue-500/5 border border-blue-500/10 p-4 rounded-xl"><h4 class="font-bold text-blue-400 mb-1.5 flex items-center gap-1.5"><span>⏱️</span> 1. Garansi 60 Jam</h4><p class="text-gray-400 text-[13px]">Garansi berlaku selama 60 jam sejak akun dikirim murni karena kesalahan sistem kami.</p></div>
-        <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl"><h4 class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5"><span>⚠️</span> 2. Garansi Hangus</h4><p class="text-gray-400 text-[13px]">Garansi batal jika data pemulihan diubah atau akun dipindah tangan.</p></div>
+        
+        <div class="bg-blue-500/5 border border-blue-500/10 p-4 rounded-xl">
+          <h4 class="font-bold text-blue-400 mb-1.5 flex items-center gap-1.5">
+            <span>⏱️</span> 1. Garansi 60 Jam
+          </h4>
+          <p class="text-gray-400 text-[13px]">Garansi berlaku selama 2 hari 12 jam (60 jam) sejak akun dikirim. Garansi hanya mencakup gagal login akibat kesalahan sistem/kredensial dari pihak kami.</p>
+        </div>
+
+        <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl">
+          <h4 class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5">
+            <span>⚠️</span> 2. Garansi Hangus
+          </h4>
+          <p class="text-gray-400 text-[13px]">Garansi otomatis batal jika: akun dipindahtangankan atau dijual kembali kepada pihak lain, atau pembeli mengubah data pemulihan (hapus email utama/recovery) yang membuat akun tidak bisa dipulihkan.</p>
+        </div>
+
+        <div class="bg-orange-500/5 border border-orange-500/10 p-4 rounded-xl">
+          <h4 class="font-bold text-orange-400 mb-1.5 flex items-center gap-1.5">
+            <span>🔄</span> 3. Refund & Penukaran
+          </h4>
+          <p class="text-gray-400 text-[13px]">Semua penjualan bersifat final (tidak ada refund uang tunai). Penggantian berupa penukaran akun atau saldo hanya diberikan jika kesalahan murni dari pihak kami.</p>
+        </div>
+
+        <div class="bg-gray-500/5 border border-gray-600/30 p-4 rounded-xl">
+          <h4 class="font-bold text-gray-300 mb-1.5 flex items-center gap-1.5">
+            <span>⚖️</span> 4. Tanggung Jawab Penggunaan
+          </h4>
+          <p class="text-gray-400 text-[13px]">Setelah akun diserahkan, kami tidak bertanggung jawab apabila akun digunakan untuk hal-hal yang melanggar hukum. Kami juga tidak bertanggung jawab atas akun yang di-suspend, dilimit, atau hilang akses karena kelalaian pembeli.</p>
+        </div>
+
+        <div class="bg-green-500/5 border border-green-500/10 p-4 rounded-xl">
+          <h4 class="font-bold text-green-400 mb-1.5 flex items-center gap-1.5">
+            <span>🤝</span> 5. Bantuan Kode Recovery
+          </h4>
+          <p class="text-gray-400 text-[13px]">Bantuan untuk mendapatkan kode verifikasi dari email/nomor pemulihan lama terjamin dan dapat Anda minta kapan pun tanpa batasan waktu garansi.</p>
+        </div>
       </div>
-      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl"><button onclick="closeModal()" class="w-full py-2.5 bg-blue-600 text-white font-bold rounded-xl outline-none">Saya Mengerti</button></div>
+      
+      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
+        <button onclick="closeModal()" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20 outline-none">Saya Mengerti</button>
+      </div>
     </div>
   </div>
 
-  <div id="infoModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center">
+  <div id="infoModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="infoModalBackdrop" onclick="closeInfoModal()"></div>
     <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="infoModalContent">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
@@ -169,20 +194,56 @@
         </h3>
         <button onclick="closeInfoModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
+      
       <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed">
-        <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl"><h4 class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5"><span>🔴</span> 1. Non HTMT</h4><p class="text-gray-400 text-[13px]">Visibilitas terbatas, mention (@) tidak bekerja.</p></div>
-        <div class="bg-green-500/5 border border-green-500/10 p-4 rounded-xl"><h4 class="font-bold text-green-400 mb-1.5 flex items-center gap-1.5"><span>👍🏻</span> 2. Masuk MT</h4><p class="text-gray-400 text-[13px]">Status sehat, mention masuk tab orang lain meskipun belum follow.</p></div>
+        
+        <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl">
+          <h4 class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5">
+            <span>🔴</span> 1. Akun Non HTMT (Terbatas)
+          </h4>
+          <p class="text-gray-400 text-[13px]">Akun yang visibilitasnya sedang dibatasi oleh algoritma X. Mention (@) belum bisa bekerja, dan biasanya ini adalah akun baru atau yang terkena shadowban ringan. Kurang direkomendasikan untuk jualan atau promosi.</p>
+        </div>
+
+        <div class="bg-green-500/5 border border-green-500/10 p-4 rounded-xl">
+          <h4 class="font-bold text-green-400 mb-1.5 flex items-center gap-1.5">
+            <span>👍🏻</span> 2. Akun Masuk MT (Mention Tab)
+          </h4>
+          <p class="text-gray-400 text-[13px]">Akun dengan status "Sehat". Saat kamu melakukan mention (@), notifikasinya pasti masuk ke tab orang lain meskipun belum saling follow. Akun ini masuk kategori sehat dan cocok digunakan untuk farming, promosi standar, atau interaksi sehari-hari.</p>
+        </div>
+
+        <div class="bg-orange-500/5 border border-orange-500/10 p-4 rounded-xl">
+          <h4 class="font-bold text-orange-400 mb-1.5 flex items-center gap-1.5">
+            <span>🔥</span> 3. Akun Masuk HTMT (Kasta Tertinggi)
+          </h4>
+          <p class="text-gray-400 text-[13px]">Ini adalah akun kualitas paling premium dan paling banyak dicari. Selain mention yang pasti masuk, tweet dari akun ini bisa menembus pencarian Hashtag (#).</p>
+        </div>
+
+        <div class="pt-4 mt-2">
+          <h4 class="font-bold text-blue-400 mb-2.5 text-[12px] uppercase tracking-wider">Ringkasan Cepat</h4>
+          <div class="space-y-2 text-[13px] text-gray-400 bg-gray-900/50 p-4 rounded-xl border border-gray-700/50">
+            <p><span class="text-red-400 font-semibold">Non HTMT:</span> Paling lemah (Hanya cocok untuk personal/baca-baca).</p>
+            <p><span class="text-green-400 font-semibold">Masuk MT:</span> Bagus & Sehat (Aman untuk interaksi & farming).</p>
+            <p><span class="text-orange-400 font-semibold">Masuk HTMT:</span> Sempurna (Jangkauan maksimal, akun kualitas terbaik).</p>
+          </div>
+        </div>
+
       </div>
-      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl"><button onclick="closeInfoModal()" class="w-full py-2.5 bg-gray-700 text-white font-bold rounded-xl outline-none">Tutup</button></div>
+      
+      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
+        <button onclick="closeInfoModal()" class="w-full py-2.5 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl transition shadow-sm outline-none">Tutup</button>
+      </div>
     </div>
   </div>
 
-  <div id="buyModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center">
+  <div id="buyModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="buyModalBackdrop" onclick="closeBuyModal()"></div>
     <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[85%] max-w-sm flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="buyModalContent">
       <div class="p-6 text-center space-y-4">
+        <div class="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-2 border border-blue-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+        </div>
         <h3 class="text-lg font-bold text-gray-100">Konfirmasi Pesanan</h3>
-        <p class="text-sm text-gray-400">Saya telah menyetujui seluruh <button onclick="openTncFromCheckout()" class="text-blue-400 hover:underline outline-none">S&K</button>.</p>
+        <p class="text-sm text-gray-400">Saya menyatakan telah membaca dan menyetujui seluruh <button onclick="openTncFromCheckout()" class="text-blue-400 hover:underline outline-none">S&K</button>.</p>
       </div>
       <div class="flex border-t border-gray-700">
         <button onclick="closeBuyModal()" class="flex-1 py-3.5 text-sm font-semibold text-gray-400 hover:text-white transition border-r border-gray-700 outline-none">Batal</button>
@@ -192,21 +253,5 @@
   </div>
 
   <script src="script.js"></script>
-
-  <script>
-    const navbar = document.getElementById('navbar');
-    let lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-    window.addEventListener('scroll', function() {
-      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      
-      if (scrollTop > lastScrollTop && scrollTop > 60) {
-        navbar.style.transform = 'translateY(-100%)';
-      } else {
-        navbar.style.transform = 'translateY(0)';
-      }
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
-    }, { passive: true });
-  </script>
 </body>
 </html>
