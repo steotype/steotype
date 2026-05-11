@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Reseller - SteoType</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // SATPAM: Cek apakah sudah login
+        const session = JSON.parse(localStorage.getItem('reseller_session'));
+        if (!session || !session.isLoggedIn) {
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+<body class="bg-[#0a0a0a] text-white p-6">
+    <div class="max-w-4xl mx-auto">
+        <nav class="flex justify-between items-center mb-12">
+            <div>
+                <h1 class="text-xl font-bold tracking-tighter italic">STEO<span class="text-gray-500">TYPE</span></h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-xs font-semibold text-gray-400 uppercase tracking-widest" id="welcomeName"></span>
+                <button onclick="logout()" class="text-xs bg-red-500/10 text-red-400 px-3 py-1.5 rounded-lg font-bold border border-red-500/20">LOGOUT</button>
+            </div>
+        </nav>
+
+        <div class="bg-blue-500/10 border border-blue-500/20 p-6 rounded-3xl mb-8">
+            <h2 class="text-lg font-bold mb-2">Halo, Reseller Terdaftar! 👋</h2>
+            <p class="text-gray-400 text-sm">Ini adalah ruang khusus untuk kamu. Di sini kamu bisa melihat stok dengan harga reseller atau informasi eksklusif lainnya.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-[#161616] p-6 rounded-3xl border border-white/5">
+                <p class="text-gray-500 text-xs font-bold uppercase mb-2">Info Stok</p>
+                <p class="text-sm">Fitur stok reseller akan segera muncul di sini.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Tampilkan nama reseller
+        document.getElementById('welcomeName').innerText = session.nama;
+
+        function logout() {
+            localStorage.removeItem('reseller_session');
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>
+
