@@ -7,12 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
+        /* Menggunakan 100dvh agar pas dengan layar HP meskipun ada address bar */
         body { 
             background-color: #0a0a0a; 
             font-family: 'Inter', sans-serif; 
             height: 100dvh; 
             width: 100vw; 
-            overflow: hidden; 
+            overflow: hidden; /* Mengunci total agar tidak bisa di-scroll */
             margin: 0;
             padding: 0;
             display: flex;
@@ -37,13 +38,13 @@
         <p class="text-blue-500 text-[10px] uppercase tracking-[0.3em] font-black mb-10">Partner Portal</p>
         
         <form id="loginForm" class="space-y-5">
-            <div class="relative text-left">
+            <div class="relative">
                 <input type="text" id="username" placeholder="Username Partner" required 
-                    class="w-full bg-gray-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium focus:outline-none focus:border-blue-500 focus:bg-gray-900 transition-all placeholder-gray-700">
+                    class="w-full bg-gray-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium focus:outline-none focus:border-blue-500 focus:bg-gray-900 transition-all placeholder-gray-600">
             </div>
-            <div class="relative text-left">
+            <div class="relative">
                 <input type="password" id="password" placeholder="Password" required 
-                    class="w-full bg-gray-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium focus:outline-none focus:border-blue-500 focus:bg-gray-900 transition-all placeholder-gray-700">
+                    class="w-full bg-gray-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white text-sm font-medium focus:outline-none focus:border-blue-500 focus:bg-gray-900 transition-all placeholder-gray-600">
             </div>
             <button type="submit" id="btn" class="w-full bg-white text-black font-black py-4 rounded-2xl hover:bg-gray-200 active:scale-95 transition-all uppercase tracking-widest text-xs mt-2 shadow-xl shadow-white/5 outline-none">
                 Masuk
@@ -53,6 +54,7 @@
     </div>
 
     <script>
+        // Jalur API tersamar
         const API = "/api/reseller";
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
