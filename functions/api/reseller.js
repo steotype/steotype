@@ -4,7 +4,7 @@ export async function onRequest(context) {
   const queryString = url.search; 
 
   // 2. Tempelkan ke URL Asli Google Script kamu (yang disembunyikan)
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxM0LN44xzbUy4VDb8fVk_Olb3avz7m-AWlB_iKkDGprIjSayyaac4hBOlMYAznJGvB/exec" + queryString;
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUQQKI2MNo3jqESMvdV1O7prnqVm34SBKtXduzkExaCwR6k1m2tPggh5_CmHxwSWXg/exec" + queryString;
 
   try {
     // 3. Ambil data dari Google secara diam-diam
