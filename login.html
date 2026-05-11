@@ -2,12 +2,24 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login Partner - SteoType</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0a0a0a; font-family: 'Inter', sans-serif; }
+        /* Menggunakan 100dvh agar pas dengan layar HP meskipun ada address bar */
+        body { 
+            background-color: #0a0a0a; 
+            font-family: 'Inter', sans-serif; 
+            height: 100dvh; 
+            width: 100vw; 
+            overflow: hidden; /* Mengunci total agar tidak bisa di-scroll */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .glass { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); }
         .fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
         @keyframes fadeInUp {
@@ -16,11 +28,12 @@
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6 relative overflow-hidden">
-    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 blur-[120px] rounded-full pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-900/20 blur-[120px] rounded-full pointer-events-none"></div>
+<body class="relative">
+    
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-blue-600/20 blur-[120px] rounded-full pointer-events-none"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-900/20 blur-[120px] rounded-full pointer-events-none"></div>
 
-    <div class="w-full max-w-md glass rounded-[2.5rem] p-10 shadow-2xl text-center relative z-10 fade-in-up border border-white/5">
+    <div class="w-full max-w-md glass rounded-[2.5rem] p-10 shadow-2xl text-center relative z-10 fade-in-up border border-white/5 mx-6">
         <h1 class="text-3xl font-black text-white mb-2 italic tracking-tighter">STEO<span class="text-gray-500">TYPE</span></h1>
         <p class="text-blue-500 text-[10px] uppercase tracking-[0.3em] font-black mb-10">Partner Portal</p>
         
@@ -41,7 +54,7 @@
     </div>
 
     <script>
-        // LINK SUDAH DISAMARKAN (Menggunakan file functions/api/reseller.js di Cloudflare)
+        // Jalur API tersamar
         const API = "/api/reseller";
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -52,7 +65,6 @@
             btn.innerHTML = `<svg class="animate-spin h-4 w-4 text-black mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
 
             try {
-                // Proses fetch tetap berjalan normal lewat jalur rahasia
                 const res = await fetch(`${API}?action=login&username=${encodeURIComponent(username.value)}&password=${encodeURIComponent(password.value)}`);
                 const data = await res.json();
 
