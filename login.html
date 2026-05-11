@@ -11,28 +11,33 @@
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-6">
-    <div class="w-full max-w-md glass rounded-3xl p-8">
+    <div class="w-full max-w-md glass rounded-3xl p-8 shadow-2xl">
         <div class="text-center mb-8">
             <h1 class="text-2xl font-bold text-white italic">STEO<span class="text-gray-500">TYPE</span></h1>
-            <p class="text-gray-400 text-xs mt-2 uppercase tracking-widest">Reseller Area</p>
+            <p class="text-gray-400 text-[10px] mt-2 uppercase tracking-[0.2em] font-black">Reseller Area</p>
         </div>
 
         <form id="loginForm" class="space-y-4">
-            <input type="text" id="username" placeholder="Username" required class="w-full bg-[#161616] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-blue-500">
-            <input type="password" id="password" placeholder="Password" required class="w-full bg-[#161616] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-blue-500">
-            <button type="submit" id="btn" class="w-full bg-white text-black font-bold py-4 rounded-2xl hover:bg-gray-200 transition-all">Masuk</button>
+            <input type="text" id="username" placeholder="Username" required 
+                class="w-full bg-[#161616] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-blue-500 transition-all">
+            <input type="password" id="password" placeholder="Password" required 
+                class="w-full bg-[#161616] border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-blue-500 transition-all">
+            <button type="submit" id="btn" class="w-full bg-white text-black font-bold py-4 rounded-2xl hover:bg-gray-200 active:scale-95 transition-all">Masuk</button>
         </form>
-        <p id="msg" class="mt-4 text-center text-sm"></p>
+        <p id="msg" class="mt-6 text-center text-sm font-medium"></p>
     </div>
 
     <script>
-        const API = "https://script.google.com/macros/s/AKfycbzyTN-FNE2s99jzKCUznIApg2zlj4LooXWZDgBVIbhGiP6085R_oT14unWmf2_coIiU/exec";
+        // URL API Terbaru
+        const API = "https://script.google.com/macros/s/AKfycbzAa283tyu1mapdtO-syHot1i67CcpAlApJAG0X2QrXHdSQEO3CYM0yhK4yywvV4iEn/exec";
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn');
             const msg = document.getElementById('msg');
-            btn.disabled = true; btn.innerText = "Memproses...";
+            btn.disabled = true; btn.innerText = "Memverifikasi...";
+            msg.className = "mt-6 text-center text-blue-400";
+            msg.innerText = "Menghubungkan ke database...";
 
             try {
                 const res = await fetch(`${API}?username=${encodeURIComponent(username.value)}&password=${encodeURIComponent(password.value)}`);
@@ -42,19 +47,20 @@
                     localStorage.setItem('reseller_session', JSON.stringify({
                         isLoggedIn: true,
                         nama: data.nama,
-                        diskon: data.diskon
+                        diskon: data.diskon || "0"
                     }));
-                    msg.className = "mt-4 text-center text-green-400";
-                    msg.innerText = "Berhasil! Mengalihkan...";
+                    msg.className = "mt-6 text-center text-green-400";
+                    msg.innerText = "Login Berhasil! Mengalihkan...";
                     setTimeout(() => window.location.href = "reseller.html", 1000);
                 } else {
-                    msg.className = "mt-4 text-center text-red-400";
+                    msg.className = "mt-6 text-center text-red-400";
                     msg.innerText = data.message;
                     btn.disabled = false; btn.innerText = "Masuk";
                 }
             } catch (e) {
-                msg.innerText = "Error koneksi.";
-                btn.disabled = false;
+                msg.className = "mt-6 text-center text-red-400";
+                msg.innerText = "Gagal terhubung ke server.";
+                btn.disabled = false; btn.innerText = "Masuk";
             }
         });
     </script>
