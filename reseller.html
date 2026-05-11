@@ -5,61 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Reseller - SteoType</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: white; }
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.02); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            backdrop-filter: blur(12px);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card:hover { 
-            border-color: rgba(59, 130, 246, 0.5); 
-            transform: translateY(-6px);
-            background: rgba(255, 255, 255, 0.04);
-            box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
-        }
-        .stok-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-            gap: 1.5rem; 
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; }
+        .glass-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); }
+        .stok-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
     </style>
+    <script>
+        // Cek Sesi
+        const session = JSON.parse(localStorage.getItem('reseller_session'));
+        if (!session || !session.isLoggedIn) { window.location.href = "login.html"; }
+    </script>
 </head>
-<body class="p-6 antialiased">
+<body class="bg-[#0a0a0a] text-white p-6 antialiased">
     <div class="max-w-6xl mx-auto">
         
-        <nav class="flex justify-between items-center mb-12">
+        <nav class="flex justify-between items-center mb-10">
             <div>
-                <h1 class="text-2xl font-black italic tracking-tighter text-white">STEO<span class="text-gray-500">TYPE</span></h1>
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                    <p class="text-[9px] text-blue-500 font-black uppercase tracking-[0.3em]">Partner Portal</p>
-                </div>
+                <h1 class="text-2xl font-extrabold italic tracking-tighter text-white">STEO<span class="text-gray-500">TYPE</span></h1>
+                <p class="text-[10px] text-blue-500 font-black uppercase tracking-[0.3em]">Reseller Dashboard</p>
             </div>
-            <button onclick="localStorage.clear(); window.location.href='login.html';" 
-                class="text-[10px] bg-red-500/10 text-red-400 px-5 py-2.5 rounded-2xl font-black border border-red-500/20 hover:bg-red-500/20 transition-all uppercase tracking-widest">
-                Logout
-            </button>
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden sm:block">
+                    <p id="userDisplay" class="text-[10px] text-gray-500 uppercase font-bold tracking-widest"></p>
+                </div>
+                <button onclick="localStorage.clear(); window.location.href='login.html';" 
+                    class="text-[10px] bg-red-500/10 text-red-400 px-4 py-2 rounded-xl font-black border border-red-500/20 hover:bg-red-500/20 transition-all uppercase">
+                    Logout
+                </button>
+            </div>
         </nav>
 
-        <div class="glass-card p-8 rounded-[2.5rem] mb-12 flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
-            <div class="relative z-10">
-                <h2 class="text-xl font-black mb-1">Halo, <span id="nmDisplay" class="text-blue-500"></span>! 👋</h2>
-                <p class="text-sm text-gray-500 font-medium tracking-tight">Akses katalog harga khusus mitra SteoType.</p>
+        <div class="glass-card p-8 rounded-[2.5rem] mb-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <h2 class="font-bold text-xl mb-1" id="welcomeName"></h2>
+                <p class="text-sm text-gray-400 font-medium">Katalog di bawah otomatis menggunakan harga mitra SteoType.</p>
             </div>
-            <div class="mt-6 md:mt-0 text-center bg-white/5 border border-white/10 px-8 py-4 rounded-[1.5rem] relative z-10">
-                <p class="text-[9px] text-gray-500 font-black uppercase tracking-widest mb-1">Benefit Diskon</p>
-                <p id="dscDisplay" class="text-2xl font-black text-white italic"></p>
+            <div class="bg-white/5 border border-white/10 px-6 py-4 rounded-2xl text-center min-w-[150px]">
+                <p class="text-[9px] text-gray-500 font-black uppercase tracking-widest mb-1">Diskon Anda</p>
+                <p id="dscBadge" class="text-xl font-black text-blue-500"></p>
             </div>
-            <div class="absolute -right-10 -top-10 w-32 h-32 bg-blue-600/10 blur-[80px] rounded-full"></div>
         </div>
 
         <div id="stokContainer" class="stok-grid">
-            <div class="col-span-full text-center py-24">
-                <div class="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                <p class="text-gray-600 text-[10px] font-black uppercase tracking-[0.4em]">Syncing Database...</p>
+            <div class="col-span-full text-center py-20 text-gray-700 font-black uppercase tracking-[0.5em] animate-pulse text-xs">
+                Synchronizing Database...
             </div>
         </div>
 
@@ -67,21 +57,27 @@
 
     <script>
         const API = "https://script.google.com/macros/s/AKfycbxM0LN44xzbUy4VDb8fVk_Olb3avz7m-AWlB_iKkDGprIjSayyaac4hBOlMYAznJGvB/exec";
-        const session = JSON.parse(localStorage.getItem('reseller_session'));
+        
+        // ISI DATA PROFIL (Perbaikan error di bagian atas)
+        document.getElementById('userDisplay').innerText = session.nama;
+        document.getElementById('welcomeName').innerText = "Selamat Datang, " + session.nama + "!";
 
-        if (!session || !session.isLoggedIn) window.location.href = "login.html";
-
-        // Fungsi Pintar: Mengonversi 50K, 50.000, dll menjadi Angka
+        // Fungsi Pintar Harga (Bisa baca 50K, 10k, Rp 50.000)
         function parsePrice(input) {
-            let s = String(input).toLowerCase().replace(/[^0-9k]/g, '');
-            if (s.includes('k')) return parseFloat(s.replace('k', '')) * 1000;
-            return parseInt(s) || 0;
+            if (!input) return 0;
+            let val = String(input).toLowerCase().trim();
+            if (val.includes('k')) {
+                // Mengambil angka sebelum 'k' dan dikali 1000
+                return parseFloat(val.replace('k', '').replace(/[^0-9.]/g, '')) * 1000;
+            }
+            return parseInt(val.replace(/[^0-9]/g, '')) || 0;
         }
 
-        // Tampilkan Identitas & Diskon
-        const rawDsc = String(session.diskon || "0");
-        document.getElementById('nmDisplay').innerText = session.nama;
-        document.getElementById('dscDisplay').innerText = rawDsc.toLowerCase().includes('k') ? rawDsc.toUpperCase() : "Rp " + parsePrice(rawDsc).toLocaleString('id-ID');
+        // Tampilkan Info Diskon
+        const diskonRaw = String(session.diskon || "0");
+        document.getElementById('dscBadge').innerText = diskonRaw.toLowerCase().includes('k') 
+            ? diskonRaw.toUpperCase() 
+            : "Rp " + parsePrice(diskonRaw).toLocaleString('id-ID');
 
         async function loadStok() {
             const container = document.getElementById('stokContainer');
@@ -90,66 +86,58 @@
                 const data = await res.json();
                 container.innerHTML = '';
 
-                const diskonNominal = parsePrice(rawDsc);
+                const potonganNominal = parsePrice(diskonRaw);
 
                 data.forEach(item => {
                     const hargaAsli = parsePrice(item.harga);
-                    const hargaFinal = hargaAsli - diskonNominal;
-                    const ready = String(item.status_stok).toLowerCase() === 'ready';
+                    const hargaFinal = hargaAsli - potonganNominal;
+                    const isReady = String(item.status_stok || "").toLowerCase() === 'ready';
 
                     container.innerHTML += `
-                        <div class="glass-card p-6 rounded-[2.5rem] flex flex-col justify-between h-full">
+                        <div class="glass-card p-6 rounded-[2rem] flex flex-col justify-between group hover:border-blue-500/40 transition-all duration-500 hover:-translate-y-1">
                             <div>
-                                <div class="flex justify-between items-center mb-6">
-                                    <div class="bg-blue-500/10 text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-xl border border-blue-500/10 uppercase tracking-widest">
-                                        EST. ${item.tahun_akun || '-'}
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-1.5 h-1.5 rounded-full ${ready ? 'bg-green-500' : 'bg-red-500'}"></span>
-                                        <span class="text-[10px] font-black uppercase ${ready ? 'text-green-400' : 'text-red-400'}">
-                                            ${item.status_stok}
-                                        </span>
-                                    </div>
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="text-[9px] font-black bg-blue-500/10 text-blue-500 px-3 py-1 rounded-full border border-blue-500/10 uppercase tracking-widest">
+                                        Account ${item.tahun_akun || '-'}
+                                    </span>
+                                    <span class="px-3 py-1 rounded-lg text-[9px] font-black uppercase ${isReady ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}">
+                                        ${(item.status_stok || 'UNKNOWN').toUpperCase()}
+                                    </span>
                                 </div>
-
-                                <h3 class="text-xl font-black text-white mb-5 tracking-tight group-hover:text-blue-400 transition-colors">
-                                    @${item.username}
-                                </h3>
-
-                                <div class="space-y-3 mb-8">
-                                    <div class="flex justify-between items-center bg-white/[0.02] p-3 rounded-2xl border border-white/[0.03]">
-                                        <span class="text-[9px] font-black text-gray-600 uppercase tracking-widest">Followers</span>
-                                        <span class="text-xs font-bold">${item.followers || '0'}</span>
+                                <h3 class="text-lg font-extrabold text-white mb-2 group-hover:text-blue-400 transition-colors">@${item.username || 'NoName'}</h3>
+                                <div class="space-y-2 mb-6">
+                                    <div class="flex items-center text-xs text-gray-400">
+                                        <span class="w-20 font-bold uppercase text-[9px] text-gray-600">Followers</span>
+                                        <span class="text-white">${item.followers || '0'}</span>
                                     </div>
-                                    <div class="flex justify-between items-center bg-white/[0.02] p-3 rounded-2xl border border-white/[0.03]">
-                                        <span class="text-[9px] font-black text-gray-600 uppercase tracking-widest">Kesehatan</span>
-                                        <span class="text-xs font-bold ${String(item.kesehatan).toLowerCase() === 'aman' ? 'text-green-400' : 'text-yellow-400'} uppercase">${item.kesehatan}</span>
+                                    <div class="flex items-center text-xs text-gray-400">
+                                        <span class="w-20 font-bold uppercase text-[9px] text-gray-600">Kesehatan</span>
+                                        <span class="${String(item.kesehatan || '').toLowerCase() === 'aman' ? 'text-green-400' : 'text-yellow-400'} font-bold">${item.kesehatan || '-'}</span>
                                     </div>
-                                    <div class="flex justify-between items-center bg-white/[0.02] p-3 rounded-2xl border border-white/[0.03]">
-                                        <span class="text-[9px] font-black text-gray-600 uppercase tracking-widest">Verifikasi</span>
-                                        <span class="text-xs font-bold">${item.verif_telepon || '-'}</span>
+                                    <div class="flex items-center text-xs text-gray-400">
+                                        <span class="w-20 font-bold uppercase text-[9px] text-gray-600">Verif</span>
+                                        <span class="text-white">${item.verif_telepon || '-'}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="pt-6 border-t border-white/5 flex justify-between items-center">
+                            <div class="pt-4 border-t border-white/5 flex justify-between items-end">
                                 <div>
-                                    <p class="text-[9px] text-gray-600 font-black uppercase mb-1">Partner Price</p>
-                                    <div class="flex items-baseline gap-2">
-                                        <span class="text-xl font-black text-white">Rp ${Math.max(0, hargaFinal).toLocaleString('id-ID')}</span>
-                                        <span class="text-[10px] text-gray-700 line-through font-bold">Rp ${hargaAsli.toLocaleString('id-ID')}</span>
-                                    </div>
+                                    <p class="text-[9px] text-gray-600 font-bold uppercase mb-1">Partner Price</p>
+                                    <p class="text-xl font-black text-white">Rp ${Math.max(0, hargaFinal).toLocaleString('id-ID')}</p>
+                                    <p class="text-[10px] text-gray-700 line-through font-bold">Rp ${hargaAsli.toLocaleString('id-ID')}</p>
                                 </div>
-                                <a href="${item.link_akun}" target="_blank" class="bg-white text-black p-3.5 rounded-[1.2rem] hover:bg-blue-600 hover:text-white transition-all shadow-xl active:scale-90">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                <a href="${item.link_akun || '#'}" target="_blank" class="bg-white text-black p-3 rounded-2xl hover:bg-blue-500 hover:text-white transition-all shadow-lg active:scale-90">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                                        <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
                                     </svg>
                                 </a>
                             </div>
                         </div>`;
                 });
             } catch (e) {
-                container.innerHTML = `<div class="col-span-full text-center p-12 glass-card rounded-[2.5rem] border-red-500/20"><p class="text-red-400 text-xs font-black uppercase tracking-widest">Gagal Menghubungkan Database</p></div>`;
+                container.innerHTML = `<div class="col-span-full text-center p-10 bg-red-500/5 border border-red-500/10 rounded-3xl text-red-500 text-xs font-bold uppercase tracking-widest">Gagal Memuat Database Akun</div>`;
             }
         }
         loadStok();
