@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="style.css">
 
   <script>
-    // SISTEM SATPAM RESELLER
     const session = JSON.parse(localStorage.getItem('reseller_session'));
     if (!session || !session.isLoggedIn) { window.location.href = "login.html"; }
   </script>
@@ -28,7 +27,6 @@
 
     <div class="fade-in-down mb-8 relative overflow-hidden bg-[#151923] border border-gray-700/50 rounded-[2rem] shadow-xl">
         <div class="absolute -top-16 -right-16 w-40 h-40 bg-blue-600/20 blur-3xl rounded-full pointer-events-none"></div>
-
         <div class="p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center relative z-10 gap-5">
             <div>
                 <h2 class="text-2xl font-bold mb-1.5 text-white flex items-center gap-2">
@@ -36,7 +34,6 @@
                 </h2>
                 <p class="text-xs text-gray-400 font-medium">Katalog eksklusif dengan penyesuaian harga otomatis.</p>
             </div>
-
             <div class="w-full md:w-auto bg-gray-900/80 border border-blue-500/30 rounded-2xl px-6 py-4 flex flex-col justify-center items-center md:items-end shadow-[0_0_20px_rgba(59,130,246,0.1)] backdrop-blur-md">
                 <p class="text-[9px] text-blue-400 font-black uppercase tracking-[0.2em] mb-1">Benefit Diskon</p>
                 <p id="dscDisplay" class="text-2xl font-black text-white italic tracking-tighter drop-shadow-md"></p>
@@ -48,28 +45,19 @@
       
       <div class="grid grid-cols-2 gap-3 fade-in-down">
         <button onclick="openModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 hover:bg-gray-800/60 transition-all outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-          S&K (TNC)
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg> S&K (TNC)
         </button>
         <button onclick="openInfoModal()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-dashed border-gray-700 bg-gray-800/30 text-sm font-semibold text-gray-400 hover:border-gray-500 hover:text-gray-200 hover:bg-gray-800/60 transition-all outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Info Akun
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Info Akun
         </button>
       </div>
 
       <div class="grid grid-cols-2 gap-2.5 fade-in-down">
-        <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-all outline-none">
-          READY (<span id="count-ready">0</span>)
-        </button>
-        <button onclick="switchTab('sold')" id="btn-sold" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">
-          SOLD (<span id="count-sold">0</span>)
-        </button>
-        <button onclick="switchTab('mt')" id="btn-mt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">
-          MASUK MT (<span id="count-mt">0</span>)
-        </button>
-        <button onclick="switchTab('htmt')" id="btn-htmt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">
-          MASUK HTMT (<span id="count-htmt">0</span>)
-        </button>
+        <button onclick="switchTab('ready')" id="btn-ready" class="w-full py-2.5 rounded-xl border border-blue-500 bg-blue-600 text-xs font-bold text-white shadow-lg shadow-blue-900/20 transition-all outline-none">READY (<span id="count-ready">0</span>)</button>
+        <button onclick="switchTab('keep')" id="btn-keep" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">KEEP SAYA (<span id="count-keep">0</span>)</button>
+        <button onclick="switchTab('mt')" id="btn-mt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">MASUK MT (<span id="count-mt">0</span>)</button>
+        <button onclick="switchTab('htmt')" id="btn-htmt" class="w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">MASUK HTMT (<span id="count-htmt">0</span>)</button>
+        <button onclick="switchTab('sold')" id="btn-sold" class="col-span-2 w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">SOLD (<span id="count-sold">0</span>)</button>
       </div>
 
       <div class="flex gap-3 fade-in-down relative z-20">
@@ -122,20 +110,12 @@
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="cartModalBackdrop" onclick="closeCartModal()"></div>
     <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="cartModalContent">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-          Keranjang Reseller
-        </h3>
+        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg> Keranjang Reseller</h3>
         <button onclick="closeCartModal()" class="text-gray-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
-      
       <div id="cartItemsList" class="p-4 overflow-y-auto space-y-3 max-h-[40vh]"></div>
-      
       <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
-        <div class="flex justify-between items-center mb-4">
-          <span class="text-gray-400 text-sm">Total Estimasi</span>
-          <span id="cartTotal" class="text-xl font-bold text-blue-400">Rp 0</span>
-        </div>
+        <div class="flex justify-between items-center mb-4"><span class="text-gray-400 text-sm">Total Estimasi</span><span id="cartTotal" class="text-xl font-bold text-blue-400">Rp 0</span></div>
         <button onclick="proceedToCheckout()" class="flex justify-center items-center gap-2 w-full py-3 bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#128C7E] hover:to-[#075E54] text-white font-bold rounded-xl transition shadow-lg shadow-green-900/20 outline-none">Lanjut ke WhatsApp</button>
       </div>
     </div>
@@ -145,51 +125,16 @@
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="modalBackdrop" onclick="closeModal()"></div>
     <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="modalContent">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Syarat & Ketentuan Reseller
-        </h3>
+        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> Syarat & Ketentuan</h3>
         <button onclick="closeModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed">
-        
-        <div class="bg-blue-500/5 border border-blue-500/10 p-4 rounded-xl">
-          <h4 class="font-bold text-blue-400 mb-1.5 flex items-center gap-1.5"><span>⏱️</span> 1. Garansi 60 Jam</h4>
-          <p class="text-gray-400 text-[13px]">Garansi berlaku selama 60 jam (2 hari 12 jam) sejak akun dikirim. Garansi hanya mencakup kendala gagal login akibat kesalahan kredensial dari pihak SteoType.</p>
-        </div>
-        
-        <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl">
-          <h4 class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5"><span>⚠️</span> 2. Garansi Hangus</h4>
-          <p class="text-gray-400 text-[13px]">Garansi otomatis hangus apabila data pemulihan akun diubah, seperti email utama, email recovery, password, atau informasi keamanan lainnya.</p>
-          <p class="text-gray-400 text-[13px] mt-2">SteoType hanya bertanggung jawab sampai pihak pembeli langsung dari reseller. Apabila akun dijual kembali oleh pembeli tersebut kepada pihak lain, maka segala bentuk garansi dan tanggung jawab dari SteoType otomatis tidak berlaku.</p>
-        </div>
-
-        <div class="bg-green-500/5 border border-green-500/10 p-4 rounded-xl">
-          <h4 class="font-bold text-green-400 mb-1.5 flex items-center gap-1.5"><span>📧</span> 3. Jaminan Akses Verifikasi</h4>
-          <p class="text-gray-400 text-[13px]">SteoType menjamin akses kode verifikasi untuk login email akan tetap tersedia tanpa batas waktu, selama tidak ada perubahan data pemulihan oleh pengguna.</p>
-          <p class="text-gray-400 text-[13px] mt-2">Jaminan ini hanya berlaku untuk akses verifikasi login email yang diberikan oleh SteoType, dan tidak mencakup akun X, layanan, atau platform lain yang terhubung.</p>
-        </div>
-
-        <div class="bg-orange-500/5 border border-orange-500/10 p-4 rounded-xl">
-          <h4 class="font-bold text-orange-400 mb-1.5 flex items-center gap-1.5"><span>🔄</span> 4. Refund & Penukaran</h4>
-          <p class="text-gray-400 text-[13px]">Semua transaksi bersifat final dan tidak dapat direfund.</p>
-          <p class="text-gray-400 text-[13px] mt-2">Refund atau penukaran akun hanya dapat dilakukan apabila terdapat kesalahan murni dari pihak SteoType.</p>
-        </div>
-
-        <div class="bg-gray-500/5 border border-gray-600/30 p-4 rounded-xl">
-          <h4 class="font-bold text-gray-300 mb-1.5 flex items-center gap-1.5"><span>⚖️</span> 5. Tanggung Jawab Penggunaan</h4>
-          <p class="text-gray-400 text-[13px]">SteoType tidak bertanggung jawab atas segala bentuk penggunaan akun oleh reseller maupun pembeli akhir yang melanggar hukum atau ketentuan platform terkait.</p>
-        </div>
-
-        <div class="pt-2 text-center">
-            <p class="text-[11px] text-gray-500 font-bold uppercase tracking-widest">📌 6. Persetujuan</p>
-            <p class="text-gray-400 text-[12px] mt-1">Dengan melakukan pembelian, reseller dianggap telah membaca dan menyetujui seluruh syarat & ketentuan yang berlaku.</p>
-        </div>
-
+        <div class="bg-blue-500/5 border border-blue-500/10 p-4 rounded-xl"><h4 class="font-bold text-blue-400 mb-1.5">⏱️ 1. Garansi 60 Jam</h4><p class="text-gray-400 text-[13px]">Garansi berlaku selama 60 jam sejak akun dikirim. Hanya mencakup kendala gagal login akibat kesalahan dari pihak SteoType.</p></div>
+        <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl"><h4 class="font-bold text-red-400 mb-1.5">⚠️ 2. Garansi Hangus</h4><p class="text-gray-400 text-[13px]">Batal apabila data pemulihan akun diubah. SteoType hanya bertanggung jawab sampai pihak pembeli langsung (reseller).</p></div>
+        <div class="bg-green-500/5 border border-green-500/10 p-4 rounded-xl"><h4 class="font-bold text-green-400 mb-1.5">📧 3. Bantuan Verifikasi</h4><p class="text-gray-400 text-[13px]">Bantuan akses kode verifikasi login akan tersedia selamanya tanpa batas waktu.</p></div>
+        <div class="bg-purple-500/5 border border-purple-500/10 p-4 rounded-xl"><h4 class="font-bold text-purple-400 mb-1.5">🕒 4. Aturan Keep Akun</h4><p class="text-gray-400 text-[13px]">Reseller berhak melakukan keep (reservasi sementara) maksimal 6 jam. Harap gunakan bijak, penyalahgunaan (Hit & Run) berulang dapat menyebabkan sanksi.</p></div>
       </div>
-      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
-        <button onclick="closeModal()" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg shadow-blue-900/20 outline-none">Saya Mengerti</button>
-      </div>
+      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl"><button onclick="closeModal()" class="w-full py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl transition shadow-lg outline-none">Saya Mengerti</button></div>
     </div>
   </div>
 
@@ -197,48 +142,14 @@
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="infoModalBackdrop" onclick="closeInfoModal()"></div>
     <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="infoModalContent">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Info Kualitas Akun
-        </h3>
-        <button onclick="closeInfoModal()" class="text-gray-400 hover:text-white transition outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <h3 class="text-lg font-bold text-gray-100">Info Kualitas Akun</h3>
+        <button onclick="closeInfoModal()" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed">
-        
-        <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl">
-          <h4 class="font-bold text-red-400 mb-1.5 flex items-center gap-1.5">
-            <span>🔴</span> 1. Akun Non HTMT (Terbatas)
-          </h4>
-          <p class="text-gray-400 text-[13px]">Akun yang visibilitasnya sedang dibatasi oleh algoritma X. Mention (@) belum bisa bekerja, dan biasanya ini adalah akun baru atau yang terkena shadowban ringan. Kurang direkomendasikan untuk jualan atau promosi.</p>
-        </div>
-
-        <div class="bg-green-500/5 border border-green-500/10 p-4 rounded-xl">
-          <h4 class="font-bold text-green-400 mb-1.5 flex items-center gap-1.5">
-            <span>👍🏻</span> 2. Akun Masuk MT (Mention Tab)
-          </h4>
-          <p class="text-gray-400 text-[13px]">Akun dengan status "Sehat". Saat kamu melakukan mention (@), notifikasinya pasti masuk ke tab orang lain meskipun belum saling follow. Akun ini masuk kategori sehat dan cocok digunakan untuk farming, promosi standar, atau interaksi sehari-hari.</p>
-        </div>
-
-        <div class="bg-orange-500/5 border border-orange-500/10 p-4 rounded-xl">
-          <h4 class="font-bold text-orange-400 mb-1.5 flex items-center gap-1.5">
-            <span>🔥</span> 3. Akun Masuk HTMT (Kasta Tertinggi)
-          </h4>
-          <p class="text-gray-400 text-[13px]">Ini adalah akun kualitas paling premium dan paling banyak dicari. Selain mention yang pasti masuk, tweet dari akun ini bisa menembus pencarian Hashtag (#).</p>
-        </div>
-
-        <div class="pt-4 mt-2">
-          <h4 class="font-bold text-blue-400 mb-2.5 text-[12px] uppercase tracking-wider">Ringkasan Cepat</h4>
-          <div class="space-y-2 text-[13px] text-gray-400 bg-gray-900/50 p-4 rounded-xl border border-gray-700/50">
-            <p><span class="text-red-400 font-semibold">Non HTMT:</span> Paling lemah (Hanya cocok untuk personal/baca-baca).</p>
-            <p><span class="text-green-400 font-semibold">Masuk MT:</span> Bagus & Sehat (Aman untuk interaksi & farming).</p>
-            <p><span class="text-orange-400 font-semibold">Masuk HTMT:</span> Sempurna (Jangkauan maksimal, akun kualitas terbaik).</p>
-          </div>
-        </div>
-
+        <div class="bg-green-500/5 border border-green-500/10 p-4 rounded-xl"><h4 class="font-bold text-green-400 mb-1.5">👍🏻 Masuk MT</h4><p class="text-gray-400 text-[13px]">Akun sehat, mention otomatis masuk notifikasi orang lain.</p></div>
+        <div class="bg-orange-500/5 border border-orange-500/10 p-4 rounded-xl"><h4 class="font-bold text-orange-400 mb-1.5">🔥 Masuk HTMT</h4><p class="text-gray-400 text-[13px]">Kasta tertinggi, jangkauan maksimal dan bisa menembus hashtag.</p></div>
       </div>
-      <div class="p-4 border-t border-gray-700 bg-gray-900/50 rounded-b-2xl">
-        <button onclick="closeInfoModal()" class="w-full py-2.5 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl transition shadow-sm outline-none">Tutup</button>
-      </div>
+      <div class="p-4 border-t border-gray-700"><button onclick="closeInfoModal()" class="w-full py-2.5 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl">Tutup</button></div>
     </div>
   </div>
 
@@ -246,20 +157,47 @@
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="buyModalBackdrop" onclick="closeBuyModal()"></div>
     <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[85%] max-w-sm flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="buyModalContent">
       <div class="p-6 text-center space-y-4">
-        <div class="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-2 border border-blue-500/20">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-        </div>
+        <div class="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-2 border border-blue-500/20"><svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg></div>
         <h3 class="text-lg font-bold text-gray-100">Konfirmasi Pesanan</h3>
-        <p class="text-sm text-gray-400">Saya menyatakan pesanan ini sudah benar dan menyetujui seluruh <button onclick="openTncFromCheckout()" class="text-blue-400 hover:underline outline-none">S&K</button>.</p>
+        <p class="text-sm text-gray-400">Saya menyetujui seluruh <button onclick="openTncFromCheckout()" class="text-blue-400 hover:underline">S&K</button>.</p>
       </div>
       <div class="flex border-t border-gray-700">
-        <button onclick="closeBuyModal()" class="flex-1 py-3.5 text-sm font-semibold text-gray-400 hover:text-white transition border-r border-gray-700 outline-none">Batal</button>
-        <button id="btn-confirm-buy" class="flex-1 py-3.5 text-sm font-bold text-blue-500 hover:text-blue-400 transition outline-none">Setuju & Kirim WA</button>
+        <button onclick="closeBuyModal()" class="flex-1 py-3.5 text-sm font-semibold text-gray-400 hover:text-white border-r border-gray-700">Batal</button>
+        <button id="btn-confirm-buy" class="flex-1 py-3.5 text-sm font-bold text-blue-500 hover:text-blue-400">Setuju & WA</button>
       </div>
     </div>
   </div>
 
-  <script src="script-reseller.js"></script>
+  <div id="keepModal" class="fixed inset-0 z-[90] hidden flex items-center justify-center">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="keepModalBackdrop" onclick="closeKeepModal()"></div>
+    <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[85%] max-w-sm flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="keepModalContent">
+      <div class="p-6 text-center space-y-4">
+        <div class="w-14 h-14 bg-indigo-500/10 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-2 border border-indigo-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-100">Keep Akun <span id="keepTargetText" class="text-blue-400"></span></h3>
+        <p class="text-xs text-gray-400">Pilih durasi waktu untuk menahan akun ini. Reseller lain tidak akan bisa membelinya selama waktu keep aktif.</p>
+        
+        <div class="pt-2 text-left">
+            <label class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2 block">Pilih Durasi Waktu</label>
+            <select id="keepDuration" class="w-full bg-gray-900 border border-gray-700 text-white text-sm rounded-xl block p-3.5 outline-none focus:border-indigo-500 transition-colors">
+               <option value="1">1 Jam</option>
+               <option value="2">2 Jam</option>
+               <option value="3">3 Jam</option>
+               <option value="4">4 Jam</option>
+               <option value="5">5 Jam</option>
+               <option value="6">6 Jam (Maksimal)</option>
+            </select>
+        </div>
+      </div>
+      <div class="flex border-t border-gray-700">
+        <button onclick="closeKeepModal()" class="flex-1 py-3.5 text-sm font-semibold text-gray-400 hover:text-white transition border-r border-gray-700 outline-none">Batal</button>
+        <button id="btn-confirm-keep" onclick="submitKeep()" class="flex-1 py-3.5 text-sm font-bold text-indigo-500 hover:text-indigo-400 transition outline-none">Konfirmasi</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script-reseller.js?v=3"></script>
 
 </body>
 </html>
