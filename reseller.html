@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="style.css">
 
   <script>
+    // SISTEM SATPAM RESELLER
     const session = JSON.parse(localStorage.getItem('reseller_session'));
     if (!session || !session.isLoggedIn) { window.location.href = "login.html"; }
   </script>
@@ -60,23 +61,27 @@
         <button onclick="switchTab('sold')" id="btn-sold" class="col-span-2 w-full py-2.5 rounded-xl border border-gray-700 bg-gray-800 text-xs font-bold text-gray-400 hover:bg-gray-700 transition-all outline-none">SOLD (<span id="count-sold">0</span>)</button>
       </div>
 
-      <div class="flex gap-3 fade-in-down relative z-20">
+      <div class="flex gap-3 items-center fade-in-down relative z-20">
         <div class="relative flex-1">
-          <input type="text" id="searchInput" onkeyup="filterAccounts()" placeholder="Cari (MT, Tahun)..." class="w-full h-full bg-gray-800/80 border border-gray-700 text-gray-200 text-sm rounded-xl block pl-10 pr-3 py-3 outline-none focus:border-blue-500 focus:bg-gray-800 transition-colors">
+          <input type="text" id="searchInput" onkeyup="filterAccounts()" placeholder="Cari (MT, Tahun, Username)..." class="w-full h-full bg-gray-800/80 border border-gray-700 text-gray-200 text-sm rounded-xl block pl-10 pr-3 py-3 outline-none focus:border-blue-500 focus:bg-gray-800 transition-colors h-[48px]">
           <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
           </div>
         </div>
-        <div class="relative w-[48px] flex-shrink-0">
-          <select id="sortSelect" onchange="renderProducts()" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 appearance-none">
+
+        <div class="relative flex-shrink-0">
+          <select id="sortSelect" onchange="renderProducts()" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 appearance-none h-[48px]">
             <option value="default">Urutan Default</option>
-            <option value="harga-asc">Termurah</option>
-            <option value="harga-desc">Termahal</option>
-            <option value="followers-desc">Foll Terbanyak</option>
-            <option value="tahun-asc">Paling Tua</option>
+            <option value="harga-asc">Harga Termurah</option>
+            <option value="harga-desc">Harga Termahal</option>
+            <option value="followers-desc">Followers Terbanyak</option>
+            <option value="tahun-asc">Tahun Tertua</option>
           </select>
-          <div class="w-full h-full bg-gray-800/80 border border-gray-700 rounded-xl flex items-center justify-center text-gray-400 transition-colors pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+          
+          <div class="w-[56px] h-[48px] bg-gray-800 border border-gray-700 rounded-xl flex items-center justify-center text-blue-400 transition-colors shadow-sm outline-none focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 00-1 1v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L16 14.586V9a1 1 0 00-1-1z" />
+            </svg>
           </div>
         </div>
       </div>
@@ -110,7 +115,9 @@
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 opacity-0" id="cartModalBackdrop" onclick="closeCartModal()"></div>
     <div class="relative bg-gray-800 border border-gray-700 rounded-2xl w-[90%] max-w-md max-h-[85vh] flex flex-col shadow-2xl transform scale-95 transition-all duration-300 opacity-0" id="cartModalContent">
       <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg> Keranjang Reseller</h3>
+        <h3 class="text-lg font-bold text-gray-100 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg> Keranjang Reseller
+        </h3>
         <button onclick="closeCartModal()" class="text-gray-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div id="cartItemsList" class="p-4 overflow-y-auto space-y-3 max-h-[40vh]"></div>
