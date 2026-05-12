@@ -180,17 +180,25 @@
         <button onclick="closeInfoModal()" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
       </div>
       <div class="p-5 overflow-y-auto space-y-3.5 text-sm leading-relaxed">
-        <div class="bg-gray-500/10 border border-gray-500/20 p-4 rounded-xl">
-            <h4 class="font-bold text-gray-300 mb-1.5">🚦 Non HTMT</h4>
-            <p class="text-gray-400 text-[13px]">Akun dibatasi algoritma atau terkena shadowban ringan. Mention tidak masuk notifikasi.</p>
+        <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl">
+            <h4 class="font-bold text-red-400 mb-1.5">🔴 1. Akun Non HTMT (Terbatas)</h4>
+            <p class="text-gray-400 text-[13px]">Akun yang visibilitasnya sedang dibatasi oleh algoritma X. Mention (@) belum bisa bekerja, dan biasanya ini adalah akun baru atau yang terkena shadowban ringan. Kurang direkomendasikan untuk jualan atau promosi.</p>
         </div>
         <div class="bg-green-500/5 border border-green-500/10 p-4 rounded-xl">
-            <h4 class="font-bold text-green-400 mb-1.5">👍🏻 Masuk MT</h4>
-            <p class="text-gray-400 text-[13px]">Akun sehat. Mention otomatis masuk ke notifikasi atau tab mention orang lain.</p>
+            <h4 class="font-bold text-green-400 mb-1.5">👍🏻 2. Akun Masuk MT (Mention Tab)</h4>
+            <p class="text-gray-400 text-[13px]">Akun dengan status "Sehat". Saat kamu melakukan mention (@), notifikasinya pasti masuk ke tab orang lain meskipun belum saling follow. Akun ini masuk kategori sehat dan cocok digunakan untuk farming, promosi standar, atau interaksi sehari-hari.</p>
         </div>
         <div class="bg-orange-500/5 border border-orange-500/10 p-4 rounded-xl">
-            <h4 class="font-bold text-orange-400 mb-1.5">🔥 Masuk HTMT</h4>
-            <p class="text-gray-400 text-[13px]">Kualitas premium/kasta tertinggi. Jangkauan maksimal dan bisa menembus pencarian hashtag.</p>
+            <h4 class="font-bold text-orange-400 mb-1.5">🔥 3. Akun Masuk HTMT (Kasta Tertinggi)</h4>
+            <p class="text-gray-400 text-[13px]">Ini adalah akun kualitas paling premium dan paling banyak dicari. Selain mention yang pasti masuk, tweet dari akun ini bisa menembus pencarian Hashtag (#).</p>
+        </div>
+        <div class="bg-blue-500/5 border border-blue-500/10 p-4 rounded-xl mt-2">
+            <h4 class="font-bold text-blue-400 mb-2">📋 Ringkasan Cepat</h4>
+            <ul class="text-gray-400 text-[13px] space-y-1">
+                <li><strong class="text-gray-300">Non HTMT:</strong> Paling lemah (Hanya cocok untuk personal/baca-baca).</li>
+                <li><strong class="text-gray-300">Masuk MT:</strong> Bagus & Sehat (Aman untuk interaksi & farming).</li>
+                <li><strong class="text-gray-300">Masuk HTMT:</strong> Sempurna (Jangkauan maksimal, akun kualitas terbaik).</li>
+            </ul>
         </div>
       </div>
       <div class="p-4 border-t border-gray-700"><button onclick="closeInfoModal()" class="w-full py-2.5 bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl">Tutup</button></div>
