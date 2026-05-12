@@ -1,5 +1,5 @@
 // --- URL API TERBARU ANDA ---
-const BASE_URL = "https://script.google.com/macros/s/AKfycbz1OHfu6w-0OMRWvCjQRlM506HsiSUNJ5eW35AWhSK9Oli8y49I7oW4zmxfMkD7wwbo/exec";
+const BASE_URL = "api/reseller";
 const SPREADSHEET_URL = BASE_URL + "?action=get_stok";
 
 let allData = []; 
