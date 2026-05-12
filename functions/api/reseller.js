@@ -1,10 +1,10 @@
 export async function onRequest(context) {
-  // 1. Tangkap semua parameter dari website (?action=login atau ?action=get_stok)
+  // 1. Tangkap semua parameter dari website (?action=login, ?action=get_stok, atau ?action=keep)
   const url = new URL(context.request.url);
   const queryString = url.search; 
 
-  // 2. Tempelkan ke URL Asli Google Script kamu (yang disembunyikan)
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwEP7HCvgiPynomYfw3y2appnZUK3aXhIsv4Mk3oOQAqxi4yC6f1h-Z0eeWCq900zN/exec" + queryString;
+  // 2. Tempelkan ke URL Asli Google Script kamu (URL TERBARU DENGAN FITUR KEEP)
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1OHfu6w-0OMRWvCjQRlM506HsiSUNJ5eW35AWhSK9Oli8y49I7oW4zmxfMkD7wwbo/exec" + queryString;
 
   try {
     // 3. Ambil data dari Google secara diam-diam
@@ -17,7 +17,7 @@ export async function onRequest(context) {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        "Cache-Control": "no-store" // Memastikan data login/stok selalu baru
+        "Cache-Control": "no-store" // Memastikan data login/stok/keep selalu baru
       }
     });
   } catch (error) {
