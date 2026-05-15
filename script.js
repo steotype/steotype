@@ -144,7 +144,7 @@ function proceedToCheckout() {
       sumHarga += parseNum(item.harga);
     });
     message += `\nTotal: ${formatHarga(sumHarga)}\n\nBisa di test dulu kak?`;
-    window.open(`https://https://steo.my.id/wa?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://steo.my.id/wa?text=${encodeURIComponent(message)}`, '_blank');
     closeBuyModal();
   };
 }
