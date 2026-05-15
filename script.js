@@ -144,7 +144,7 @@ function proceedToCheckout() {
       sumHarga += parseNum(item.harga);
     });
     message += `\nTotal: ${formatHarga(sumHarga)}\n\nBisa di test dulu kak?`;
-    window.open(`https://wa.me/6285959161539?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/6285111571616?text=${encodeURIComponent(message)}`, '_blank');
     closeBuyModal();
   };
 }
