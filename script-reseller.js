@@ -121,7 +121,7 @@ function proceedToCheckout() {
       sumHarga += item.hargaFinal;
     });
     message += `\nTotal: Rp ${sumHarga.toLocaleString('id-ID')}`;
-    window.open(`https://steo.my.id/wa?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/6285111571616?text=${encodeURIComponent(message)}`, '_blank');
     closeBuyModal();
   };
 }
